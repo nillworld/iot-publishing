@@ -20,15 +20,13 @@ export class Server {
         const options = JSON.parse(message);
         fs.writeFile(
           './Dockerfile',
-          `FROM ${options.from}
-LABEL name=""
-WORKDIR "${options.workdir}"
-RUN "${options.run}"
-ADD . /app
-ENTRYPOINT ["${options.entrypoint}"]
-CMD ["${options.cmd}"]
-ENV ${options.env}
-ARG ${options.arg}`,
+          `FROM ${options.from ? `${options.from}` : `node:12`}\nLABEL name="test@gmail.com"\n${
+            options.workdir ? `WORKDIR ${options.workdir}\n` : ``
+          }RUN "${options.run ? `${options.from}` : `npm install --silent`}"\nADD . /app\nENTRYPOINT ["${
+            options.entrypoint ? `${options.entrypoint}` : `node`
+          }"]\nCMD ["${options.cmd ? `${options.cmd}` : `index.js`}"]\n${options.env ? `ENV ${options.env}\n` : ``}${
+            options.arg ? `ARG ${options.arg}` : ``
+          }`,
           function (err) {
             if (err === null) {
               console.log('success');
@@ -37,7 +35,7 @@ ARG ${options.arg}`,
             }
           }
         );
-        console.log('received: %s', message);
+        console.log('received: %s', options.from ? 'true' : 'false');
         ws.send('Good, Nice to meet you, Iam server'); // 이 줄만 추가!
       });
     });

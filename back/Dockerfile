@@ -1,9 +1,6 @@
-FROM node
-LABEL name=""
-WORKDIR ""
-RUN "fgdg"
+FROM node:12
+LABEL name="test@gmail.com"
+RUN "npm install --silent"
 ADD . /app
-ENTRYPOINT [""]
-CMD ["fdg"]
-ENV NODE_ENV node
-ARG port
+ENTRYPOINT ["node"]
+CMD ["index.js"]

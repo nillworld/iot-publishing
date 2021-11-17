@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import { exec } from 'child_process';
 
 class App extends React.Component {
   ws: any;
@@ -18,6 +19,9 @@ class App extends React.Component {
     this.ws.onmessage = (evt: MessageEvent) => {
       console.log(evt);
       console.log(evt.data);
+      exec('tar cvf deployFiles/project.tar ../projext', (err, out, stderr) => {
+        console.log(out);
+      });
     };
   };
   valueOnChange = (e: any) => {
