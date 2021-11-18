@@ -1,4 +1,6 @@
 import * as fs from 'fs';
+import { exec } from 'child_process';
+
 const WebSocketS = require('ws').Server;
 
 export class Server {
@@ -30,6 +32,10 @@ export class Server {
           function (err) {
             if (err === null) {
               console.log('success');
+              console.log(options);
+              exec('dir', (err, out, stderr) => {
+                // console.log(out);
+              });
             } else {
               console.log('fail');
             }

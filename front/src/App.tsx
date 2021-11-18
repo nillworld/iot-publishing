@@ -19,9 +19,9 @@ class App extends React.Component {
     this.ws.onmessage = (evt: MessageEvent) => {
       console.log(evt);
       console.log(evt.data);
-      exec('tar cvf deployFiles/project.tar ../projext', (err, out, stderr) => {
-        console.log(out);
-      });
+      // exec('tar cvf deployFiles/project.tar ../projext', (err, out, stderr) => {
+      //   console.log(out);
+      // });
     };
   };
   valueOnChange = (e: any) => {
