@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"cd back && npm start\" \"cd ./front && npm run start\""
+    "build": "concurrently \"cd ./back && npm build\" \"cd ./front && npm run build",
+    "start": "concurrently \"cd ./back && npm start\" \"cd ./front && npm run start\""
   },
   "author": "",
   "license": "ISC",

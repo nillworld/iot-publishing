@@ -32,17 +32,17 @@ export class Server {
           function (err) {
             if (err === null) {
               console.log('success');
-              console.log(options);
-              exec('dir', (err, out, stderr) => {
-                // console.log(out);
+              exec('tar cvf project.tar ../project', (err, out, stderr) => {
+                console.log(out);
+                ws.send('out the "project.tar" file');
               });
             } else {
               console.log('fail');
             }
           }
         );
-        console.log('received: %s', options.from ? 'true' : 'false');
-        ws.send('Good, Nice to meet you, Iam server'); // 이 줄만 추가!
+        console.log('received: %s', message);
+        ws.send('Good, Nice to meet you, Iam server');
       });
     });
     this.wss.on('close', function (error: any) {
