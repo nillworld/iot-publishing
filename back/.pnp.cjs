@@ -36,7 +36,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",
           "packageDependencies": [
             ["@types/express", "npm:4.17.13"],
-            ["@types/node", "npm:16.11.9"],
+            ["@types/node", "npm:16.11.10"],
             ["@yarnpkg/pnpify", "npm:3.1.1-rc.5"],
             ["ts-node", "virtual:cc47f9aa4c9b94f328515cb12db7a25d42583a5b148b47800d108c1194b53f2a5acb801ba1f4725f2267cbdbe360762fe8487e2965b4bc014cefb5e307bf2576#npm:10.4.0"],
             ["ts-node-dev", "virtual:cc47f9aa4c9b94f328515cb12db7a25d42583a5b148b47800d108c1194b53f2a5acb801ba1f4725f2267cbdbe360762fe8487e2965b4bc014cefb5e307bf2576#npm:1.1.8"],
@@ -320,6 +320,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-npm-13.13.52-95159539bb-8f1afff497.zip/node_modules/@types/node/",
           "packageDependencies": [
             ["@types/node", "npm:13.13.52"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:16.11.10", {
+          "packageLocation": "./.yarn/cache/@types-node-npm-16.11.10-6a434088fa-9c79419c5c.zip/node_modules/@types/node/",
+          "packageDependencies": [
+            ["@types/node", "npm:16.11.10"]
           ],
           "linkType": "HARD",
         }],
@@ -2672,7 +2679,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@tsconfig/node12", "npm:1.0.9"],
             ["@tsconfig/node14", "npm:1.0.1"],
             ["@tsconfig/node16", "npm:1.0.2"],
-            ["@types/node", "npm:16.11.9"],
+            ["@types/node", "npm:16.11.10"],
             ["@types/swc__core", null],
             ["@types/swc__wasm", null],
             ["@types/typescript", null],
@@ -2817,7 +2824,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["websocket", "workspace:."],
             ["@types/express", "npm:4.17.13"],
-            ["@types/node", "npm:16.11.9"],
+            ["@types/node", "npm:16.11.10"],
             ["@yarnpkg/pnpify", "npm:3.1.1-rc.5"],
             ["ts-node", "virtual:cc47f9aa4c9b94f328515cb12db7a25d42583a5b148b47800d108c1194b53f2a5acb801ba1f4725f2267cbdbe360762fe8487e2965b4bc014cefb5e307bf2576#npm:10.4.0"],
             ["ts-node-dev", "virtual:cc47f9aa4c9b94f328515cb12db7a25d42583a5b148b47800d108c1194b53f2a5acb801ba1f4725f2267cbdbe360762fe8487e2965b4bc014cefb5e307bf2576#npm:1.1.8"],
