@@ -1,0 +1,16 @@
+{
+  "name": "nillworld",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/nillworld/iot-publishing.git",
+  "author": "Nill <wwaosldk@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "concurrently \"cd ./back && npm build\" \"cd ./front && npm run build",
+    "start": "concurrently \"cd ./back && npm run start\" \"cd ./front && npm run start\""
+  },
+  "dependencies": {
+    "concurrently": "^6.4.0"
+  }
+}
