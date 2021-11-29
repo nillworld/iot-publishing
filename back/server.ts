@@ -21,7 +21,7 @@ export class Server {
       ws.on('message', (message: string) => {
         const options = JSON.parse(message);
         fs.writeFile(
-          './Dockerfile',
+          '../project/Dockerfile',
           `FROM ${options.from ? `${options.from}` : `node:12`}\nLABEL name="test@gmail.com"\n${
             options.workdir ? `WORKDIR ${options.workdir}\n` : ``
           }RUN "${options.run ? `${options.from}` : `npm install --silent`}"\nADD . /app\nENTRYPOINT ["${
@@ -32,8 +32,7 @@ export class Server {
           function (err) {
             if (err === null) {
               console.log('success');
-              exec('tar cvf project.tar ../project', (err, out, stderr) => {
-                console.log(out);
+              exec('cd ../ && tar cvf project.tar project', (err, out, stderr) => {
                 ws.send('out the "project.tar" file');
               });
             } else {
