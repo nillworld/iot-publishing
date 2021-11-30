@@ -20,6 +20,7 @@ export class Server {
       //메세지 핸들러,클라이언트가 메세지를 보내게되면 여기서 받는다.
       ws.on('message', (message: string) => {
         const options = JSON.parse(message);
+        console.log('check!', options);
         fs.writeFile(
           '../project/Dockerfile',
           `FROM ${options.from ? `${options.from}` : `node:12`}\nLABEL name="test@gmail.com"\n${
