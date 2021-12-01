@@ -18,7 +18,17 @@ function App() {
 
   const templateForms = [
     { template: '-Template-', from: '', workdir: '', run: '', entrypoint: '', cmd: '', env: '', arg: '' },
-    { template: 'Node', from: '1', workdir: '', run: '', entrypoint: '', cmd: '', env: '', arg: '' },
+    {
+      template: 'Node 16',
+      from: 'node:16-alpine3.11',
+      workdir: '/app',
+      run: 'npm install',
+      entrypoint: '',
+      cmd: '[ "node", "server.js" ]',
+      env: '',
+      arg: '',
+    },
+    { template: 'Node 14', from: '1', workdir: '', run: '', entrypoint: '', cmd: '', env: '', arg: '' },
     { template: 'Python', from: '2', workdir: '', run: '', entrypoint: '', cmd: '', env: '', arg: '' },
     { template: 'Jave', from: '3', workdir: '', run: '', entrypoint: '', cmd: '', env: '', arg: '' },
   ];

@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "concurrently \"cd ./back && npm build\" \"cd ./front && npm run build",
+    "build": "concurrently \"cd ./back && npm run build\" \"cd ./front && npm run build",
     "start": "concurrently \"cd ./back && npm run start\" \"cd ./front && npm run start\""
   },
   "dependencies": {
