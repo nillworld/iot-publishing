@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 
-function DockerForm() {
-  const ws = new WebSocket("ws://172.10.12.95:1234/ws"); // 아까 서버에서 1234 port로 했으니 이런식으로
+type Props = {
+  ip: String;
+  port: String;
+};
+
+function DockerForm(props: Props) {
+  const ws = new WebSocket(`ws://${props.ip}:${props.port}/ws`);
 
   const [state, setState] = useState({
     template: "",
@@ -17,7 +22,16 @@ function DockerForm() {
   const [template, setTemplate] = useState("");
 
   const templateForms = [
-    { template: "-Template-", from: "", workdir: "", run: "", entrypoint: "", cmd: "", env: "", arg: "" },
+    {
+      template: "-Template-",
+      from: "",
+      workdir: "",
+      run: "",
+      entrypoint: "",
+      cmd: "",
+      env: "",
+      arg: "",
+    },
     {
       template: "Node 16",
       from: "node:16-alpine3.11",
@@ -28,9 +42,36 @@ function DockerForm() {
       env: "",
       arg: "",
     },
-    { template: "Node 14", from: "1", workdir: "", run: "", entrypoint: "", cmd: "", env: "", arg: "" },
-    { template: "Python", from: "2", workdir: "", run: "", entrypoint: "", cmd: "", env: "", arg: "" },
-    { template: "Jave", from: "3", workdir: "", run: "", entrypoint: "", cmd: "", env: "", arg: "" },
+    {
+      template: "Node 14",
+      from: "1",
+      workdir: "",
+      run: "",
+      entrypoint: "",
+      cmd: "",
+      env: "",
+      arg: "",
+    },
+    {
+      template: "Python",
+      from: "2",
+      workdir: "",
+      run: "",
+      entrypoint: "",
+      cmd: "",
+      env: "",
+      arg: "",
+    },
+    {
+      template: "Jave",
+      from: "3",
+      workdir: "",
+      run: "",
+      entrypoint: "",
+      cmd: "",
+      env: "",
+      arg: "",
+    },
   ];
 
   const setTemplateForm = (e: any) => {
@@ -54,7 +95,16 @@ function DockerForm() {
   };
 
   const clearValue = () => {
-    setState({ template: "", from: "", workdir: "", run: "", entrypoint: "", cmd: "", env: "", arg: "" });
+    setState({
+      template: "",
+      from: "",
+      workdir: "",
+      run: "",
+      entrypoint: "",
+      cmd: "",
+      env: "",
+      arg: "",
+    });
   };
   return (
     <div className="App">
@@ -64,19 +114,57 @@ function DockerForm() {
             {templateForms.map((templateForm) => {
               // console.log(templateForm);
               return (
-                <option value={JSON.stringify(templateForm)} key={templateForm.template}>
+                <option
+                  value={JSON.stringify(templateForm)}
+                  key={templateForm.template}
+                >
                   {templateForm.template}
                 </option>
               );
             })}
           </select>
-          <input placeholder="from 입력~" name={"from"} value={state.from} onChange={valueOnChange} />
-          <input placeholder="workdir 입력~" name={"workdir"} value={state.workdir} onChange={valueOnChange} />
-          <input placeholder="run 입력~" name={"run"} value={state.run} onChange={valueOnChange} />
-          <input placeholder="entry point 입력~" name={"entrypoint"} value={state.entrypoint} onChange={valueOnChange} />
-          <input placeholder="cmd 입력~" name={"cmd"} value={state.cmd} onChange={valueOnChange} />
-          <input placeholder="env 입력~" name={"env"} value={state.env} onChange={valueOnChange} />
-          <input placeholder="arg 입력~" name={"arg"} value={state.arg} onChange={valueOnChange} />
+          <input
+            placeholder="from 입력~"
+            name={"from"}
+            value={state.from}
+            onChange={valueOnChange}
+          />
+          <input
+            placeholder="workdir 입력~"
+            name={"workdir"}
+            value={state.workdir}
+            onChange={valueOnChange}
+          />
+          <input
+            placeholder="run 입력~"
+            name={"run"}
+            value={state.run}
+            onChange={valueOnChange}
+          />
+          <input
+            placeholder="entry point 입력~"
+            name={"entrypoint"}
+            value={state.entrypoint}
+            onChange={valueOnChange}
+          />
+          <input
+            placeholder="cmd 입력~"
+            name={"cmd"}
+            value={state.cmd}
+            onChange={valueOnChange}
+          />
+          <input
+            placeholder="env 입력~"
+            name={"env"}
+            value={state.env}
+            onChange={valueOnChange}
+          />
+          <input
+            placeholder="arg 입력~"
+            name={"arg"}
+            value={state.arg}
+            onChange={valueOnChange}
+          />
           <div>
             <button onClick={sendMessage}>메세지 보내기</button>
             <button onClick={clearValue}>초기화</button>

@@ -1,5 +1,12 @@
-import React, { useState } from "react";
-function WebsocketConnecter(props: any) {
+import React, { Dispatch, SetStateAction, useState } from "react";
+type Props = {
+  ip: String;
+  port: String;
+  setIP: Dispatch<SetStateAction<string>>;
+  setPort: (value: string | ((prevValue: string) => string)) => void;
+  setWsOpenCheck: (value: boolean | ((prevValue: boolean) => boolean)) => void;
+};
+function WebsocketConnecter(props: Props) {
   const [webSocketState, setWebSocketState] = useState("");
   const [ipRegExpCheck, setIpRegExpCheck] = useState("IP를 입력하세요.");
   const [portRegExpCheck, setPortRegExpCheck] = useState("PORT를 입력하세요");
@@ -7,8 +14,9 @@ function WebsocketConnecter(props: any) {
   const [portCheck, setPortCheck] = useState(true);
 
   const getIP = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const re = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
-    if (re.test(e.target.value) !== false) {
+    const re =
+      /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
+    if (re.test(e.target.value) !== false || "localhost" === e.target.value) {
       setIpRegExpCheck("");
       props.setIP(e.target.value);
       setIpCheck(false);
@@ -38,7 +46,8 @@ function WebsocketConnecter(props: any) {
       return;
     }
     setWebSocketState("연결중..");
-    const ws = new WebSocket("ws://192.168.0.11:1234/ws");
+
+    const ws = new WebSocket(`ws://${props.ip}:${props.port}/ws`);
 
     console.log("계속 열려 있는 건가?");
     ws.onclose = () => {
@@ -48,7 +57,7 @@ function WebsocketConnecter(props: any) {
     ws.onopen = () => {
       console.log("열려 버렸다 이기야~");
       setWebSocketState("열림!");
-      setTimeout(props.setWsOpenCheck(true), 1000);
+      props.setWsOpenCheck(true);
     };
     // ws.onmessage = (evt: MessageEvent) => {
     //   console.log(evt);
@@ -63,7 +72,12 @@ function WebsocketConnecter(props: any) {
       </div>
       <div>
         PORT:
-        <input placeholder="ex) 4500" type="number" name="test" onChange={getPort} />
+        <input
+          placeholder="ex) 4500"
+          type="number"
+          name="test"
+          onChange={getPort}
+        />
       </div>
       <button onClick={connectServer} disabled={ipCheck || portCheck}>
         연결
