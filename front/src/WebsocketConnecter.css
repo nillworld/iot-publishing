@@ -1,0 +1,21 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+}
+.form-box {
+  display: flex;
+  flex-direction: column;
+  width: 80vw;
+  max-width: 400px;
+}
+.form .input-div {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+.check-comment {
+  align-self: flex-end;
+}

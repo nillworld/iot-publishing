@@ -11,15 +11,8 @@ function App() {
       {wsOpenCheck ? (
         <DockerForm ip={ip} port={port} />
       ) : (
-        <WebsocketConnecter
-          setIP={setIP}
-          ip={ip}
-          setPort={setPort}
-          port={port}
-          setWsOpenCheck={setWsOpenCheck}
-        />
+        <WebsocketConnecter setIP={setIP} ip={ip} setPort={setPort} port={port} setWsOpenCheck={setWsOpenCheck} />
       )}
-      IP: {ip}:{port}
     </div>
   );
 }

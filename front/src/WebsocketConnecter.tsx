@@ -1,4 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
+import "./WebsocketConnecter.css";
 type Props = {
   ip: String;
   port: String;
@@ -9,7 +10,7 @@ type Props = {
 function WebsocketConnecter(props: Props) {
   const [webSocketState, setWebSocketState] = useState("");
   const [ipRegExpCheck, setIpRegExpCheck] = useState("IP를 입력하세요.");
-  const [portRegExpCheck, setPortRegExpCheck] = useState("PORT를 입력하세요");
+  const [portRegExpCheck, setPortRegExpCheck] = useState("PORT를 입력하세요.");
   const [ipCheck, setIpCheck] = useState(true);
   const [portCheck, setPortCheck] = useState(true);
 
@@ -21,7 +22,7 @@ function WebsocketConnecter(props: Props) {
       props.setIP(e.target.value);
       setIpCheck(false);
     } else {
-      setIpRegExpCheck("IP 형식 제대로 입력하세요.");
+      setIpRegExpCheck("옳바른 IP 형식으로 입력하세요.");
       props.setIP("");
       setIpCheck(true);
     }
@@ -34,7 +35,7 @@ function WebsocketConnecter(props: Props) {
       props.setPort(e.target.value);
       setPortCheck(false);
     } else {
-      setPortRegExpCheck("PORT 형식 제대로 입력하세요.");
+      setPortRegExpCheck("옳바른 PORT 형식으로 입력하세요.");
       props.setPort("");
       setPortCheck(true);
     }
@@ -65,26 +66,23 @@ function WebsocketConnecter(props: Props) {
     // };
   };
   return (
-    <div>
-      <div>
-        서버IP:
-        <input placeholder="ex) 192.168.0.5" name="test" onChange={getIP} />
+    <div className="form">
+      <div className="form-box">
+        <div className="input-div">
+          서버IP:
+          <input placeholder="ex) 192.168.0.5" name="test" onChange={getIP} />
+        </div>
+        <div className="input-div">
+          PORT:
+          <input placeholder="ex) 4500" type="number" name="test" onChange={getPort} />
+        </div>
+        <button onClick={connectServer} disabled={ipCheck || portCheck}>
+          연결
+        </button>
+        <div className="check-comment">{ipRegExpCheck}</div>
+        <div className="check-comment">{portRegExpCheck}</div>
+        <div className="check-comment">{webSocketState}</div>
       </div>
-      <div>
-        PORT:
-        <input
-          placeholder="ex) 4500"
-          type="number"
-          name="test"
-          onChange={getPort}
-        />
-      </div>
-      <button onClick={connectServer} disabled={ipCheck || portCheck}>
-        연결
-      </button>
-      <div>{ipRegExpCheck}</div>
-      <div>{portRegExpCheck}</div>
-      <div>{webSocketState}</div>
     </div>
   );
 }
