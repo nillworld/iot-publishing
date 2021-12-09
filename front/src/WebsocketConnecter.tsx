@@ -41,6 +41,12 @@ function WebsocketConnecter(props: Props) {
     }
   };
 
+  const enterKeypress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !(ipCheck || portCheck)) {
+      connectServer();
+    }
+  };
+
   const connectServer = () => {
     if (ipCheck || portCheck) {
       console.log("잘못된 접근입니다.");
@@ -70,13 +76,13 @@ function WebsocketConnecter(props: Props) {
       <div className="form-box">
         <div className="input-div">
           서버IP:
-          <input placeholder="ex) 192.168.0.5" name="test" onChange={getIP} />
+          <input placeholder="ex) 192.168.0.5" name="test" onChange={getIP} onKeyPress={enterKeypress} />
         </div>
         <div className="input-div">
           PORT:
-          <input placeholder="ex) 4500" type="number" name="test" onChange={getPort} />
+          <input placeholder="ex) 4500" type="number" name="test" onChange={getPort} onKeyPress={enterKeypress} />
         </div>
-        <button onClick={connectServer} disabled={ipCheck || portCheck}>
+        <button type="submit" onClick={connectServer} disabled={ipCheck || portCheck}>
           연결
         </button>
         <div className="check-comment">{ipRegExpCheck}</div>
