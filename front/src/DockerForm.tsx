@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 
 type Props = {
-  ip: String;
-  port: String;
+  ws: WebSocket | undefined;
 };
 
 function DockerForm(props: Props) {
-  const ws = new WebSocket(`ws://${props.ip}:${props.port}/ws`);
+  const ws = props.ws;
 
   const [state, setState] = useState({
     template: "",
@@ -19,7 +18,6 @@ function DockerForm(props: Props) {
     env: "",
     arg: "",
   });
-  const [template, setTemplate] = useState("");
 
   const templateForms = [
     {
@@ -75,9 +73,6 @@ function DockerForm(props: Props) {
   ];
 
   const setTemplateForm = (e: any) => {
-    // const { name, value } = templateForms[0];
-    // setState({ ...state, [name]: value });
-    // console.log(e.target.value);
     setState(JSON.parse(e.target.value));
   };
 
@@ -87,11 +82,13 @@ function DockerForm(props: Props) {
   };
 
   const sendMessage = () => {
-    ws.send(JSON.stringify(state));
-    ws.onmessage = (evt: MessageEvent) => {
-      console.log(evt);
-      console.log(evt.data);
-    };
+    if (ws) {
+      ws.send(JSON.stringify(state));
+      ws.onmessage = (evt: MessageEvent) => {
+        console.log(evt);
+        console.log(evt.data);
+      };
+    }
   };
 
   const clearValue = () => {
@@ -112,59 +109,25 @@ function DockerForm(props: Props) {
         <div className="form-div">
           <select onChange={setTemplateForm}>
             {templateForms.map((templateForm) => {
-              // console.log(templateForm);
               return (
-                <option
-                  value={JSON.stringify(templateForm)}
-                  key={templateForm.template}
-                >
+                <option value={JSON.stringify(templateForm)} key={templateForm.template}>
                   {templateForm.template}
                 </option>
               );
             })}
           </select>
-          <input
-            placeholder="from 입력~"
-            name={"from"}
-            value={state.from}
-            onChange={valueOnChange}
-          />
-          <input
-            placeholder="workdir 입력~"
-            name={"workdir"}
-            value={state.workdir}
-            onChange={valueOnChange}
-          />
-          <input
-            placeholder="run 입력~"
-            name={"run"}
-            value={state.run}
-            onChange={valueOnChange}
-          />
+          <input placeholder="from 입력~" name={"from"} value={state.from} onChange={valueOnChange} />
+          <input placeholder="workdir 입력~" name={"workdir"} value={state.workdir} onChange={valueOnChange} />
+          <input placeholder="run 입력~" name={"run"} value={state.run} onChange={valueOnChange} />
           <input
             placeholder="entry point 입력~"
             name={"entrypoint"}
             value={state.entrypoint}
             onChange={valueOnChange}
           />
-          <input
-            placeholder="cmd 입력~"
-            name={"cmd"}
-            value={state.cmd}
-            onChange={valueOnChange}
-          />
-          <input
-            placeholder="env 입력~"
-            name={"env"}
-            value={state.env}
-            onChange={valueOnChange}
-          />
-          <input
-            placeholder="arg 입력~"
-            name={"arg"}
-            value={state.arg}
-            onChange={valueOnChange}
-          />
+          <input placeholder="cmd 입력~" name={"cmd"} value={state.cmd} onChange={valueOnChange} />
+          <input placeholder="env 입력~" name={"env"} value={state.env} onChange={valueOnChange} />
+          <input placeholder="arg 입력~" name={"arg"} value={state.arg} onChange={valueOnChange} />
           <div>
             <button onClick={sendMessage}>메세지 보내기</button>
             <button onClick={clearValue}>초기화</button>
