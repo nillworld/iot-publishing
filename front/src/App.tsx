@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import DockerForm from "./DockerForm";
 import WebsocketConnecter from "./WebsocketConnecter";
 function App() {
-  // const [ip, setIP] = useState("");
-  // const [port, setPort] = useState("");
   const [wsOpenCheck, setWsOpenCheck] = useState(false);
   const [ws, setWs] = useState<WebSocket>();
   useEffect(() => {
