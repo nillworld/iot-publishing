@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="file" id="fileInput" />
+    <button id="fileUpload">file upload</button>
+  </body>
+  <script>
+    const fileInput = document.querySelector("#fileInput");
+    const uploadBt = document.querySelector("#fileUpload");
+    const test = () => {
+      const file = fileInput.files[0];
+      const fileName = file.name;
+      const fileSize = file.size;
+      const bufferSize = 1024;
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(file);
+      let rawData = new ArrayBuffer();
+      let pos = 0;
+
+      const ws = new WebSocket("ws://localhost:1234");
+
+      ws.onopen = () => {
+        ws.send("START");
+      };
+      ws.onmessage = (message) => {
+        console.log(message.data);
+        ws.send(message.data);
+
+        if (message.data === "FILENAME") {
+          ws.send(fileName);
+        } else if (message.data === "FILESIZE") {
+          ws.send(fileSize);
+        } else if (message.data === "DATA") {
+          ws.send(file.slice(pos, pos + bufferSize));
+          pos = pos + bufferSize;
+          if (pos > fileSize) {
+            pos = fileSize;
+          }
+        }
+      };
+
+      ws.onclose = () => {
+        console.log("disconnected");
+      };
+    };
+    uploadBt.addEventListener("click", test);
+  </script>
+</html>
