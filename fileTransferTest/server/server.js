@@ -23,19 +23,44 @@ class Sever {
         // Process other business...
       }); */
       let fileName = "test.txt";
-      //메세지 핸들러,클라이언트가 메세지를 보내게되면 여기서 받는다.
-      ws.on("message", (message) => {
-        console.log("received: %s", message);
-        // ws.send("FILENAME");
-        if (message.toString() === "START") {
-          ws.send("DATA");
-        } else if (message.toString() === "DATA") {
-          fs.writeFileSync(`./${fileName}`, message);
-        }
+      let controller = "START";
 
-        // ws.send("Good, Nice to meet you, Iam server");
-      });
+      if (controller === "START") {
+        ws.on("message", (message) => {
+          ws.send("FILENAME");
+          // console.log(controller);
+          controller = "FILENAME";
+        });
+      }
+      if (controller == "FILENAME") {
+        ws.on("message", (message) => {
+          fileName = message;
+          console.log(controller);
+          ws.send("DATA");
+          controller = "DATA";
+        });
+      }
+      if (controller === "DATA") {
+        ws.on("message", (message) => {
+          fs.writeFileSync(`./${fileName}`, message);
+        });
+      }
+
+      // //메세지 핸들러,클라이언트가 메세지를 보내게되면 여기서 받는다.
+      // ws.on("message", (message) => {
+      //   console.log("received: %s", message);
+      //   // ws.send("FILENAME");
+      //   if (message.toString() === "START") {
+      //     ws.send("DATA");
+      //   } else {
+      //     /* if (message.toString() === "DATA") */
+      //     fs.writeFileSync(`./${fileName}`, message);
+      //   }
+
+      //   // ws.send("Good, Nice to meet you, Iam server");
+      // });
     });
+
     this.wss.on("close", function (error) {
       console.log("websever close", error);
     });

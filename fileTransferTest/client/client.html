@@ -29,10 +29,10 @@
         ws.send("START");
       };
       ws.onmessage = (message) => {
-        console.log(message.data);
         ws.send(message.data);
 
         if (message.data === "FILENAME") {
+          console.log("check", message.data);
           ws.send(fileName);
         } else if (message.data === "FILESIZE") {
           ws.send(fileSize);
