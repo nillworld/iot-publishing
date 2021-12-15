@@ -5,14 +5,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+		<style>
+			#progressBar{
+				width: 70vw;
+				height: 30px;
+				background-color: white;
+				border: 1px solid black;
+				margin: 50px;
+			}
+			#progressBar-ing{
+				width: 10%;
+				height: 100%;
+				background-color: black;
+			}
+		</style>
   </head>
   <body>
     <input type="file" id="fileInput" />
     <button id="fileUpload">file upload</button>
+		<div id="progressBar">
+			<div id="progressBar-ing"></div>
+		<div>
   </body>
   <script>
     const fileInput = document.querySelector("#fileInput");
     const uploadBt = document.querySelector("#fileUpload");
+		const progressBar = document.querySelector('#progressBar-ing');
+		const progressBarWidth = progressBar.style.width;
     const test = () => {
       const file = fileInput.files[0];
       const fileName = file.name;
@@ -32,19 +51,21 @@
         ws.send(message.data);
 
         if (message.data === "FILENAME") {
-          // console.log(file.name);
           ws.send(file.name);
         } else if (message.data === "FILESIZE") {
           ws.send(fileSize);
         } else if (message.data === "DATA") {
-          ws.send(file);
-          // while (pos != fileSize) {
-          //   ws.send(file.slice(pos, pos + bufferSize));
-          //   pos = pos + bufferSize;
-          //   if (pos > fileSize) {
-          //     pos = fileSize;
-          //   }
-          // }
+          // ws.send(file);
+          while (pos != fileSize) {
+            ws.send(file.slice(pos, pos + bufferSize));
+            pos = pos + bufferSize;
+            if (pos > fileSize) {
+              pos = fileSize;
+            }
+						progressBarWidth = `${pos/fileSize*100}%`;
+						console.log(progressBar.style.width);
+          }
+          ws.send("DONE");
         }
       };
 

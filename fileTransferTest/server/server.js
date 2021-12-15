@@ -45,8 +45,10 @@ class Sever {
             ws.send("DATA");
             handler = "data";
           }
-        } else if (handler === "data" && message.toString() !== "DATA") {
+        } else if (handler === "data" && message.toString() !== "DATA" && message.toString() !== "DONE") {
           fs.appendFileSync(`./${fileName}`, message);
+          // handler = "check";
+        } else if (message.toString() === "DONE") {
           handler = "check";
         }
       });
