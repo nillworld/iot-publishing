@@ -33,15 +33,19 @@
         ws.send(message.data);
 
         if (message.data === "FILENAME") {
-          ws.send(fileName);
+          // console.log(file.name);
+          ws.send(file.name);
         } else if (message.data === "FILESIZE") {
           ws.send(fileSize);
         } else if (message.data === "DATA") {
-          ws.send(file.slice(pos, pos + bufferSize));
-          pos = pos + bufferSize;
-          if (pos > fileSize) {
-            pos = fileSize;
-          }
+          ws.send(file);
+          // while (pos != fileSize) {
+          //   ws.send(file.slice(pos, pos + bufferSize));
+          //   pos = pos + bufferSize;
+          //   if (pos > fileSize) {
+          //     pos = fileSize;
+          //   }
+          // }
         }
       };
 

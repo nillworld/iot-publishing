@@ -9,31 +9,52 @@ class Sever {
     this.wss = new WebSocketS({ port: port });
     console.log("WebSocket Initialized", port);
 
-    //웹소켓 연결 핸들러, 연결이 되면 진행됨!
     this.wss.on("connection", (ws) => {
       this.clients.push(ws);
       console.log("Connected total:", this.clients.length);
 
-      /* ws.on("send_message", async (data: any, cb: any) => {
-        if (data.type == "attachment") {
-          console.log("Found binary data");
-          cb("Received file successfully.");
-          return;
-        }
-        // Process other business...
-      }); */
       let fileName = "test.txt";
-      //메세지 핸들러,클라이언트가 메세지를 보내게되면 여기서 받는다.
-      ws.on("message", (message) => {
-        console.log("received: %s", message);
-        // ws.send("FILENAME");
-        if (message.toString() === "START") {
-          ws.send("DATA");
-        } else if (message.toString() === "DATA") {
-          fs.writeFileSync(`./${fileName}`, message);
-        }
+      let handler = "start";
+      let counter = 0;
 
-        // ws.send("Good, Nice to meet you, Iam server");
+      ws.on("message", (message) => {
+        counter += 1;
+        console.log(counter);
+
+        if (handler === "start") {
+          ws.send("FILENAME");
+          handler = "filename";
+        } else if (handler === "filename") {
+          fileName = message.toString();
+          console.log("dkjfkldsaajflds", fileName);
+          console.log("filename223232", fileName);
+          ws.send("DATA");
+          if (fileName !== "FILENAME") {
+            handler = "data";
+          }
+        } else if (handler === "data" && message.toString() !== "DATA") {
+          //
+          // 파일명 유효성 첵크랑 파일 다운로드랑 분리 필요/
+          //
+
+          fs.readdir("./", (err, fileList) => {
+            const pointIndex = fileName.lastIndexOf(".");
+            let counter = 0;
+
+            if (pointIndex !== -1) {
+              const fileExtension = fileName.slice(pointIndex);
+              const onlyFileName = fileName.replace(fileExtension, "");
+
+              const checkFileName = (name) => name === fileName;
+              while (fileList.find(checkFileName)) {
+                counter += 1;
+                fileName = onlyFileName + "(" + counter.toString() + ")" + fileExtension;
+              }
+              fs.appendFileSync(`./${fileName}`, message);
+            }
+          });
+          handler = "check";
+        }
       });
     });
     this.wss.on("close", function (error) {
