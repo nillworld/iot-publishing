@@ -29,7 +29,6 @@
         ws.send("START");
       };
       ws.onmessage = (message) => {
-        console.log(message.data);
         ws.send(message.data);
 
         if (message.data === "FILENAME") {

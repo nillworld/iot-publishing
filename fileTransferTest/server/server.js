@@ -57,6 +57,7 @@ class Sever {
         }
       });
     });
+
     this.wss.on("close", function (error) {
       console.log("websever close", error);
     });
