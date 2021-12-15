@@ -26,33 +26,27 @@ class Sever {
           handler = "filename";
         } else if (handler === "filename") {
           fileName = message.toString();
-          console.log("dkjfkldsaajflds", fileName);
-          console.log("filename223232", fileName);
-          ws.send("DATA");
           if (fileName !== "FILENAME") {
+            fs.readdir("./", (err, fileList) => {
+              const pointIndex = fileName.lastIndexOf(".");
+              let counter = 0;
+
+              if (pointIndex !== -1) {
+                const fileExtension = fileName.slice(pointIndex);
+                const onlyFileName = fileName.replace(fileExtension, "");
+
+                const checkFileName = (name) => name === fileName;
+                while (fileList.find(checkFileName)) {
+                  counter += 1;
+                  fileName = onlyFileName + "(" + counter.toString() + ")" + fileExtension;
+                }
+              }
+            });
+            ws.send("DATA");
             handler = "data";
           }
         } else if (handler === "data" && message.toString() !== "DATA") {
-          //
-          // 파일명 유효성 첵크랑 파일 다운로드랑 분리 필요/
-          //
-
-          fs.readdir("./", (err, fileList) => {
-            const pointIndex = fileName.lastIndexOf(".");
-            let counter = 0;
-
-            if (pointIndex !== -1) {
-              const fileExtension = fileName.slice(pointIndex);
-              const onlyFileName = fileName.replace(fileExtension, "");
-
-              const checkFileName = (name) => name === fileName;
-              while (fileList.find(checkFileName)) {
-                counter += 1;
-                fileName = onlyFileName + "(" + counter.toString() + ")" + fileExtension;
-              }
-              fs.appendFileSync(`./${fileName}`, message);
-            }
-          });
+          fs.appendFileSync(`./${fileName}`, message);
           handler = "check";
         }
       });
