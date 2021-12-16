@@ -18,38 +18,38 @@ class Sever {
       let counter = 0;
 
       ws.on("message", (message) => {
-        counter += 1;
-        console.log(counter);
-
-        if (handler === "start") {
+        // counter += 1;
+        // console.log(counter);
+        console.log(message.toString());
+        if (message.toString() === "START") {
           ws.send("FILENAME");
-          handler = "filename";
-        } else if (handler === "filename") {
+          handler = "fileName";
+        } else if (handler === "fileName") {
           fileName = message.toString();
-          if (fileName !== "FILENAME") {
-            fs.readdir("./", (err, fileList) => {
-              const pointIndex = fileName.lastIndexOf(".");
-              let counter = 0;
+          fs.readdir("./", (err, fileList) => {
+            const pointIndex = fileName.lastIndexOf(".");
+            let counter = 0;
 
-              if (pointIndex !== -1) {
-                const fileExtension = fileName.slice(pointIndex);
-                const onlyFileName = fileName.replace(fileExtension, "");
+            if (pointIndex !== -1) {
+              const fileExtension = fileName.slice(pointIndex);
+              const onlyFileName = fileName.replace(fileExtension, "");
 
-                const checkFileName = (name) => name === fileName;
-                while (fileList.find(checkFileName)) {
-                  counter += 1;
-                  fileName = onlyFileName + "(" + counter.toString() + ")" + fileExtension;
-                }
+              const checkFileName = (name) => name === fileName;
+              while (fileList.find(checkFileName)) {
+                counter += 1;
+                fileName = onlyFileName + "(" + counter.toString() + ")" + fileExtension;
               }
-            });
-            ws.send("DATA");
-            handler = "data";
-          }
-        } else if (handler === "data" && message.toString() !== "DATA" && message.toString() !== "DONE") {
+            }
+          });
+          ws.send("DATA");
+          handler = "data";
+          console.log("fileName", fileName);
+        } else if (handler === "data" && message.toString() !== "DONE") {
+          console.log(message.length);
           fs.appendFileSync(`./${fileName}`, message);
+          // ws.send()
           // handler = "check";
         } else if (message.toString() === "DONE") {
-          handler = "check";
         }
       });
     });

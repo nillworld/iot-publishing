@@ -14,7 +14,7 @@
 				margin: 50px;
 			}
 			#progressBar-ing{
-				width: 10%;
+				width: 1%;
 				height: 100%;
 				background-color: black;
 			}
@@ -31,7 +31,7 @@
     const fileInput = document.querySelector("#fileInput");
     const uploadBt = document.querySelector("#fileUpload");
 		const progressBar = document.querySelector('#progressBar-ing');
-		const progressBarWidth = progressBar.style.width;
+		let progressBarWidth = 0
     const test = () => {
       const file = fileInput.files[0];
       const fileName = file.name;
@@ -41,18 +41,22 @@
       reader.readAsArrayBuffer(file);
       let rawData = new ArrayBuffer();
       let pos = 0;
-
       const ws = new WebSocket("ws://localhost:1234");
-
+			// send 합치기
+			let fileHeader = {
+				fileName : fileName, fileSize : fileSize
+			}
+			
       ws.onopen = () => {
+
         ws.send("START");
       };
       ws.onmessage = (message) => {
-        ws.send(message.data);
-
-        if (message.data === "FILENAME") {
+        if (message.data === "FILENAME") 
+				{
           ws.send(file.name);
-        } else if (message.data === "FILESIZE") {
+        } 
+				else if (message.data === "FILESIZE") {
           ws.send(fileSize);
         } else if (message.data === "DATA") {
           // ws.send(file);
@@ -62,17 +66,25 @@
             if (pos > fileSize) {
               pos = fileSize;
             }
-						progressBarWidth = `${pos/fileSize*100}%`;
+						progressBarWidth = pos/fileSize*100;
 						console.log(progressBar.style.width);
+						// widow.setInterval(setWidth, 500)
           }
           ws.send("DONE");
+					ws.close();
         }
       };
 
       ws.onclose = () => {
         console.log("disconnected");
       };
+			
     };
+		function setWidth(){
+			progressBar.style.width = `${progressBarWidth}%`
+		};
     uploadBt.addEventListener("click", test);
+		// progressBar.addEventListener("change",setWidth);
+
   </script>
 </html>
