@@ -14,21 +14,33 @@ class Sever {
       console.log("Connected total:", this.clients.length);
 
       let fileName = "test.txt";
+      let fileSize = 0;
       let handler = "start";
+      let downloadedFileSize = 0;
+      let downloadedPercent = "";
       let counter = 0;
+
+      let sandMessage = {
+        sendChecker: "start",
+        downloadedPercent: "",
+      };
 
       ws.on("message", (message) => {
         // counter += 1;
         // console.log(counter);
-        console.log(message.toString());
+        // console.log(message.toString());
         if (message.toString() === "START") {
-          ws.send("FILENAME");
+          // sandMessage.sendChecker = "FILENAME";
+          ws.send(JSON.stringify(sandMessage));
           handler = "fileName";
         } else if (handler === "fileName") {
-          fileName = message.toString();
+          let JsonMessage = JSON.parse(message);
+          fileName = JsonMessage.fileName;
+          fileSize = JsonMessage.fileSize;
+          console.log("??", fileName);
           fs.readdir("./", (err, fileList) => {
             const pointIndex = fileName.lastIndexOf(".");
-            let counter = 0;
+            let fileCounter = 0;
 
             if (pointIndex !== -1) {
               const fileExtension = fileName.slice(pointIndex);
@@ -36,18 +48,25 @@ class Sever {
 
               const checkFileName = (name) => name === fileName;
               while (fileList.find(checkFileName)) {
-                counter += 1;
-                fileName = onlyFileName + "(" + counter.toString() + ")" + fileExtension;
+                fileCounter += 1;
+                fileName = onlyFileName + "(" + fileCounter.toString() + ")" + fileExtension;
               }
             }
           });
+          // sandMessage.sendChecker = "DATA";
           ws.send("DATA");
           handler = "data";
           console.log("fileName", fileName);
         } else if (handler === "data" && message.toString() !== "DONE") {
-          console.log(message.length);
+          // console.log(message.length);
+          downloadedFileSize += message.length;
+          downloadedPercent = `${parseInt((downloadedFileSize / fileSize) * 100)}%`;
+          console.log(downloadedPercent);
+          // send(downloadedPercent);
+
           fs.appendFileSync(`./${fileName}`, message);
-          // ws.send()
+          // sandMessage.downloadedPercent = downloadedPercent;
+          // ws.send(sandMessage);
           // handler = "check";
         } else if (message.toString() === "DONE") {
         }

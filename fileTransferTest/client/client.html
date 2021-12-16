@@ -43,21 +43,18 @@
       let pos = 0;
       const ws = new WebSocket("ws://localhost:1234");
 			// send 합치기
-			let fileHeader = {
+			let fileInfo = {
 				fileName : fileName, fileSize : fileSize
 			}
-			
       ws.onopen = () => {
-
         ws.send("START");
       };
       ws.onmessage = (message) => {
-        if (message.data === "FILENAME") 
-				{
-          ws.send(file.name);
-        } 
-				else if (message.data === "FILESIZE") {
-          ws.send(fileSize);
+				console.log(message.data);
+				console.log(me)
+        if (message.data === "FILENAME") { 
+					ws.send(JSON.stringify(fileInfo));
+					console.log(fileInfo)
         } else if (message.data === "DATA") {
           // ws.send(file);
           while (pos != fileSize) {
