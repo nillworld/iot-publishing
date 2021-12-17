@@ -50,8 +50,7 @@
         ws.send("START");
       };
       ws.onmessage = (message) => {
-				console.log(message.data);
-				console.log(me)
+				console.log(JSON.parse(message.data).sendChecker)
         if (message.data === "FILENAME") { 
 					ws.send(JSON.stringify(fileInfo));
 					console.log(fileInfo)
