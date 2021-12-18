@@ -21,7 +21,7 @@ class Sever {
       let counter = 0;
 
       let sandMessage = {
-        sendChecker: "start",
+        sendChecker: "START",
         downloadedPercent: "",
       };
 
@@ -30,7 +30,7 @@ class Sever {
         // console.log(counter);
         // console.log(message.toString());
         if (message.toString() === "START") {
-          // sandMessage.sendChecker = "FILENAME";
+          sandMessage.sendChecker = "FILENAME";
           ws.send(JSON.stringify(sandMessage));
           handler = "fileName";
         } else if (handler === "fileName") {
@@ -53,20 +53,18 @@ class Sever {
               }
             }
           });
-          // sandMessage.sendChecker = "DATA";
-          ws.send("DATA");
+          sandMessage.sendChecker = "DATA";
+          ws.send(JSON.stringify(sandMessage));
           handler = "data";
           console.log("fileName", fileName);
         } else if (handler === "data" && message.toString() !== "DONE") {
-          // console.log(message.length);
           downloadedFileSize += message.length;
           downloadedPercent = `${parseInt((downloadedFileSize / fileSize) * 100)}%`;
-          console.log(downloadedPercent);
-          // send(downloadedPercent);
 
           fs.appendFileSync(`./${fileName}`, message);
-          // sandMessage.downloadedPercent = downloadedPercent;
-          // ws.send(sandMessage);
+          sandMessage.downloadedPercent = downloadedPercent;
+          sandMessage.sendChecker = "DOWNLOADING";
+          ws.send(JSON.stringify(sandMessage));
           // handler = "check";
         } else if (message.toString() === "DONE") {
         }

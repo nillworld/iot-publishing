@@ -50,11 +50,12 @@
         ws.send("START");
       };
       ws.onmessage = (message) => {
-				console.log(JSON.parse(message.data).sendChecker)
-        if (message.data === "FILENAME") { 
+        let sendChecker = JSON.parse(message.data).sendChecker
+        let downloadedPercent = JSON.parse(message.data).downloadedPercent
+        if (sendChecker === "FILENAME") { 
 					ws.send(JSON.stringify(fileInfo));
 					console.log(fileInfo)
-        } else if (message.data === "DATA") {
+        } else if (sendChecker === "DATA") {
           // ws.send(file);
           while (pos != fileSize) {
             ws.send(file.slice(pos, pos + bufferSize));
@@ -62,12 +63,15 @@
             if (pos > fileSize) {
               pos = fileSize;
             }
-						progressBarWidth = pos/fileSize*100;
-						console.log(progressBar.style.width);
+						//progressBarWidth = pos/fileSize*100;
+						//console.log(progressBar.style.width);
 						// widow.setInterval(setWidth, 500)
           }
           ws.send("DONE");
-					ws.close();
+					
+          //ws.close();
+        } else if (sendChecker ==="DOWNLOADING"){
+          progressBar.style.width = downloadedPercent
         }
       };
 
