@@ -8,6 +8,7 @@
 		<style>
 			#progressBar{
 				width: 70vw;
+        max-width: 500px;
 				height: 30px;
 				background-color: white;
 				border: 1px solid black;
@@ -42,7 +43,7 @@
       let rawData = new ArrayBuffer();
       let pos = 0;
       const ws = new WebSocket("ws://localhost:1234");
-			// send 합치기
+			// message ping pong을 위한 json 구체화 - 파일 전송 
 			let fileInfo = {
 				fileName : fileName, fileSize : fileSize
 			}
