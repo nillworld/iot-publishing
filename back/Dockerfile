@@ -1,7 +1,0 @@
-FROM node:12
-LABEL name="test@gmail.com"
-WORKDIR 555
-RUN "npm install --silent"
-ADD . /app
-ENTRYPOINT ["node"]
-CMD ["55"]
