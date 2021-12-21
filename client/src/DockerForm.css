@@ -1,0 +1,14 @@
+.filebtn-div {
+  margin: 20px;
+}
+.filebtn {
+  cursor: pointer;
+  border: 1px white solid;
+  border-radius: 5px;
+  font-size: 15px;
+  padding: 10px;
+  top: 10px;
+}
+.filebtn input[type="file"] {
+  display: none;
+}

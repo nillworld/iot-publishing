@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
+import "./DockerForm.css";
 
 type Props = {
   ws: WebSocket | undefined;
@@ -72,6 +73,8 @@ function DockerForm(props: Props) {
     },
   ];
 
+  const [selectedFile, setSelectedFile] = useState<File>();
+
   const setTemplateForm = (e: any) => {
     // const { name, value } = templateForms[0];
     // setState({ ...state, [name]: value });
@@ -84,7 +87,16 @@ function DockerForm(props: Props) {
     setState({ ...state, [name]: value });
   };
 
+  const onChangeFile = (e: any) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
   const sendMessage = () => {
+    const reader = new FileReader();
+    if (selectedFile) {
+      reader.readAsArrayBuffer(selectedFile);
+      console.log(selectedFile.name);
+    }
     if (ws) {
       ws.send(JSON.stringify(state));
       // ws.send(file);
@@ -124,19 +136,20 @@ function DockerForm(props: Props) {
           <input placeholder="from 입력~" name={"from"} value={state.from} onChange={valueOnChange} />
           <input placeholder="workdir 입력~" name={"workdir"} value={state.workdir} onChange={valueOnChange} />
           <input placeholder="run 입력~" name={"run"} value={state.run} onChange={valueOnChange} />
-          <input
-            placeholder="entry point 입력~"
-            name={"entrypoint"}
-            value={state.entrypoint}
-            onChange={valueOnChange}
-          />
+          <input placeholder="entry point 입력~" name={"entrypoint"} value={state.entrypoint} onChange={valueOnChange} />
           <input placeholder="cmd 입력~" name={"cmd"} value={state.cmd} onChange={valueOnChange} />
           <input placeholder="env 입력~" name={"env"} value={state.env} onChange={valueOnChange} />
           <input placeholder="arg 입력~" name={"arg"} value={state.arg} onChange={valueOnChange} />
-          {/* <input placeholder="arg 입력~" type="file" name={"file"} onChange={handleFileChange} /> */}
+          <div className="filebtn-div">
+            <label className="filebtn">
+              프로젝트 선택
+              <input placeholder="arg 입력~" type="file" name={"file"} onChange={onChangeFile} />
+            </label>
+          </div>
+
+          {/* <input onClick={handleFileUpload}>파일 첵크</input> */}
           <div>
             <button onClick={sendMessage}>메세지 보내기</button>
-            {/* <button onClick={handleFileUpload}>파일 첵크</button> */}
             <button onClick={clearValue}>초기화</button>
           </div>
         </div>
