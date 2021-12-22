@@ -68,6 +68,20 @@ function WebsocketConnecter(props: Props) {
       };
     }
   };
+
+  // test용 websocket connecter
+  const testConnect = () => {
+    props.setWs(new WebSocket(`ws://localhost:1234/ws`));
+    if (props.ws) {
+      props.ws.onclose = () => {
+        setWebSocketState("닫힘!");
+      };
+      props.ws.onopen = () => {
+        setWebSocketState("열림!");
+      };
+    }
+  };
+
   return (
     <div className="form">
       <div className="form-box">
@@ -81,6 +95,9 @@ function WebsocketConnecter(props: Props) {
         </div>
         <button type="submit" onClick={connectServer} disabled={ipCheck || portCheck}>
           연결
+        </button>
+        <button type="submit" onClick={testConnect}>
+          테스트
         </button>
         <div className="check-comment">{ipRegExpCheck}</div>
         <div className="check-comment">{portRegExpCheck}</div>

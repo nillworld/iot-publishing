@@ -5,6 +5,9 @@ import "./DockerForm.css";
 type Props = {
   ws: WebSocket | undefined;
 };
+type MessageType = {
+  state: string;
+};
 
 function DockerForm(props: Props) {
   const ws = props.ws;
@@ -72,13 +75,10 @@ function DockerForm(props: Props) {
       arg: "",
     },
   ];
-
+  const [messageHandler, setMessageHandler] = useState<MessageType>({ state: "dockerForm" });
   const [selectedFile, setSelectedFile] = useState<File>();
 
   const setTemplateForm = (e: any) => {
-    // const { name, value } = templateForms[0];
-    // setState({ ...state, [name]: value });
-    // console.log(e.target.value);
     setState(JSON.parse(e.target.value));
   };
 
@@ -99,10 +99,13 @@ function DockerForm(props: Props) {
     }
     if (ws) {
       ws.send(JSON.stringify(state));
-      // ws.send(file);
-      ws.onmessage = (evt: MessageEvent) => {
-        console.log(evt);
-        console.log(evt.data);
+      ws.onmessage = (message) => {
+        // 여기 let 어떻게 관리하지..
+        let sendChecker = JSON.parse(message.data).sendChecker;
+        let downloadedPercent = JSON.parse(message.data).downloadedPercent;
+        const fileInfo = { fileName: selectedFile?.name, fileSize: selectedFile?.size };
+        ws.send(JSON.stringify(fileInfo));
+        console.log(fileInfo);
       };
     }
   };
@@ -119,6 +122,7 @@ function DockerForm(props: Props) {
       arg: "",
     });
   };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -136,7 +140,12 @@ function DockerForm(props: Props) {
           <input placeholder="from 입력~" name={"from"} value={state.from} onChange={valueOnChange} />
           <input placeholder="workdir 입력~" name={"workdir"} value={state.workdir} onChange={valueOnChange} />
           <input placeholder="run 입력~" name={"run"} value={state.run} onChange={valueOnChange} />
-          <input placeholder="entry point 입력~" name={"entrypoint"} value={state.entrypoint} onChange={valueOnChange} />
+          <input
+            placeholder="entry point 입력~"
+            name={"entrypoint"}
+            value={state.entrypoint}
+            onChange={valueOnChange}
+          />
           <input placeholder="cmd 입력~" name={"cmd"} value={state.cmd} onChange={valueOnChange} />
           <input placeholder="env 입력~" name={"env"} value={state.env} onChange={valueOnChange} />
           <input placeholder="arg 입력~" name={"arg"} value={state.arg} onChange={valueOnChange} />
@@ -145,6 +154,7 @@ function DockerForm(props: Props) {
               프로젝트 선택
               <input placeholder="arg 입력~" type="file" name={"file"} onChange={onChangeFile} />
             </label>
+            <div className="fileName-div">{selectedFile ? selectedFile.name : ""}</div>
           </div>
 
           {/* <input onClick={handleFileUpload}>파일 첵크</input> */}

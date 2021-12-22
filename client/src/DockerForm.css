@@ -1,5 +1,11 @@
 .filebtn-div {
-  margin: 20px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+.fileName-div {
+  margin-left: 10px;
+  font-size: 17px;
 }
 .filebtn {
   cursor: pointer;
@@ -8,6 +14,7 @@
   font-size: 15px;
   padding: 10px;
   top: 10px;
+  margin: 10px;
 }
 .filebtn input[type="file"] {
   display: none;
