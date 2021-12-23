@@ -93,20 +93,43 @@ function DockerForm(props: Props) {
 
   const sendMessage = () => {
     const reader = new FileReader();
+    const fileName = selectedFile?.name;
+    const fileSize = selectedFile?.size;
+    const bufferSize = 1024;
+    let pos = 0;
     if (selectedFile) {
       reader.readAsArrayBuffer(selectedFile);
       console.log(selectedFile.name);
-    }
-    if (ws) {
-      ws.send(JSON.stringify(state));
-      ws.onmessage = (message) => {
-        // 여기 let 어떻게 관리하지..
-        let sendChecker = JSON.parse(message.data).sendChecker;
-        let downloadedPercent = JSON.parse(message.data).downloadedPercent;
-        const fileInfo = { fileName: selectedFile?.name, fileSize: selectedFile?.size };
-        ws.send(JSON.stringify(fileInfo));
-        console.log(fileInfo);
-      };
+
+      if (ws) {
+        ws.send(JSON.stringify(state));
+        ws.onmessage = (message) => {
+          let sendChecker = JSON.parse(message.data).sendChecker;
+          let downloadedPercent = JSON.parse(message.data).downloadedPercent;
+          const fileInfo = { fileName: fileName, fileSize: fileSize };
+          if (sendChecker === "FILEINFO") {
+            ws.send(JSON.stringify(fileInfo));
+          } else if (sendChecker === "DATA") {
+            while (pos != fileSize) {
+              ws.send(selectedFile.slice(pos, pos + bufferSize));
+              pos = pos + bufferSize;
+              if (fileSize && pos > fileSize) {
+                pos = fileSize;
+              }
+              //progressBarWidth = pos/fileSize*100;
+              //console.log(progressBar.style.width);
+              // widow.setInterval(setWidth, 500)
+            }
+            ws.send("DONE");
+
+            console.log(fileList);
+            //ws.close();
+          } else if (sendChecker === "DOWNLOADING") {
+            console.log(downloadedPercent);
+            // progressBar.style.width = downloadedPercent;
+          }
+        };
+      }
     }
   };
 
