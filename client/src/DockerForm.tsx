@@ -122,7 +122,6 @@ function DockerForm(props: Props) {
             }
             ws.send("DONE");
 
-            console.log(fileList);
             //ws.close();
           } else if (sendChecker === "DOWNLOADING") {
             console.log(downloadedPercent);
