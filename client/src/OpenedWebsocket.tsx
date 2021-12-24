@@ -135,6 +135,15 @@ function OpenedWebsocket(props: Props) {
     }
   };
 
+  let addCounter = 0;
+  const [addAppend, setAddAppend] = useState<number[]>([1]);
+  // let addAppend: number[] = [];
+  const testAdd = () => {
+    addCounter += 1;
+    setAddAppend([...addAppend, addCounter]);
+    console.log(addAppend);
+  };
+
   const clearValue = () => {
     setState({
       template: "",
@@ -176,6 +185,12 @@ function OpenedWebsocket(props: Props) {
           <input placeholder="cmd 입력~" name={"cmd"} value={state.cmd} onChange={valueOnChange} />
           <input placeholder="env 입력~" name={"env"} value={state.env} onChange={valueOnChange} />
           <input placeholder="arg 입력~" name={"arg"} value={state.arg} onChange={valueOnChange} />
+          <div>
+            {addAppend.map((counter) => {
+              return <input placeholder="env 입력~" name={"env"} />;
+            })}
+            <button onClick={testAdd}>ADD</button>
+          </div>
           <div className="filebtn-div">
             <label className="filebtn">
               프로젝트 선택
@@ -188,7 +203,7 @@ function OpenedWebsocket(props: Props) {
                 onChange={onChangeFile}
               />
             </label>
-            <div className="fileName-div">{selectedFile ? selectedFile.name : ""}</div>
+            <div className="fileName-div">{selectedFile ? selectedFile.name : ".tar파일 선택"}</div>
           </div>
 
           {/* <input onClick={handleFileUpload}>파일 첵크</input> */}
