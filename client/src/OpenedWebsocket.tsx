@@ -183,8 +183,8 @@ function OpenedWebsocket(props: Props) {
                 placeholder="arg 입력~"
                 type="file"
                 name={"file"}
-                directory=""
-                webkitdirectory=""
+                // directory=""
+                // webkitdirectory=""
                 onChange={onChangeFile}
               />
             </label>
