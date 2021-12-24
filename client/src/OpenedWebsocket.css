@@ -5,16 +5,16 @@
 }
 .fileName-div {
   margin-left: 10px;
-  font-size: 17px;
+  font-size: 13px;
 }
 .filebtn {
   cursor: pointer;
   border: 1px white solid;
   border-radius: 5px;
-  font-size: 15px;
-  padding: 10px;
+  font-size: 13px;
+  padding: 7px;
   top: 10px;
-  margin: 10px;
+  margin: 7px;
 }
 .filebtn input[type="file"] {
   display: none;

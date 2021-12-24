@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import * as React from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import "./App.css";
-import "./DockerForm.css";
+import "./OpenedWebsocket.css";
+import TransferMessage from "./TransferMessage";
 
 type Props = {
   ws: WebSocket | undefined;
@@ -9,7 +11,7 @@ type MessageType = {
   state: string;
 };
 
-function DockerForm(props: Props) {
+function OpenedWebsocket(props: Props) {
   const ws = props.ws;
 
   const [state, setState] = useState({
@@ -75,9 +77,9 @@ function DockerForm(props: Props) {
       arg: "",
     },
   ];
-  const [messageHandler, setMessageHandler] = useState<MessageType>({ state: "dockerForm" });
   const [selectedFile, setSelectedFile] = useState<File>();
-
+  const [fileSendCheck, setFileSendCheck] = useState<boolean>();
+  const [downloadedPercent, setDownloadedPercent] = useState<string>("0%");
   const setTemplateForm = (e: any) => {
     setState(JSON.parse(e.target.value));
   };
@@ -92,10 +94,11 @@ function DockerForm(props: Props) {
   };
 
   const sendMessage = () => {
+    setFileSendCheck(true);
     const reader = new FileReader();
     const fileName = selectedFile?.name;
     const fileSize = selectedFile?.size;
-    const bufferSize = 1024;
+    const BUFFER_SIZE = 1024;
     let pos = 0;
     if (selectedFile) {
       reader.readAsArrayBuffer(selectedFile);
@@ -105,14 +108,14 @@ function DockerForm(props: Props) {
         ws.send(JSON.stringify(state));
         ws.onmessage = (message) => {
           let sendChecker = JSON.parse(message.data).sendChecker;
-          let downloadedPercent = JSON.parse(message.data).downloadedPercent;
+          setDownloadedPercent(JSON.parse(message.data).downloadedPercent);
           const fileInfo = { fileName: fileName, fileSize: fileSize };
-          if (sendChecker === "FILEINFO") {
+          if (sendChecker === "FILE_INFO") {
             ws.send(JSON.stringify(fileInfo));
           } else if (sendChecker === "DATA") {
             while (pos != fileSize) {
-              ws.send(selectedFile.slice(pos, pos + bufferSize));
-              pos = pos + bufferSize;
+              ws.send(selectedFile.slice(pos, pos + BUFFER_SIZE));
+              pos = pos + BUFFER_SIZE;
               if (fileSize && pos > fileSize) {
                 pos = fileSize;
               }
@@ -124,7 +127,7 @@ function DockerForm(props: Props) {
 
             //ws.close();
           } else if (sendChecker === "DOWNLOADING") {
-            console.log(downloadedPercent);
+            // console.log(downloadedPercent);
             // progressBar.style.width = downloadedPercent;
           }
         };
@@ -145,7 +148,9 @@ function DockerForm(props: Props) {
     });
   };
 
-  return (
+  return fileSendCheck ? (
+    <TransferMessage downloadedPercent={downloadedPercent} />
+  ) : (
     <div className="App">
       <header className="App-header">
         <div className="form-div">
@@ -174,14 +179,23 @@ function DockerForm(props: Props) {
           <div className="filebtn-div">
             <label className="filebtn">
               프로젝트 선택
-              <input placeholder="arg 입력~" type="file" name={"file"} onChange={onChangeFile} />
+              <input
+                placeholder="arg 입력~"
+                type="file"
+                name={"file"}
+                directory=""
+                webkitdirectory=""
+                onChange={onChangeFile}
+              />
             </label>
             <div className="fileName-div">{selectedFile ? selectedFile.name : ""}</div>
           </div>
 
           {/* <input onClick={handleFileUpload}>파일 첵크</input> */}
           <div>
-            <button onClick={sendMessage}>메세지 보내기</button>
+            <button onClick={sendMessage} disabled={fileSendCheck}>
+              메세지 보내기
+            </button>
             <button onClick={clearValue}>초기화</button>
           </div>
         </div>
@@ -189,5 +203,16 @@ function DockerForm(props: Props) {
     </div>
   );
 }
+export default OpenedWebsocket;
 
-export default DockerForm;
+////// 일단 @type>react>index.d.ts 에서 AriaAttributes 부분에 다음처럼 인자 타입 명세
+/* 'directory' ?: string;
+				'webkitdirectory'?: string; */
+
+// declare module "react" {
+//   interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
+//     // extends React's HTMLAttributes
+//     directory?: string; // remember to make these attributes optional....
+//     webkitdirectory?: string;
+//   }
+// }

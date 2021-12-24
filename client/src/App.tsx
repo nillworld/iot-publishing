@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
-import DockerForm from "./DockerForm";
+import OpenedWebsocket from "./OpenedWebsocket";
 import WebsocketConnecter from "./WebsocketConnecter";
+import TransferMessage from "./TransferMessage";
 function App() {
-  const [wsOpenCheck, setWsOpenCheck] = useState(false);
+  const [wsOpenCheck, setWsOpenCheck] = useState<boolean>(false);
   const [ws, setWs] = useState<WebSocket>();
   useEffect(() => {
     console.log(ws);
     if (ws) {
       ws.onclose = () => {
-        console.log("닫혀 버렸다 이기야~");
+        console.log("소켓 연결 종료");
         setWsOpenCheck(false);
       };
       ws.onopen = () => {
-        console.log("열려 버렸다 이기야~");
+        console.log("소켓 연결 완료");
         setWsOpenCheck(true);
       };
     }
@@ -20,7 +21,11 @@ function App() {
 
   return (
     <div>
-      {wsOpenCheck ? <DockerForm ws={ws} /> : <WebsocketConnecter wsOpenCheck={wsOpenCheck} ws={ws} setWs={setWs} />}
+      {wsOpenCheck ? (
+        <OpenedWebsocket ws={ws} />
+      ) : (
+        <WebsocketConnecter wsOpenCheck={wsOpenCheck} ws={ws} setWs={setWs} />
+      )}
     </div>
   );
 }
