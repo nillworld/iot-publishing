@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import "./App.css";
+import DockerFormInput from "./DockerFormInput";
 import "./OpenedWebsocket.css";
 import TransferMessage from "./TransferMessage";
 
@@ -186,8 +187,8 @@ function OpenedWebsocket(props: Props) {
           <input placeholder="env 입력~" name={"env"} value={state.env} onChange={valueOnChange} />
           <input placeholder="arg 입력~" name={"arg"} value={state.arg} onChange={valueOnChange} />
           <div>
-            {addAppend.map((counter) => {
-              return <input placeholder="env 입력~" name={"env"} />;
+            {addAppend.map((counter, index) => {
+              return <DockerFormInput index={index} setAddAppend={setAddAppend} addAppend={addAppend} />;
             })}
             <button onClick={testAdd}>ADD</button>
           </div>
