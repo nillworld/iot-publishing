@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import "./App.css";
-import DockerFormInput from "./DockerFormInput";
+import DockerFormInput from "../DockerFormInput";
 import "./OpenedWebsocket.css";
 import TransferMessage from "./TransferMessage";
 

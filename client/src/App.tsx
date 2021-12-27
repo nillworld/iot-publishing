@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import OpenedWebsocket from "./OpenedWebsocket";
-import WebsocketConnecter from "./WebsocketConnecter";
-import TransferMessage from "./TransferMessage";
+import OpenedWebsocket from "./components/OpenedWebsocket";
+import WebsocketConnecter from "./components/WebsocketConnecter";
+import TransferMessage from "./components/TransferMessage";
 function App() {
   const [wsOpenCheck, setWsOpenCheck] = useState<boolean>(false);
   const [ws, setWs] = useState<WebSocket>();
@@ -19,15 +19,7 @@ function App() {
     }
   }, [ws]);
 
-  return (
-    <div>
-      {wsOpenCheck ? (
-        <OpenedWebsocket ws={ws} />
-      ) : (
-        <WebsocketConnecter wsOpenCheck={wsOpenCheck} ws={ws} setWs={setWs} />
-      )}
-    </div>
-  );
+  return <div>{wsOpenCheck ? <OpenedWebsocket ws={ws} /> : <WebsocketConnecter wsOpenCheck={wsOpenCheck} ws={ws} setWs={setWs} />}</div>;
 }
 console.log(WebsocketConnecter.prototype.ipCheck);
 export default App;
