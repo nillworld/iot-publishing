@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import "./App.css";
-import DockerFormInput from "../DockerFormInput";
+import "../App.css";
+import DockerFormInput from "./DockerFormInput";
 import "./OpenedWebsocket.css";
 import TransferMessage from "./TransferMessage";
 
@@ -177,12 +177,7 @@ function OpenedWebsocket(props: Props) {
           <input placeholder="from 입력~" name={"from"} value={state.from} onChange={valueOnChange} />
           <input placeholder="workdir 입력~" name={"workdir"} value={state.workdir} onChange={valueOnChange} />
           <input placeholder="run 입력~" name={"run"} value={state.run} onChange={valueOnChange} />
-          <input
-            placeholder="entry point 입력~"
-            name={"entrypoint"}
-            value={state.entrypoint}
-            onChange={valueOnChange}
-          />
+          <input placeholder="entry point 입력~" name={"entrypoint"} value={state.entrypoint} onChange={valueOnChange} />
           <input placeholder="cmd 입력~" name={"cmd"} value={state.cmd} onChange={valueOnChange} />
           <input placeholder="env 입력~" name={"env"} value={state.env} onChange={valueOnChange} />
           <input placeholder="arg 입력~" name={"arg"} value={state.arg} onChange={valueOnChange} />
