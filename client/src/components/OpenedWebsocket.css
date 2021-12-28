@@ -19,3 +19,6 @@
 .filebtn input[type="file"] {
   display: none;
 }
+.dockerform-btn {
+  margin: 10px;
+}

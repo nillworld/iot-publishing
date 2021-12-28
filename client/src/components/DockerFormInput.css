@@ -1,0 +1,6 @@
+.input-component-div {
+  display: flex;
+}
+.input-component-div button {
+  margin-top: 5px;
+}
