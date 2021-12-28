@@ -172,7 +172,6 @@ function OpenedWebsocket(props: Props) {
         <div className="form-div">
           <select onChange={setTemplateForm}>
             {templateForms.map((templateForm) => {
-              // console.log(templateForm);
               return (
                 <option
                   value={JSON.stringify(templateForm)}
