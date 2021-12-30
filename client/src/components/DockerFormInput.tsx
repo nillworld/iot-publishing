@@ -2,27 +2,36 @@ import React, { Dispatch, MouseEventHandler, SetStateAction } from "react";
 import "./DockerFormInput.css";
 
 type Props = {
-  index: number;
-  setAddAppend: Dispatch<SetStateAction<number[]>>;
-  addAppend: number[];
+  inputIndex: number;
+  setInputIndex: Dispatch<SetStateAction<number>>;
+  inputComponents: number[];
+  setInputComponents: Dispatch<SetStateAction<number[]>>;
 };
 function DockerFormInput(props: Props) {
-  const deleteThisComponent = () => {
-    // console.log(e.);
-    console.log(props.index);
-    //props.setAddAppend(props.addAppend.splice(props.index, 1))//;
-    props.setAddAppend(
-      props.addAppend.filter((user) => {
-        console.log("user", user, props.index + 1);
-        return user !== props.index + 1;
+  const deleteThisComponent = (e: any) => {
+    console.log(e.target.value);
+    console.log(props.inputComponents);
+    props.setInputComponents(
+      props.inputComponents.filter((inputComponent) => {
+        console.log(inputComponent, e.target.value);
+        return inputComponent !== e.target.value * 1;
       })
     );
-    console.log("props.addAppend", props.addAppend);
   };
   return (
     <div className="input-component-div">
-      <input placeholder={props.index + ""} name={"env"} />
-      <button onClick={deleteThisComponent} value={props.index}>
+      <select name="" id="" className="input-component-select">
+        <option value="">-옵션 선택-</option>
+        <option value="FROM">FROM</option>
+        <option value="WORKDIR">WORKDIR</option>
+        <option value="RUN">RUN</option>
+        <option value="ENTRYPOINT">ENTRYPOINT</option>
+        <option value="CMD">CMD</option>
+        <option value="ENV">ENV</option>
+        <option value="ARG">ARG</option>
+      </select>
+      <input placeholder={props.inputIndex + ""} name={"env"} />
+      <button onClick={deleteThisComponent} value={props.inputIndex}>
         -
       </button>
     </div>

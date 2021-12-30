@@ -82,10 +82,6 @@ function OpenedWebsocket(props: Props) {
   const [fileSendCheck, setFileSendCheck] = useState<boolean>();
   const [downloadedPercent, setDownloadedPercent] = useState<string>("0%");
 
-  useEffect(() => {
-    console.log(addAppend);
-  }, []);
-
   const setTemplateForm = (e: any) => {
     setState(JSON.parse(e.target.value));
   };
@@ -141,14 +137,12 @@ function OpenedWebsocket(props: Props) {
     }
   };
 
-  //let addCounter = 0;
-  //const [addCounter, setAddCounter] = useState<number>(1);
-  const [addAppend, setAddAppend] = useState<number[]>([0]);
-  // let addAppend: number[] = [];
-  const testAdd = () => {
-    //setAddCounter(addCounter + 1);
-    setAddAppend([...addAppend, addAppend.length]);
-    console.log(addAppend);
+  const [inputIndex, setInputIndex] = useState<number>(1);
+  const [inputComponents, setInputComponents] = useState<number[]>([0]);
+  // let inputComponents: number[] = [];
+  const appendInput = () => {
+    setInputComponents([...inputComponents, inputIndex]);
+    setInputIndex(inputIndex + 1);
   };
 
   const clearValue = () => {
@@ -173,68 +167,37 @@ function OpenedWebsocket(props: Props) {
           <select onChange={setTemplateForm}>
             {templateForms.map((templateForm) => {
               return (
-                <option
-                  value={JSON.stringify(templateForm)}
-                  key={templateForm.template}
-                >
+                <option value={JSON.stringify(templateForm)} key={templateForm.template}>
                   {templateForm.template}
                 </option>
               );
             })}
           </select>
-          <input
-            placeholder="from 입력~"
-            name={"from"}
-            value={state.from}
-            onChange={valueOnChange}
-          />
-          <input
-            placeholder="workdir 입력~"
-            name={"workdir"}
-            value={state.workdir}
-            onChange={valueOnChange}
-          />
-          <input
-            placeholder="run 입력~"
-            name={"run"}
-            value={state.run}
-            onChange={valueOnChange}
-          />
+          <input placeholder="from 입력~" name={"from"} value={state.from} onChange={valueOnChange} />
+          <input placeholder="workdir 입력~" name={"workdir"} value={state.workdir} onChange={valueOnChange} />
+          <input placeholder="run 입력~" name={"run"} value={state.run} onChange={valueOnChange} />
           <input
             placeholder="entry point 입력~"
             name={"entrypoint"}
             value={state.entrypoint}
             onChange={valueOnChange}
           />
-          <input
-            placeholder="cmd 입력~"
-            name={"cmd"}
-            value={state.cmd}
-            onChange={valueOnChange}
-          />
-          <input
-            placeholder="env 입력~"
-            name={"env"}
-            value={state.env}
-            onChange={valueOnChange}
-          />
-          <input
-            placeholder="arg 입력~"
-            name={"arg"}
-            value={state.arg}
-            onChange={valueOnChange}
-          />
+          <input placeholder="cmd 입력~" name={"cmd"} value={state.cmd} onChange={valueOnChange} />
+          <input placeholder="env 입력~" name={"env"} value={state.env} onChange={valueOnChange} />
+          <input placeholder="arg 입력~" name={"arg"} value={state.arg} onChange={valueOnChange} />
           <div>
-            {addAppend.map((counter, index) => {
+            {inputComponents.map((inputIndex, index) => {
               return (
                 <DockerFormInput
-                  index={index}
-                  setAddAppend={setAddAppend}
-                  addAppend={addAppend}
+                  key={inputIndex}
+                  inputIndex={inputIndex}
+                  setInputIndex={setInputIndex}
+                  setInputComponents={setInputComponents}
+                  inputComponents={inputComponents}
                 />
               );
             })}
-            <button onClick={testAdd}>ADD</button>
+            <button onClick={appendInput}>ADD</button>
           </div>
           <div className="filebtn-div">
             <label className="filebtn">
@@ -248,18 +211,12 @@ function OpenedWebsocket(props: Props) {
                 onChange={onChangeFile}
               />
             </label>
-            <div className="fileName-div">
-              {selectedFile ? selectedFile.name : ".tar파일 선택"}
-            </div>
+            <div className="fileName-div">{selectedFile ? selectedFile.name : ".tar파일 선택"}</div>
           </div>
 
           {/* <input onClick={handleFileUpload}>파일 첵크</input> */}
           <div>
-            <button
-              className="dockerform-btn"
-              onClick={sendMessage}
-              disabled={fileSendCheck}
-            >
+            <button className="dockerform-btn" onClick={sendMessage} disabled={fileSendCheck}>
               메세지 보내기
             </button>
             <button onClick={clearValue}>초기화</button>
