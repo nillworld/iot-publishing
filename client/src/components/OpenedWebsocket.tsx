@@ -137,11 +137,15 @@ function OpenedWebsocket(props: Props) {
     }
   };
 
-  const [inputIndex, setInputIndex] = useState<number>(1);
-  const [inputComponents, setInputComponents] = useState<number[]>([0]);
+  const [inputIndex, setInputIndex] = useState<number>(0);
+  const [inputComponents, setInputComponents] = useState<number[]>();
   // let inputComponents: number[] = [];
   const appendInput = () => {
-    setInputComponents([...inputComponents, inputIndex]);
+    if (inputComponents) {
+      setInputComponents([...inputComponents, inputIndex]);
+    } else {
+      setInputComponents([inputIndex]);
+    }
     setInputIndex(inputIndex + 1);
   };
 
@@ -185,18 +189,21 @@ function OpenedWebsocket(props: Props) {
           <input placeholder="cmd 입력~" name={"cmd"} value={state.cmd} onChange={valueOnChange} />
           <input placeholder="env 입력~" name={"env"} value={state.env} onChange={valueOnChange} />
           <input placeholder="arg 입력~" name={"arg"} value={state.arg} onChange={valueOnChange} />
+
           <div>
-            {inputComponents.map((inputIndex, index) => {
-              return (
-                <DockerFormInput
-                  key={inputIndex}
-                  inputIndex={inputIndex}
-                  setInputIndex={setInputIndex}
-                  setInputComponents={setInputComponents}
-                  inputComponents={inputComponents}
-                />
-              );
-            })}
+            {inputComponents
+              ? inputComponents.map((inputIndex, index) => {
+                  return (
+                    <DockerFormInput
+                      key={inputIndex}
+                      inputIndex={inputIndex}
+                      setInputIndex={setInputIndex}
+                      setInputComponents={setInputComponents}
+                      inputComponents={inputComponents}
+                    />
+                  );
+                })
+              : ""}
             <button onClick={appendInput}>ADD</button>
           </div>
           <div className="filebtn-div">

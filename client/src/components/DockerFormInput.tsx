@@ -5,8 +5,11 @@ type Props = {
   inputIndex: number;
   setInputIndex: Dispatch<SetStateAction<number>>;
   inputComponents: number[];
-  setInputComponents: Dispatch<SetStateAction<number[]>>;
+  setInputComponents: Dispatch<SetStateAction<number[] | undefined>>;
+  option?: string;
+  value?: string;
 };
+const options = ["FROM", "WORKDIR", "RUN", "ENTRYPOINT", "CMD", "ENV", "ARG"];
 function DockerFormInput(props: Props) {
   const deleteThisComponent = (e: any) => {
     console.log(e.target.value);
@@ -22,13 +25,11 @@ function DockerFormInput(props: Props) {
     <div className="input-component-div">
       <select name="" id="" className="input-component-select">
         <option value="">-옵션 선택-</option>
-        <option value="FROM">FROM</option>
-        <option value="WORKDIR">WORKDIR</option>
-        <option value="RUN">RUN</option>
-        <option value="ENTRYPOINT">ENTRYPOINT</option>
-        <option value="CMD">CMD</option>
-        <option value="ENV">ENV</option>
-        <option value="ARG">ARG</option>
+        {options.map((option) => (
+          <option value={option} key={option}>
+            {option}
+          </option>
+        ))}
       </select>
       <input placeholder={props.inputIndex + ""} name={"env"} />
       <button onClick={deleteThisComponent} value={props.inputIndex}>
