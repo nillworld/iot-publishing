@@ -4,7 +4,7 @@ import "./DockerFormInput.css";
 type Props = {
   inputIndex: number;
   setInputIndex: Dispatch<SetStateAction<number>>;
-  inputComponents: number[];
+  inputComponents?: number[];
   setInputComponents: Dispatch<SetStateAction<number[] | undefined>>;
   option?: string;
   value?: string;
@@ -12,26 +12,28 @@ type Props = {
 const options = ["FROM", "WORKDIR", "RUN", "ENTRYPOINT", "CMD", "ENV", "ARG"];
 function DockerFormInput(props: Props) {
   const deleteThisComponent = (e: any) => {
-    console.log(e.target.value);
-    console.log(props.inputComponents);
     props.setInputComponents(
-      props.inputComponents.filter((inputComponent) => {
-        console.log(inputComponent, e.target.value);
-        return inputComponent !== e.target.value * 1;
-      })
+      props.inputComponents
+        ? props.inputComponents.filter((inputComponent) => {
+            return inputComponent !== e.target.value * 1;
+          })
+        : []
     );
   };
   return (
     <div className="input-component-div">
       <select name="" id="" className="input-component-select">
-        <option value="">-옵션 선택-</option>
+        {props.option ? <option value={props.option}>{props.option}</option> : <option value="">-옵션 선택-</option>}
+        <option value="" disabled>
+          =============
+        </option>
         {options.map((option) => (
           <option value={option} key={option}>
             {option}
           </option>
         ))}
       </select>
-      <input placeholder={props.inputIndex + ""} name={"env"} />
+      <input placeholder={props.option ? props.option : props.inputIndex + ""} name={"env"} />
       <button onClick={deleteThisComponent} value={props.inputIndex}>
         -
       </button>

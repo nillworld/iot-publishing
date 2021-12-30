@@ -81,9 +81,18 @@ function OpenedWebsocket(props: Props) {
   const [selectedFile, setSelectedFile] = useState<File>();
   const [fileSendCheck, setFileSendCheck] = useState<boolean>();
   const [downloadedPercent, setDownloadedPercent] = useState<string>("0%");
+  const [inputIndex, setInputIndex] = useState<number>(0);
+  const [inputComponents, setInputComponents] = useState<any>();
 
   const setTemplateForm = (e: any) => {
-    setState(JSON.parse(e.target.value));
+    const jsonTemplate = JSON.parse(e.target.value);
+    const jsonTemplateKeys = Object.keys(jsonTemplate);
+    const jsonTemplateValues = Object.values(jsonTemplate);
+    let lengthArray = [];
+    for (let i = 0; i < jsonTemplateKeys.length; i++) {
+      lengthArray.push(i);
+    }
+    setInputComponents(lengthArray);
   };
 
   const valueOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,8 +146,6 @@ function OpenedWebsocket(props: Props) {
     }
   };
 
-  const [inputIndex, setInputIndex] = useState<number>(0);
-  const [inputComponents, setInputComponents] = useState<number[]>();
   // let inputComponents: number[] = [];
   const appendInput = () => {
     if (inputComponents) {
@@ -160,6 +167,7 @@ function OpenedWebsocket(props: Props) {
       env: "",
       arg: "",
     });
+    setInputComponents([]);
   };
 
   return fileSendCheck ? (
@@ -168,7 +176,7 @@ function OpenedWebsocket(props: Props) {
     <div className="App">
       <header className="App-header">
         <div className="form-div">
-          <select onChange={setTemplateForm}>
+          {/* <select onChange={setTemplateForm}>
             {templateForms.map((templateForm) => {
               return (
                 <option value={JSON.stringify(templateForm)} key={templateForm.template}>
@@ -188,21 +196,26 @@ function OpenedWebsocket(props: Props) {
           />
           <input placeholder="cmd 입력~" name={"cmd"} value={state.cmd} onChange={valueOnChange} />
           <input placeholder="env 입력~" name={"env"} value={state.env} onChange={valueOnChange} />
-          <input placeholder="arg 입력~" name={"arg"} value={state.arg} onChange={valueOnChange} />
-
+          <input placeholder="arg 입력~" name={"arg"} value={state.arg} onChange={valueOnChange} /> */}
+          <select onChange={setTemplateForm}>
+            {templateForms.map((templateForm) => (
+              <option value={JSON.stringify(templateForm)} key={templateForm.template}>
+                {templateForm.template}
+              </option>
+            ))}
+          </select>
           <div>
             {inputComponents
-              ? inputComponents.map((inputIndex, index) => {
-                  return (
-                    <DockerFormInput
-                      key={inputIndex}
-                      inputIndex={inputIndex}
-                      setInputIndex={setInputIndex}
-                      setInputComponents={setInputComponents}
-                      inputComponents={inputComponents}
-                    />
-                  );
-                })
+              ? inputComponents.map((inputIndex: any, index: any) => (
+                  <DockerFormInput
+                    key={inputIndex}
+                    inputIndex={inputIndex}
+                    setInputIndex={setInputIndex}
+                    setInputComponents={setInputComponents}
+                    inputComponents={inputComponents}
+                    // option={inputIndex}
+                  />
+                ))
               : ""}
             <button onClick={appendInput}>ADD</button>
           </div>
