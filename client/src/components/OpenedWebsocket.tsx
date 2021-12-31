@@ -25,7 +25,7 @@ function OpenedWebsocket(props: Props) {
     env: "",
     arg: "",
   });
-
+  const [newObject, setNewObject] = useState<any>({});
   const templateForms = [
     {
       template: "-Template-",
@@ -83,15 +83,22 @@ function OpenedWebsocket(props: Props) {
   const [downloadedPercent, setDownloadedPercent] = useState<string>("0%");
   const [inputIndex, setInputIndex] = useState<number>(0);
   const [inputComponents, setInputComponents] = useState<any>();
+  const [jsonTestKeys, setJsonTestKeys] = useState<Array<string>>();
 
   const setTemplateForm = (e: any) => {
     const jsonTemplate = JSON.parse(e.target.value);
     const jsonTemplateKeys = Object.keys(jsonTemplate);
     const jsonTemplateValues = Object.values(jsonTemplate);
+    setJsonTestKeys(jsonTemplateKeys);
     let lengthArray = [];
     for (let i = 0; i < jsonTemplateKeys.length; i++) {
       lengthArray.push(i);
+      newObject[i] = [jsonTemplateKeys[i], jsonTemplateValues[i]];
     }
+    console.log(Object.keys(newObject));
+    jsonTemplateKeys.map((index: any) => {
+      console.log(index);
+    });
     setInputComponents(lengthArray);
   };
 
@@ -205,7 +212,7 @@ function OpenedWebsocket(props: Props) {
             ))}
           </select>
           <div>
-            {inputComponents
+            {/* {inputComponents
               ? inputComponents.map((inputIndex: any, index: any) => (
                   <DockerFormInput
                     key={inputIndex}
@@ -214,6 +221,18 @@ function OpenedWebsocket(props: Props) {
                     setInputComponents={setInputComponents}
                     inputComponents={inputComponents}
                     // option={inputIndex}
+                  />
+                ))
+              : ""} */}
+            {jsonTestKeys
+              ? jsonTestKeys.map((keys: any) => (
+                  <DockerFormInput
+                    key={inputIndex}
+                    inputIndex={inputIndex}
+                    setInputIndex={setInputIndex}
+                    setInputComponents={setInputComponents}
+                    inputComponents={inputComponents}
+                    option={keys}
                   />
                 ))
               : ""}
