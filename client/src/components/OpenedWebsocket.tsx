@@ -224,17 +224,21 @@ function OpenedWebsocket(props: Props) {
                   />
                 ))
               : ""} */}
-            {jsonTestKeys
-              ? jsonTestKeys.map((keys: any) => (
-                  <DockerFormInput
-                    key={inputIndex}
-                    inputIndex={inputIndex}
-                    setInputIndex={setInputIndex}
-                    setInputComponents={setInputComponents}
-                    inputComponents={inputComponents}
-                    option={keys}
-                  />
-                ))
+            {newObject
+              ? Object.keys(newObject).map((key, index) => {
+                  let key1 = parseInt(key);
+                  // console.log(Object.values(newObject)[key1][0]);
+                  return (
+                    <DockerFormInput
+                      key={index}
+                      inputIndex={index}
+                      setInputIndex={setInputIndex}
+                      setInputComponents={setInputComponents}
+                      inputComponents={inputComponents}
+                      option={Object.values(newObject)[key1]}
+                    />
+                  );
+                })
               : ""}
             <button onClick={appendInput}>ADD</button>
           </div>
