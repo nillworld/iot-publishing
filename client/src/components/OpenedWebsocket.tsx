@@ -227,6 +227,7 @@ function OpenedWebsocket(props: Props) {
             {newObject
               ? Object.keys(newObject).map((key, index) => {
                   let key1 = parseInt(key);
+
                   // console.log(Object.values(newObject)[key1][0]);
                   return (
                     <DockerFormInput
