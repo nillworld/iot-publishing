@@ -26,54 +26,43 @@ function OpenedWebsocket(props: Props) {
 
   const templateForms = [
     {
-      template: "-Template-",
-      from: "",
-      workdir: "",
-      run: "",
-      entrypoint: "",
-      cmd: "",
-      env: "",
-      arg: "",
+      0: { template: "-Template-" },
     },
     {
-      template: "Node 16",
-      from: "node:16-alpine3.11",
-      workdir: "/app",
-      run: "npm install",
-      entrypoint: "",
-      cmd: '[ "node", "server.js" ]',
-      env: "",
-      arg: "",
+      0: { template: "Node 16" },
+      1: { FROM: "node:16-alpine3.11" },
+      2: { WORKDIR: "/app" },
+      3: { COPY: "package*.json /app" },
+      4: { RUN: "npm install" },
+      5: { COPY: ". /app" },
+      6: { ENTRYPOINT: "" },
+      7: { CMD: '[ "node", "server.js" ]' },
+      8: { ENV: "" },
+      9: { ARG: "" },
     },
     {
-      template: "Node 14",
-      from: "1",
-      workdir: "",
-      run: "",
-      entrypoint: "",
-      cmd: "",
-      env: "",
-      arg: "",
+      0: { template: "Node 14" },
+      1: { FROM: "1" },
     },
     {
-      template: "Python",
-      from: "2",
-      workdir: "",
-      run: "",
-      entrypoint: "",
-      cmd: "",
-      env: "",
-      arg: "",
+      0: { template: "Python" },
+      1: { FROM: "2" },
+      2: { WORKDIR: "" },
+      3: { RUN: "" },
+      4: { ENTRYPOINT: "" },
+      5: { CMD: "" },
+      6: { ENV: "" },
+      7: { ARG: "" },
     },
     {
-      template: "Jave",
-      from: "3",
-      workdir: "",
-      run: "",
-      entrypoint: "",
-      cmd: "",
-      env: "",
-      arg: "",
+      1: { template: "Java" },
+      2: { FROM: "3" },
+      3: { WORKDIR: "" },
+      4: { RUN: "" },
+      5: { ENTRYPOINT: "" },
+      6: { CMD: "" },
+      7: { ENV: "" },
+      8: { ARG: "" },
     },
   ];
 
@@ -81,17 +70,29 @@ function OpenedWebsocket(props: Props) {
     const jsonTemplate = JSON.parse(e.target.value);
     const jsonTemplateKeys: string[] = Object.keys(jsonTemplate);
     const jsonTemplateValues: string[] = Object.values(jsonTemplate);
-    let test: any[] = [];
-    let test2 = 0;
-    jsonTemplateKeys.map(() => {
-      test.push(test2);
-      test2 += 1;
+
+    let jsonTemplateKeysToInt: number[] = [];
+    jsonTemplateKeys.map((key) => {
+      jsonTemplateKeysToInt.push(parseInt(key));
     });
-    setInputComponents(test);
-    setLineId(jsonTemplateKeys.length);
-    setLineOption(jsonTemplateKeys);
-    if (jsonTemplateValues) {
-      setLineValue(jsonTemplateValues);
+    let templateKeys: any[] = [];
+    let templateValues: any[] = [];
+    jsonTemplateValues.map((templateLineData) => {
+      templateKeys.push(Object.keys(templateLineData)[0]);
+      templateValues.push(Object.values(templateLineData)[0]);
+    });
+    // let test: any[] = [];
+    // let test2 = 0;
+    // jsonTemplateKeys.map(() => {
+    //   test.push(test2);
+    //   test2 += 1;
+    // });
+    console.log(jsonTemplateKeysToInt);
+    setInputComponents(jsonTemplateKeysToInt);
+    setLineId(jsonTemplateKeysToInt.length - 1);
+    setLineOption(templateKeys);
+    setLineValue(templateValues);
+    if (templateValues) {
     }
   };
 
@@ -140,6 +141,7 @@ function OpenedWebsocket(props: Props) {
   };
 
   const appendInput = () => {
+    console.log(lineId);
     if (inputComponents) {
       setInputComponents([...inputComponents, lineId]);
     } else {
@@ -151,13 +153,13 @@ function OpenedWebsocket(props: Props) {
   const clearValue = () => {
     setState({
       template: "",
-      from: "",
-      workdir: "",
-      run: "",
-      entrypoint: "",
-      cmd: "",
-      env: "",
-      arg: "",
+      FROM: "",
+      WORKDIR: "",
+      RUN: "",
+      ENTRYPOINT: "",
+      CMD: "",
+      ENV: "",
+      ARG: "",
     });
     setInputComponents([]);
   };
@@ -170,8 +172,12 @@ function OpenedWebsocket(props: Props) {
         <div className="form-div">
           <select onChange={setTemplateForm}>
             {templateForms.map((templateForm) => (
-              <option value={JSON.stringify(templateForm)} key={templateForm.template}>
-                {templateForm.template}
+              <option
+                value={JSON.stringify(templateForm)}
+                key={templateForm[0]?.template}
+                // disabled={templateForm.template === "-Template-" ? true : false}
+              >
+                {templateForm[0]?.template}
               </option>
             ))}
           </select>
@@ -189,7 +195,7 @@ function OpenedWebsocket(props: Props) {
                   />
                 ))
               : ""}
-            <button onClick={appendInput}>ADD</button>
+            <button onClick={appendInput}>ADD Instruction</button>
           </div>
           <div className="filebtn-div">
             <label className="filebtn">

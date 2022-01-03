@@ -1,4 +1,4 @@
-import React, { Dispatch, MouseEventHandler, SetStateAction } from "react";
+import React, { Dispatch, MouseEventHandler, SetStateAction, useState } from "react";
 import "./DockerFormInput.css";
 
 type Props = {
@@ -9,8 +9,10 @@ type Props = {
   option?: string;
   value?: string;
 };
-const options = ["FROM", "WORKDIR", "RUN", "ENTRYPOINT", "CMD", "ENV", "ARG"];
+const options = ["FROM", "WORKDIR", "RUN", "ENTRYPOINT", "CMD", "ADD", "ENV", "ARG", "LABEL", "EXPOSE", "MAINTAINER"];
 function DockerFormInput(props: Props) {
+  const [test, setTest] = useState<string>("e");
+
   const deleteThisComponent = (e: any) => {
     props.setInputComponents(
       props.inputComponents
@@ -20,7 +22,10 @@ function DockerFormInput(props: Props) {
         : []
     );
   };
-  const inputOnChange = () => {};
+  const inputOnChange = (e: any) => {
+    setTest(e.target.value);
+  };
+
   return (
     <div>
       {props.option === "template" ? (
@@ -44,7 +49,7 @@ function DockerFormInput(props: Props) {
           </select>
           <input
             placeholder={props.value ? props.value : "argument 입력"}
-            value={props.value ? props.value : ""}
+            value={props.value}
             onChange={inputOnChange}
             name={"env"}
           />
