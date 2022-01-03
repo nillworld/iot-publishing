@@ -86,6 +86,8 @@ function OpenedWebsocket(props: Props) {
   const [jsonTestKeys, setJsonTestKeys] = useState<Array<string>>();
 
   const setTemplateForm = (e: any) => {
+    setNewObject({});
+    // setNewObject((newObject[1] = ["1", "2"]));
     const jsonTemplate = JSON.parse(e.target.value);
     const jsonTemplateKeys = Object.keys(jsonTemplate);
     const jsonTemplateValues = Object.values(jsonTemplate);
@@ -93,8 +95,10 @@ function OpenedWebsocket(props: Props) {
     let lengthArray = [];
     for (let i = 0; i < jsonTemplateKeys.length; i++) {
       lengthArray.push(i);
-      newObject[i] = [jsonTemplateKeys[i], jsonTemplateValues[i]];
+      setNewObject((newObject[i] = [jsonTemplateKeys[i], jsonTemplateValues[i]]));
+      console.log(newObject, i);
     }
+    console.log(newObject);
     console.log(Object.keys(newObject));
     jsonTemplateKeys.map((index: any) => {
       console.log(index);
@@ -155,12 +159,16 @@ function OpenedWebsocket(props: Props) {
 
   // let inputComponents: number[] = [];
   const appendInput = () => {
+    console.log(newObject);
+    newObject[inputIndex] = ["kk", "ee"];
+    console.log(Object.keys(newObject).length);
     if (inputComponents) {
       setInputComponents([...inputComponents, inputIndex]);
     } else {
       setInputComponents([inputIndex]);
     }
     setInputIndex(inputIndex + 1);
+    console.log(inputIndex);
   };
 
   const clearValue = () => {
@@ -227,7 +235,7 @@ function OpenedWebsocket(props: Props) {
             {newObject
               ? Object.keys(newObject).map((key, index) => {
                   let key1 = parseInt(key);
-
+                  console.log(newObject);
                   // console.log(Object.values(newObject)[key1][0]);
                   return (
                     <DockerFormInput
@@ -236,7 +244,7 @@ function OpenedWebsocket(props: Props) {
                       setInputIndex={setInputIndex}
                       setInputComponents={setInputComponents}
                       inputComponents={inputComponents}
-                      option={Object.values(newObject)[key1]}
+                      // option={Object.values(newObject)[key1]}
                     />
                   );
                 })
