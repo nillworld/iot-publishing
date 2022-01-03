@@ -2,8 +2,8 @@ import React, { Dispatch, MouseEventHandler, SetStateAction } from "react";
 import "./DockerFormInput.css";
 
 type Props = {
-  inputIndex: number;
-  setInputIndex: Dispatch<SetStateAction<number>>;
+  lineId: number;
+  setLineId: Dispatch<SetStateAction<number>>;
   inputComponents?: number[];
   setInputComponents: Dispatch<SetStateAction<number[] | undefined>>;
   option?: string;
@@ -20,6 +20,7 @@ function DockerFormInput(props: Props) {
         : []
     );
   };
+  const inputOnChange = () => {};
   return (
     <div className="input-component-div">
       <select name="" id="" className="input-component-select">
@@ -33,8 +34,13 @@ function DockerFormInput(props: Props) {
           </option>
         ))}
       </select>
-      <input placeholder={props.option ? props.option : props.inputIndex + ""} name={"env"} />
-      <button onClick={deleteThisComponent} value={props.inputIndex}>
+      <input
+        placeholder={props.value ? props.value : "argument 입력"}
+        value={props.value ? props.value : ""}
+        onChange={inputOnChange}
+        name={"env"}
+      />
+      <button onClick={deleteThisComponent} value={props.lineId}>
         -
       </button>
     </div>
