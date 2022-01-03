@@ -25,7 +25,7 @@ function OpenedWebsocket(props: Props) {
     env: "",
     arg: "",
   });
-  const [newObject, setNewObject] = useState<any>({});
+
   const templateForms = [
     {
       template: "-Template-",
@@ -81,29 +81,20 @@ function OpenedWebsocket(props: Props) {
   const [selectedFile, setSelectedFile] = useState<File>();
   const [fileSendCheck, setFileSendCheck] = useState<boolean>();
   const [downloadedPercent, setDownloadedPercent] = useState<string>("0%");
-  const [inputIndex, setInputIndex] = useState<number>(0);
-  const [inputComponents, setInputComponents] = useState<any>();
-  const [jsonTestKeys, setJsonTestKeys] = useState<Array<string>>();
 
   const setTemplateForm = (e: any) => {
-    setNewObject({});
-    // setNewObject((newObject[1] = ["1", "2"]));
+    // setInputComponents([]);
     const jsonTemplate = JSON.parse(e.target.value);
     const jsonTemplateKeys = Object.keys(jsonTemplate);
     const jsonTemplateValues = Object.values(jsonTemplate);
-    setJsonTestKeys(jsonTemplateKeys);
-    let lengthArray = [];
-    for (let i = 0; i < jsonTemplateKeys.length; i++) {
-      lengthArray.push(i);
-      setNewObject((newObject[i] = [jsonTemplateKeys[i], jsonTemplateValues[i]]));
-      console.log(newObject, i);
-    }
-    console.log(newObject);
-    console.log(Object.keys(newObject));
-    jsonTemplateKeys.map((index: any) => {
-      console.log(index);
+    let test = [];
+    let test2 = 0;
+    jsonTemplateKeys.map(() => {
+      // setInputIndex(0);
     });
-    setInputComponents(lengthArray);
+    // setInputIndex(inputIndex + 1);
+    setInputComponents(jsonTemplateKeys);
+    console.log(inputComponents);
   };
 
   const valueOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -157,18 +148,16 @@ function OpenedWebsocket(props: Props) {
     }
   };
 
+  const [inputIndex, setInputIndex] = useState<number>(0);
+  const [inputComponents, setInputComponents] = useState<any>();
   // let inputComponents: number[] = [];
   const appendInput = () => {
-    console.log(newObject);
-    newObject[inputIndex] = ["kk", "ee"];
-    console.log(Object.keys(newObject).length);
     if (inputComponents) {
       setInputComponents([...inputComponents, inputIndex]);
     } else {
       setInputComponents([inputIndex]);
     }
     setInputIndex(inputIndex + 1);
-    console.log(inputIndex);
   };
 
   const clearValue = () => {
@@ -220,7 +209,7 @@ function OpenedWebsocket(props: Props) {
             ))}
           </select>
           <div>
-            {/* {inputComponents
+            {inputComponents
               ? inputComponents.map((inputIndex: any, index: any) => (
                   <DockerFormInput
                     key={inputIndex}
@@ -231,23 +220,6 @@ function OpenedWebsocket(props: Props) {
                     // option={inputIndex}
                   />
                 ))
-              : ""} */}
-            {newObject
-              ? Object.keys(newObject).map((key, index) => {
-                  let key1 = parseInt(key);
-                  console.log(newObject);
-                  // console.log(Object.values(newObject)[key1][0]);
-                  return (
-                    <DockerFormInput
-                      key={index}
-                      inputIndex={index}
-                      setInputIndex={setInputIndex}
-                      setInputComponents={setInputComponents}
-                      inputComponents={inputComponents}
-                      // option={Object.values(newObject)[key1]}
-                    />
-                  );
-                })
               : ""}
             <button onClick={appendInput}>ADD</button>
           </div>
