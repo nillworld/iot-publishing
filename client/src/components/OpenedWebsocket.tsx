@@ -15,16 +15,7 @@ type MessageType = {
 function OpenedWebsocket(props: Props) {
   const ws = props.ws;
 
-  const [state, setState] = useState({
-    template: "",
-    from: "",
-    workdir: "",
-    run: "",
-    entrypoint: "",
-    cmd: "",
-    env: "",
-    arg: "",
-  });
+  const [state, setState] = useState({});
   const [selectedFile, setSelectedFile] = useState<File>();
   const [fileSendCheck, setFileSendCheck] = useState<boolean>();
   const [downloadedPercent, setDownloadedPercent] = useState<string>("0%");

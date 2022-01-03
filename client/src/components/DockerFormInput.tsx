@@ -22,27 +22,37 @@ function DockerFormInput(props: Props) {
   };
   const inputOnChange = () => {};
   return (
-    <div className="input-component-div">
-      <select name="" id="" className="input-component-select">
-        {props.option ? <option value={props.option}>{props.option}</option> : <option value="">-옵션 선택-</option>}
-        <option value="" disabled>
-          =============
-        </option>
-        {options.map((option) => (
-          <option value={option} key={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-      <input
-        placeholder={props.value ? props.value : "argument 입력"}
-        value={props.value ? props.value : ""}
-        onChange={inputOnChange}
-        name={"env"}
-      />
-      <button onClick={deleteThisComponent} value={props.lineId}>
-        -
-      </button>
+    <div>
+      {props.option === "template" ? (
+        ""
+      ) : (
+        <div className="input-component-div">
+          <select name="" id="" className="input-component-select">
+            {props.option ? (
+              <option value={props.option}>{props.option}</option>
+            ) : (
+              <option value="">-옵션 선택-</option>
+            )}
+            <option value="" disabled>
+              =============
+            </option>
+            {options.map((option) => (
+              <option value={option} key={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+          <input
+            placeholder={props.value ? props.value : "argument 입력"}
+            value={props.value ? props.value : ""}
+            onChange={inputOnChange}
+            name={"env"}
+          />
+          <button onClick={deleteThisComponent} value={props.lineId}>
+            -
+          </button>
+        </div>
+      )}
     </div>
   );
 }
