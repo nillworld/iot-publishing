@@ -11,7 +11,7 @@ type Props = {
 };
 const options = ["FROM", "WORKDIR", "RUN", "ENTRYPOINT", "CMD", "ADD", "ENV", "ARG", "LABEL", "EXPOSE", "MAINTAINER"];
 function DockerFormInput(props: Props) {
-  const [test, setTest] = useState<string>("e");
+  const [inputValue, setInputValue] = useState<string>();
 
   const deleteThisComponent = (e: any) => {
     props.setInputComponents(
@@ -23,7 +23,7 @@ function DockerFormInput(props: Props) {
     );
   };
   const inputOnChange = (e: any) => {
-    setTest(e.target.value);
+    setInputValue(e.target.value);
   };
 
   return (
@@ -49,7 +49,7 @@ function DockerFormInput(props: Props) {
           </select>
           <input
             placeholder={props.value ? props.value : "argument 입력"}
-            value={props.value}
+            value={inputValue ? inputValue : props.value}
             onChange={inputOnChange}
             name={"env"}
           />

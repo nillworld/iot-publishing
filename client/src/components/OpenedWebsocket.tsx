@@ -67,7 +67,6 @@ function OpenedWebsocket(props: Props) {
   ];
 
   const setTemplateForm = (e: any) => {
-    // setInputComponents([]);
     const jsonTemplate = JSON.parse(e.target.value);
     const jsonTemplateKeys: string[] = Object.keys(jsonTemplate);
     const jsonTemplateValues: string[] = Object.values(jsonTemplate);
@@ -82,27 +81,11 @@ function OpenedWebsocket(props: Props) {
       templateKeys.push(Object.keys(templateLineData)[0]);
       templateValues.push(Object.values(templateLineData)[0]);
     });
-<<<<<<< HEAD
-    // let test: any[] = [];
-    // let test2 = 0;
-    // jsonTemplateKeys.map(() => {
-    //   test.push(test2);
-    //   test2 += 1;
-    // });
-    console.log(jsonTemplateKeysToInt);
     setInputComponents(jsonTemplateKeysToInt);
-    setLineId(jsonTemplateKeysToInt.length - 1);
+    setLineId(jsonTemplateKeysToInt.length);
     setLineOption(templateKeys);
     setLineValue(templateValues);
     if (templateValues) {
-=======
-    // setLineId(lineId + 1);
-    setInputComponents(test);
-    setLineId(jsonTemplateKeys.length);
-    setLineOption(jsonTemplateKeys);
-    if (jsonTemplateValues) {
-      setLineValue(jsonTemplateValues);
->>>>>>> parent of fbed740... delete comment
     }
   };
 
@@ -124,7 +107,7 @@ function OpenedWebsocket(props: Props) {
     let pos = 0;
     if (selectedFile) {
       reader.readAsArrayBuffer(selectedFile);
-      console.log(selectedFile.name);
+      console.log("selectedFile.name", selectedFile.name);
 
       if (ws) {
         ws.send(JSON.stringify(state));
@@ -141,9 +124,6 @@ function OpenedWebsocket(props: Props) {
               if (fileSize && pos > fileSize) {
                 pos = fileSize;
               }
-              //progressBarWidth = pos/fileSize*100;
-              //console.log(progressBar.style.width);
-              // widow.setInterval(setWidth, 500)
             }
             ws.send("DONE");
 
@@ -157,9 +137,7 @@ function OpenedWebsocket(props: Props) {
     }
   };
 
-  // let inputComponents: number[] = [];
   const appendInput = () => {
-    console.log(lineId);
     if (inputComponents) {
       setInputComponents([...inputComponents, lineId]);
     } else {
@@ -188,34 +166,9 @@ function OpenedWebsocket(props: Props) {
     <div className="App">
       <header className="App-header">
         <div className="form-div">
-          {/* <select onChange={setTemplateForm}>
-            {templateForms.map((templateForm) => {
-              return (
-                <option value={JSON.stringify(templateForm)} key={templateForm.template}>
-                  {templateForm.template}
-                </option>
-              );
-            })}
-          </select>
-          <input placeholder="from 입력~" name={"from"} value={state.from} onChange={valueOnChange} />
-          <input placeholder="workdir 입력~" name={"workdir"} value={state.workdir} onChange={valueOnChange} />
-          <input placeholder="run 입력~" name={"run"} value={state.run} onChange={valueOnChange} />
-          <input
-            placeholder="entry point 입력~"
-            name={"entrypoint"}
-            value={state.entrypoint}
-            onChange={valueOnChange}
-          />
-          <input placeholder="cmd 입력~" name={"cmd"} value={state.cmd} onChange={valueOnChange} />
-          <input placeholder="env 입력~" name={"env"} value={state.env} onChange={valueOnChange} />
-          <input placeholder="arg 입력~" name={"arg"} value={state.arg} onChange={valueOnChange} /> */}
           <select onChange={setTemplateForm}>
-            {templateForms.map((templateForm) => (
-              <option
-                value={JSON.stringify(templateForm)}
-                key={templateForm[0]?.template}
-                // disabled={templateForm.template === "-Template-" ? true : false}
-              >
+            {templateForms.map((templateForm, index) => (
+              <option value={JSON.stringify(templateForm)} key={index}>
                 {templateForm[0]?.template}
               </option>
             ))}
@@ -239,19 +192,11 @@ function OpenedWebsocket(props: Props) {
           <div className="filebtn-div">
             <label className="filebtn">
               프로젝트 선택
-              <input
-                placeholder="arg 입력~"
-                type="file"
-                name={"file"}
-                // directory=""
-                // webkitdirectory=""
-                onChange={onChangeFile}
-              />
+              <input placeholder="arg 입력~" type="file" name={"file"} onChange={onChangeFile} />
             </label>
             <div className="fileName-div">{selectedFile ? selectedFile.name : ".tar파일 선택"}</div>
           </div>
 
-          {/* <input onClick={handleFileUpload}>파일 첵크</input> */}
           <div>
             <button className="dockerform-btn" onClick={sendMessage} disabled={fileSendCheck}>
               메세지 보내기
@@ -264,15 +209,3 @@ function OpenedWebsocket(props: Props) {
   );
 }
 export default OpenedWebsocket;
-
-////// 일단 @type>react>index.d.ts 에서 AriaAttributes 부분에 다음처럼 인자 타입 명세
-/* 'directory' ?: string;
-				'webkitdirectory'?: string; */
-
-// declare module "react" {
-//   interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
-//     // extends React's HTMLAttributes
-//     directory?: string; // remember to make these attributes optional....
-//     webkitdirectory?: string;
-//   }
-// }
