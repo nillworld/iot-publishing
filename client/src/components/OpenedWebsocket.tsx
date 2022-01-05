@@ -12,7 +12,6 @@ type Props = {
 function OpenedWebsocket(props: Props) {
   const ws = props.ws;
 
-  const [state, setState] = useState({});
   const [selectedFile, setSelectedFile] = useState<File>();
   const [fileSendCheck, setFileSendCheck] = useState<boolean>();
   const [downloadedPercent, setDownloadedPercent] = useState<string>("0%");
@@ -95,7 +94,7 @@ function OpenedWebsocket(props: Props) {
   };
 
   const sendMessage = () => {
-    console.log(dockerfileInputData);
+    // const test = makeDockerfile();
     setFileSendCheck(true);
     const reader = new FileReader();
     const fileName = selectedFile?.name;
@@ -107,7 +106,7 @@ function OpenedWebsocket(props: Props) {
       console.log("selectedFile.name", selectedFile.name);
 
       if (ws) {
-        ws.send(JSON.stringify(state));
+        ws.send(makeDockerfile());
         ws.onmessage = (message) => {
           let sendChecker = JSON.parse(message.data).sendChecker;
           setDownloadedPercent(JSON.parse(message.data).downloadedPercent);
@@ -134,6 +133,27 @@ function OpenedWebsocket(props: Props) {
     }
   };
 
+  const makeDockerfile = () => {
+    console.log(dockerfileInputData);
+    // dockerfileInputData.map((lineData: any) => {
+    //   console.log(lineData);
+    // });
+    let lineValues = Object.values(dockerfileInputData);
+    let txt = "";
+    lineValues.map((lineValue: any, index) => {
+      let lineSelected = Object.keys(lineValue);
+      let lineInput = Object.values(lineValue);
+      if (index === 0) {
+        return;
+      }
+      if (lineSelected[0] === "" || lineInput[0] === "") {
+        return;
+      }
+      txt = `${txt}\n ${lineSelected[0]} ${lineInput[0]}`;
+    });
+    return txt;
+  };
+
   const appendInput = () => {
     if (inputComponents) {
       setInputComponents([...inputComponents, lineId === 0 ? lineId + 1 : lineId]);
@@ -147,16 +167,6 @@ function OpenedWebsocket(props: Props) {
   };
 
   const clearValue = () => {
-    setState({
-      template: "",
-      FROM: "",
-      WORKDIR: "",
-      RUN: "",
-      ENTRYPOINT: "",
-      CMD: "",
-      ENV: "",
-      ARG: "",
-    });
     setInputComponents([]);
   };
 
