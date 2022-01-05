@@ -95,13 +95,13 @@ function OpenedWebsocket(props: Props) {
 
   const sendMessage = () => {
     // const test = makeDockerfile();
-    setFileSendCheck(true);
     const reader = new FileReader();
     const fileName = selectedFile?.name;
     const fileSize = selectedFile?.size;
     const BUFFER_SIZE = 1024;
     let pos = 0;
-    if (selectedFile) {
+    if (selectedFile && dockerfileInputData) {
+      setFileSendCheck(true);
       reader.readAsArrayBuffer(selectedFile);
       console.log("selectedFile.name", selectedFile.name);
 
@@ -157,10 +157,8 @@ function OpenedWebsocket(props: Props) {
   const appendInput = () => {
     if (inputComponents) {
       setInputComponents([...inputComponents, lineId === 0 ? lineId + 1 : lineId]);
-      // setDockerfileInputData({ ...dockerfileInputData, [lineId === 0 ? lineId + 1 : lineId]: "" });
     } else {
       setInputComponents([lineId === 0 ? lineId + 1 : lineId]);
-      console.log("2222222222");
     }
     setDockerfileInputData({ ...dockerfileInputData, [lineId === 0 ? lineId + 1 : lineId]: "" });
     setLineId(lineId === 0 ? lineId + 2 : lineId + 1);
