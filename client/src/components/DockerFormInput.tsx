@@ -19,7 +19,7 @@ function DockerFormInput(props: Props) {
     setInputValue("");
   }, [props.value]);
 
-  const selectOnChange = (e: any) => {
+  const selectOnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     let lineValue: string[] = [];
     if (props.dockerfileInputData) {
       lineValue = Object.values(props.dockerfileInputData[props.lineId]);
@@ -40,7 +40,8 @@ function DockerFormInput(props: Props) {
         : []
     );
   };
-  const inputOnChange = (e: any) => {
+  const inputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(props.dockerfileInputData);
     let lineSelected: string[] = [];
     setInputValue(e.target.value);
     if (props.dockerfileInputData) {

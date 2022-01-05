@@ -8,9 +8,6 @@ import TransferMessage from "./TransferMessage";
 type Props = {
   ws: WebSocket | undefined;
 };
-type MessageType = {
-  state: string;
-};
 
 function OpenedWebsocket(props: Props) {
   const ws = props.ws;
@@ -67,7 +64,7 @@ function OpenedWebsocket(props: Props) {
     },
   ];
 
-  const setTemplateForm = (e: any) => {
+  const setTemplateForm = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const jsonTemplate = JSON.parse(e.target.value);
     const jsonTemplateKeys: string[] = Object.keys(jsonTemplate);
     const jsonTemplateValues: string[] = Object.values(jsonTemplate);
@@ -76,8 +73,8 @@ function OpenedWebsocket(props: Props) {
     jsonTemplateKeys.map((key) => {
       jsonTemplateKeysToInt.push(parseInt(key));
     });
-    let templateKeys: any[] = [];
-    let templateValues: any[] = [];
+    let templateKeys: Array<string> = [];
+    let templateValues: Array<string> = [];
     jsonTemplateValues.map((templateLineData) => {
       templateKeys.push(Object.keys(templateLineData)[0]);
       templateValues.push(Object.values(templateLineData)[0]);
@@ -91,13 +88,10 @@ function OpenedWebsocket(props: Props) {
     }
   };
 
-  const valueOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setState({ ...state, [name]: value });
-  };
-
-  const onChangeFile = (e: any) => {
-    setSelectedFile(e.target.files[0]);
+  const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setSelectedFile(e.target.files[0]);
+    }
   };
 
   const sendMessage = () => {
@@ -142,7 +136,6 @@ function OpenedWebsocket(props: Props) {
 
   const appendInput = () => {
     if (inputComponents) {
-      console.log(inputComponents);
       setInputComponents([...inputComponents, lineId === 0 ? lineId + 1 : lineId]);
       // setDockerfileInputData({ ...dockerfileInputData, [lineId === 0 ? lineId + 1 : lineId]: "" });
     } else {
@@ -182,7 +175,7 @@ function OpenedWebsocket(props: Props) {
           </select>
           <div>
             {inputComponents
-              ? inputComponents.map((lineId: any, index: any) => (
+              ? inputComponents.map((lineId: number) => (
                   <DockerFormInput
                     key={lineId}
                     lineId={lineId}
