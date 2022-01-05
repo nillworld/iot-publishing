@@ -23,6 +23,7 @@ function OpenedWebsocket(props: Props) {
   const [lineOption, setLineOption] = useState<string[]>();
   const [lineValue, setLineValue] = useState<string[]>();
   const [inputComponents, setInputComponents] = useState<any>();
+  const [dockerfileInputData, setDockerfileInputData] = useState<any>();
 
   const templateForms = [
     {
@@ -55,14 +56,14 @@ function OpenedWebsocket(props: Props) {
       7: { ARG: "" },
     },
     {
-      1: { template: "Java" },
-      2: { FROM: "3" },
-      3: { WORKDIR: "" },
-      4: { RUN: "" },
-      5: { ENTRYPOINT: "" },
-      6: { CMD: "" },
-      7: { ENV: "" },
-      8: { ARG: "" },
+      0: { template: "Java" },
+      1: { FROM: "3" },
+      2: { WORKDIR: "" },
+      3: { RUN: "" },
+      4: { ENTRYPOINT: "" },
+      5: { CMD: "" },
+      6: { ENV: "" },
+      7: { ARG: "" },
     },
   ];
 
@@ -81,6 +82,7 @@ function OpenedWebsocket(props: Props) {
       templateKeys.push(Object.keys(templateLineData)[0]);
       templateValues.push(Object.values(templateLineData)[0]);
     });
+    setDockerfileInputData(jsonTemplate);
     setInputComponents(jsonTemplateKeysToInt);
     setLineId(jsonTemplateKeysToInt.length);
     setLineOption(templateKeys);
@@ -140,8 +142,10 @@ function OpenedWebsocket(props: Props) {
   const appendInput = () => {
     if (inputComponents) {
       setInputComponents([...inputComponents, lineId]);
+      setDockerfileInputData({ ...dockerfileInputData, [lineId]: "" });
     } else {
       setInputComponents([lineId]);
+      console.log("2222222222");
     }
     setLineId(lineId + 1);
   };
@@ -184,6 +188,8 @@ function OpenedWebsocket(props: Props) {
                     inputComponents={inputComponents}
                     option={lineOption ? lineOption[lineId] : ""}
                     value={lineValue ? lineValue[lineId] : ""}
+                    dockerfileInputData={dockerfileInputData}
+                    setDockerfileInputData={setDockerfileInputData}
                   />
                 ))
               : ""}
@@ -203,6 +209,7 @@ function OpenedWebsocket(props: Props) {
             </button>
             <button onClick={clearValue}>초기화</button>
           </div>
+          <div>{JSON.stringify(dockerfileInputData)}</div>
         </div>
       </header>
     </div>
