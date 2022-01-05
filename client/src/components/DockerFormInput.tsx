@@ -75,7 +75,7 @@ function DockerFormInput(props: Props) {
           </select>
           <input
             placeholder={props.value ? props.value : "argument 입력"}
-            value={inputValue ? inputValue : props.value}
+            value={inputValue ? inputValue : props.value || ""}
             onChange={inputOnChange}
             name={"env"}
           />

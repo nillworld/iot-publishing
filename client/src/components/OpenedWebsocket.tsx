@@ -22,7 +22,7 @@ function OpenedWebsocket(props: Props) {
   const [lineId, setLineId] = useState<number>(0);
   const [lineOption, setLineOption] = useState<string[]>();
   const [lineValue, setLineValue] = useState<string[]>();
-  const [inputComponents, setInputComponents] = useState<any>();
+  const [inputComponents, setInputComponents] = useState<number[]>();
   const [dockerfileInputData, setDockerfileInputData] = useState<any>();
 
   const templateForms = [
@@ -101,6 +101,7 @@ function OpenedWebsocket(props: Props) {
   };
 
   const sendMessage = () => {
+    console.log(dockerfileInputData);
     setFileSendCheck(true);
     const reader = new FileReader();
     const fileName = selectedFile?.name;
@@ -141,13 +142,15 @@ function OpenedWebsocket(props: Props) {
 
   const appendInput = () => {
     if (inputComponents) {
-      setInputComponents([...inputComponents, lineId]);
-      setDockerfileInputData({ ...dockerfileInputData, [lineId]: "" });
+      console.log(inputComponents);
+      setInputComponents([...inputComponents, lineId === 0 ? lineId + 1 : lineId]);
+      // setDockerfileInputData({ ...dockerfileInputData, [lineId === 0 ? lineId + 1 : lineId]: "" });
     } else {
-      setInputComponents([lineId]);
+      setInputComponents([lineId === 0 ? lineId + 1 : lineId]);
       console.log("2222222222");
     }
-    setLineId(lineId + 1);
+    setDockerfileInputData({ ...dockerfileInputData, [lineId === 0 ? lineId + 1 : lineId]: "" });
+    setLineId(lineId === 0 ? lineId + 2 : lineId + 1);
   };
 
   const clearValue = () => {
