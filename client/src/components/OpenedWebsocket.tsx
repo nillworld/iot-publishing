@@ -89,6 +89,7 @@ function OpenedWebsocket(props: Props) {
 
   const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
+      console.log(e.target.files[0]);
       setSelectedFile(e.target.files[0]);
     }
   };
@@ -125,8 +126,13 @@ function OpenedWebsocket(props: Props) {
 
             //ws.close();
           } else if (sendChecker === "DOWNLOADING") {
-            // console.log(downloadedPercent);
-            // progressBar.style.width = downloadedPercent;
+            console.log(downloadedPercent);
+          } else if (sendChecker === "TAR") {
+            console.log("TAR");
+            ws.send("TAR");
+          } else if (sendChecker === "BUILD") {
+            console.log("BUILD");
+            ws.send("BUILD");
           }
         };
       }

@@ -1,0 +1,8 @@
+이 폴더는 사용자 프로젝트가 들어갈 폴더입니다. 
+
+이 폴더를 기반으로 프로젝트가 도커로 빌드 됩니다.
+
+프로젝트를 감싸는 폴더 이름은 project 여야 합니다. 
+
+즉, project/[user_folder]/<user_project_files> 이런식으로 들어가는 게 아닌
+project/<user_project_files> 이여야 합니다.
