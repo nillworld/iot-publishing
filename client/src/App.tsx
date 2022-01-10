@@ -18,8 +18,24 @@ function App() {
       };
     }
   }, [ws]);
+  const onServerTest = () => {
+    fetch("http://localhost:3001/")
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+  };
 
-  return <div>{wsOpenCheck ? <OpenedWebsocket ws={ws} /> : <WebsocketConnecter wsOpenCheck={wsOpenCheck} ws={ws} setWs={setWs} />}</div>;
+  return (
+    <div>
+      {wsOpenCheck ? (
+        <OpenedWebsocket ws={ws} />
+      ) : (
+        <WebsocketConnecter wsOpenCheck={wsOpenCheck} ws={ws} setWs={setWs} />
+      )}
+      <div>
+        <button onClick={onServerTest}>hi</button>
+      </div>
+    </div>
+  );
 }
 console.log(WebsocketConnecter.prototype.ipCheck);
 export default App;

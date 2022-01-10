@@ -4,16 +4,12 @@ import "../App.css";
 import DockerFormInput from "./DockerFormInput";
 import "./OpenedWebsocket.css";
 import TransferMessage from "./TransferMessage";
-import tar from "tar";
 
 type Props = {
   ws: WebSocket | undefined;
 };
 
 function OpenedWebsocket(props: Props) {
-  const test5 = () => {
-    tar.c({ file: "test5.tar" }, ["test5.txt"]).then((_) => console.log("check"));
-  };
   const ws = props.ws;
 
   const [selectedFile, setSelectedFile] = useState<File>();
@@ -218,7 +214,6 @@ function OpenedWebsocket(props: Props) {
           </div>
 
           <div>
-            <button>hi</button>
             <button className="dockerform-btn" onClick={sendMessage} disabled={fileSendCheck}>
               메세지 보내기
             </button>
