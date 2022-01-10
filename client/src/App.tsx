@@ -22,6 +22,10 @@ function App() {
       backWebSocket.onopen = () => {
         console.log("Websocket port 4000으로 back과 통신 중");
         backWebSocket.send("tar");
+
+        backWebSocket.onmessage = (message) => {
+          console.log(message.data);
+        };
       };
       backWebSocket.onclose = () => {
         console.log("Websocket port 4000 닫힘");
@@ -45,7 +49,7 @@ function App() {
 
   return (
     <div>
-      <button onClick={connectBack}>eee</button>
+      <button onClick={connectBack}>이 버튼이 vscode api 연결 임시 방편</button>
       {wsOpenCheck ? (
         <OpenedWebsocket ws={ws} />
       ) : (
