@@ -2,10 +2,17 @@ import React, { useEffect, useState } from "react";
 import OpenedWebsocket from "./components/OpenedWebsocket";
 import WebsocketConnecter from "./components/WebsocketConnecter";
 import TransferMessage from "./components/TransferMessage";
+
+type Message = {
+  state: string | undefined;
+  generatorIP: {} | undefined;
+};
+
 function App() {
   const [wsOpenCheck, setWsOpenCheck] = useState<boolean>(false);
-  const [ws, setWs] = useState<WebSocket>();
   const [backWebSocket, setBackWebsocket] = useState<WebSocket>();
+  const [messageForBack, setMessageForBack] = useState<Message>();
+  const [connectCheck, setConnectCheck] = useState(true);
 
   // express로 back이랑 연결 방식
   // const onServerTest = () => {
@@ -13,18 +20,21 @@ function App() {
   //     .then((res) => res.json())
   //     .then((data) => console.log(data));
   // };
+
   const connectBack = () => {
     setBackWebsocket(new WebSocket(`ws://localhost:4000/ws`));
   };
   useEffect(() => {
-    // onServerTest();
     if (backWebSocket) {
       backWebSocket.onopen = () => {
         console.log("Websocket port 4000으로 back과 통신 중");
-        backWebSocket.send("tar");
+        // backWebSocket.send("tar");
 
         backWebSocket.onmessage = (message) => {
-          console.log(message.data);
+          if (message.data === "GENERATOR_CONNECTED") {
+            setWsOpenCheck(true);
+          } else if (message.data === "GENERATOR_CONNECT_ERROR") {
+          }
         };
       };
       backWebSocket.onclose = () => {
@@ -33,27 +43,26 @@ function App() {
     }
   }, [backWebSocket]);
 
+  //back으로 'messageForBack'내용 바뀔때 마다 보냄
   useEffect(() => {
-    console.log(ws);
-    if (ws) {
-      ws.onclose = () => {
-        console.log("소켓 연결 종료");
-        setWsOpenCheck(false);
-      };
-      ws.onopen = () => {
-        console.log("소켓 연결 완료");
-        setWsOpenCheck(true);
-      };
-    }
-  }, [ws]);
+    backWebSocket?.send(JSON.stringify(messageForBack));
+    console.log("backWebSocket", messageForBack);
+  }, [messageForBack]);
 
   return (
     <div>
-      <button onClick={connectBack}>이 버튼이 vscode api 연결 임시 방편</button>
+      {backWebSocket ? "" : <button onClick={connectBack}>이 버튼이 vscode api 연결 임시 방편</button>}
       {wsOpenCheck ? (
-        <OpenedWebsocket ws={ws} />
+        <OpenedWebsocket ws={backWebSocket} />
       ) : (
-        <WebsocketConnecter wsOpenCheck={wsOpenCheck} ws={ws} setWs={setWs} />
+        <WebsocketConnecter
+          wsOpenCheck={wsOpenCheck}
+          backWebSocket={backWebSocket}
+          messageForBack={messageForBack}
+          setMessageForBack={setMessageForBack}
+          connectCheck={connectCheck}
+          setConnectCheck={setConnectCheck}
+        />
       )}
       <div></div>
     </div>

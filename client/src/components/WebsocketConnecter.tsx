@@ -1,9 +1,18 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import "./WebsocketConnecter.css";
+
+type Message = {
+  state: string | undefined;
+  generatorIP: {} | undefined;
+};
+
 type Props = {
-  ws: WebSocket | undefined;
   wsOpenCheck: boolean;
-  setWs: Dispatch<SetStateAction<WebSocket | undefined>>;
+  backWebSocket: WebSocket | undefined;
+  messageForBack: Message | undefined;
+  setMessageForBack: Dispatch<SetStateAction<Message | undefined>>;
+  connectCheck: boolean;
+  setConnectCheck: Dispatch<SetStateAction<boolean>>;
 };
 function WebsocketConnecter(props: Props) {
   const [ip, setIP] = useState<String>("");
@@ -43,42 +52,43 @@ function WebsocketConnecter(props: Props) {
 
   const enterKeypress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !(ipCheck || portCheck)) {
-      connectServer();
+      connectGenerator();
     }
   };
 
-  const connectServer = () => {
+  const connectGenerator = () => {
     if (ipCheck || portCheck) {
       console.log("잘못된 접근입니다.");
       return;
     }
     setWebSocketState("연결중..");
-    if (props.wsOpenCheck) {
-      setWebSocketState("연결");
-    } else {
+    setTimeout(() => {
       setWebSocketState("연결을 다시 확인해 주세요.");
-    }
-    props.setWs(new WebSocket(`ws://${ip}:${port}/ws`));
-    if (props.ws) {
-      props.ws.onclose = () => {
-        setWebSocketState("닫힘!");
-      };
-      props.ws.onopen = () => {
-        setWebSocketState("열림!");
-      };
+      props.setConnectCheck(true);
+    }, 3000);
+    // if (props.wsOpenCheck) {
+    //   setWebSocketState("연결 dhksfy");
+    // } else {
+    //   setWebSocketState("연결을 다시 확인해 주세요.");
+    //   return;
+    // }
+    if (props.backWebSocket) {
+      props.setMessageForBack({
+        state: "CONNECT_GENERATOR",
+        generatorIP: { ip: ip, port: port },
+      });
+      props.setConnectCheck(false);
     }
   };
 
-  // test용 websocket connecter
-  const testConnect = () => {
-    props.setWs(new WebSocket(`ws://localhost:1234/ws`));
-    if (props.ws) {
-      props.ws.onclose = () => {
-        setWebSocketState("닫힘!");
-      };
-      props.ws.onopen = () => {
-        setWebSocketState("열림!");
-      };
+  // 테스트용 Generator Connector
+  const connectGeneratorTest = () => {
+    console.log("connectGenerator");
+    if (props.backWebSocket) {
+      props.setMessageForBack({
+        state: "CONNECT_GENERATOR",
+        generatorIP: { ip: "localhost", port: 1234 },
+      });
     }
   };
 
@@ -93,12 +103,11 @@ function WebsocketConnecter(props: Props) {
           PORT:
           <input placeholder="ex) 4500" type="number" name="test" onChange={getPort} onKeyPress={enterKeypress} />
         </div>
-        <button type="submit" onClick={connectServer} disabled={ipCheck || portCheck}>
-          연결
+
+        <button onClick={connectGenerator} disabled={ipCheck || portCheck || !props.connectCheck}>
+          back 통해서 generator 연결
         </button>
-        <button type="submit" onClick={testConnect}>
-          테스트
-        </button>
+        <button onClick={connectGeneratorTest}>back 통해서 generator 연결 테스트</button>
         <div className="check-comment">{ipRegExpCheck}</div>
         <div className="check-comment">{portRegExpCheck}</div>
         <div className="check-comment">{webSocketState}</div>
