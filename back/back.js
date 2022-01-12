@@ -3,15 +3,18 @@ const WebsocketServer = require("ws").Server;
 const tar = require("tar");
 const fs = require("fs");
 
-let generatorWS;
-
 const clientConnect = () => {
   const backWSS = new WebsocketServer({ port: 4000 });
+
+  let generatorWS;
+
   console.log("ws 4000 열림");
 
   backWSS.on("connection", (clientWS) => {
     console.log("back이랑 연결 됨");
     clientWS.on("message", (message) => {
+      console.log("여기////", message);
+      console.log(message.toString());
       const jsonMessage = JSON.parse(message);
       console.log(jsonMessage);
       if (message.toString() === "tar") {
@@ -39,14 +42,16 @@ const clientConnect = () => {
         generatorWS.onopen = () => {
           console.log("GeneratorWS opened");
           clientWS.send("GENERATOR_CONNECTED");
-          generatorWS.send("자 이제 시작이야");
+          generatorWS.send("GENERATOR_START");
 
           generatorWSOpenCheck = true;
         };
 
-        generatorWS.onmessage = (message) => {
-          console.log("yeah it's generator ws connection !", message);
-        };
+        // generatorWS.onmessage = (message) => {
+        //   console.log("#### Message from generator: ", message.data);
+        // };
+      }
+      if (jsonMessage.state === "SET_DOCKER_FORM") {
       }
     });
   });

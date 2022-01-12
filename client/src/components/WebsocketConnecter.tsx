@@ -1,19 +1,20 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import "./WebsocketConnecter.css";
 
-type Message = {
-  state: string | undefined;
-  generatorIP: {} | undefined;
-};
-
 type Props = {
   wsOpenCheck: boolean;
   backWebSocket: WebSocket | undefined;
-  messageForBack: Message | undefined;
   setMessageForBack: Dispatch<SetStateAction<Message | undefined>>;
   connectCheck: boolean;
   setConnectCheck: Dispatch<SetStateAction<boolean>>;
 };
+
+type Message = {
+  state: string | undefined;
+  generatorIP?: {} | undefined;
+  dockerForm?: {} | undefined;
+};
+
 function WebsocketConnecter(props: Props) {
   const [ip, setIP] = useState<String>("");
   const [port, setPort] = useState<String>();

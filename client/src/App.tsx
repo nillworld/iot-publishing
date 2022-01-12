@@ -5,7 +5,8 @@ import TransferMessage from "./components/TransferMessage";
 
 type Message = {
   state: string | undefined;
-  generatorIP: {} | undefined;
+  generatorIP?: {} | undefined;
+  dockerForm?: {} | undefined;
 };
 
 function App() {
@@ -53,12 +54,11 @@ function App() {
     <div>
       {backWebSocket ? "" : <button onClick={connectBack}>이 버튼이 vscode api 연결 임시 방편</button>}
       {wsOpenCheck ? (
-        <OpenedWebsocket ws={backWebSocket} />
+        <OpenedWebsocket backWebSocket={backWebSocket} setMessageForBack={setMessageForBack} />
       ) : (
         <WebsocketConnecter
           wsOpenCheck={wsOpenCheck}
           backWebSocket={backWebSocket}
-          messageForBack={messageForBack}
           setMessageForBack={setMessageForBack}
           connectCheck={connectCheck}
           setConnectCheck={setConnectCheck}

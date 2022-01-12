@@ -6,11 +6,18 @@ import "./OpenedWebsocket.css";
 import TransferMessage from "./TransferMessage";
 
 type Props = {
-  ws: WebSocket | undefined;
+  backWebSocket: WebSocket | undefined;
+  setMessageForBack: Dispatch<SetStateAction<Message | undefined>>;
+};
+
+type Message = {
+  state: string | undefined;
+  generatorIP?: {} | undefined;
+  dockerForm?: {} | undefined;
 };
 
 function OpenedWebsocket(props: Props) {
-  const ws = props.ws;
+  const backWebSocket = props.backWebSocket;
 
   const [selectedFile, setSelectedFile] = useState<File>();
   const [fileSendCheck, setFileSendCheck] = useState<boolean>();
@@ -95,6 +102,10 @@ function OpenedWebsocket(props: Props) {
   };
 
   const sendMessage = () => {
+    ///////////////////////
+    props.setMessageForBack({ state: "SET_DOCKER_FORM" });
+    ///////////////////////////
+
     // const test = makeDockerfile();
     const reader = new FileReader();
     const fileName = selectedFile?.name;
@@ -106,33 +117,33 @@ function OpenedWebsocket(props: Props) {
       reader.readAsArrayBuffer(selectedFile);
       console.log("selectedFile.name", selectedFile.name);
 
-      if (ws) {
-        ws.send(makeDockerfile());
-        ws.onmessage = (message) => {
+      if (backWebSocket) {
+        backWebSocket.send(makeDockerfile());
+        backWebSocket.onmessage = (message) => {
           let sendChecker = JSON.parse(message.data).sendChecker;
           setDownloadedPercent(JSON.parse(message.data).downloadedPercent);
           const fileInfo = { fileName: fileName, fileSize: fileSize };
           if (sendChecker === "FILE_INFO") {
-            ws.send(JSON.stringify(fileInfo));
+            backWebSocket.send(JSON.stringify(fileInfo));
           } else if (sendChecker === "DATA") {
             while (pos != fileSize) {
-              ws.send(selectedFile.slice(pos, pos + BUFFER_SIZE));
+              backWebSocket.send(selectedFile.slice(pos, pos + BUFFER_SIZE));
               pos = pos + BUFFER_SIZE;
               if (fileSize && pos > fileSize) {
                 pos = fileSize;
               }
             }
-            ws.send("DONE");
+            backWebSocket.send("DONE");
 
-            //ws.close();
+            //backWebSocket.close();
           } else if (sendChecker === "DOWNLOADING") {
             console.log(downloadedPercent);
           } else if (sendChecker === "TAR") {
             console.log("TAR");
-            ws.send("TAR");
+            backWebSocket.send("TAR");
           } else if (sendChecker === "BUILD") {
             console.log("BUILD");
-            ws.send("BUILD");
+            backWebSocket.send("BUILD");
           }
         };
       }
