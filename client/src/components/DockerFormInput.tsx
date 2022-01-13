@@ -8,8 +8,8 @@ type Props = {
   setInputComponents: Dispatch<SetStateAction<number[] | undefined>>;
   option?: string;
   value?: string;
-  dockerfileInputData: any[] | undefined;
-  setDockerfileInputData: Dispatch<SetStateAction<any | undefined>>;
+  dockerFormData: any[] | undefined;
+  setDockerFormData: Dispatch<SetStateAction<any | undefined>>;
 };
 const options = ["FROM", "WORKDIR", "RUN", "ENTRYPOINT", "CMD", "ADD", "ENV", "ARG", "LABEL", "EXPOSE", "MAINTAINER"];
 function DockerFormInput(props: Props) {
@@ -21,17 +21,19 @@ function DockerFormInput(props: Props) {
 
   const selectOnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     let lineValue: string[] = [];
-    if (props.dockerfileInputData) {
-      lineValue = Object.values(props.dockerfileInputData[props.lineId]);
+    if (props.dockerFormData) {
+      lineValue = Object.values(props.dockerFormData[props.lineId]);
     }
-    props.setDockerfileInputData({
-      ...props.dockerfileInputData,
+    props.setDockerFormData({
+      ...props.dockerFormData,
       [props.lineId]: { [e.target.value]: lineValue[0] },
     });
   };
 
   const deleteThisComponent = (e: any) => {
-    props.setDockerfileInputData({ ...props.dockerfileInputData, [e.target.value]: "" });
+    let tempdockerFormData = { ...props.dockerFormData };
+    delete tempdockerFormData[e.target.value];
+    props.setDockerFormData(tempdockerFormData);
     props.setInputComponents(
       props.inputComponents
         ? props.inputComponents.filter((inputComponent) => {
@@ -41,14 +43,14 @@ function DockerFormInput(props: Props) {
     );
   };
   const inputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(props.dockerfileInputData);
+    console.log(props.dockerFormData);
     let lineSelected: string[] = [];
     setInputValue(e.target.value);
-    if (props.dockerfileInputData) {
-      lineSelected = Object.keys(props.dockerfileInputData[props.lineId]);
+    if (props.dockerFormData) {
+      lineSelected = Object.keys(props.dockerFormData[props.lineId]);
     }
-    props.setDockerfileInputData({
-      ...props.dockerfileInputData,
+    props.setDockerFormData({
+      ...props.dockerFormData,
       [props.lineId]: { [lineSelected[0]]: e.target.value },
     });
   };

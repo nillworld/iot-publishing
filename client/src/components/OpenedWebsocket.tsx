@@ -26,7 +26,7 @@ function OpenedWebsocket(props: Props) {
   const [lineOption, setLineOption] = useState<string[]>();
   const [lineValue, setLineValue] = useState<string[]>();
   const [inputComponents, setInputComponents] = useState<number[]>();
-  const [dockerfileInputData, setDockerfileInputData] = useState<any>();
+  const [dockerFormData, setDockerFormData] = useState<any>();
 
   const templateForms = [
     {
@@ -71,6 +71,7 @@ function OpenedWebsocket(props: Props) {
   ];
 
   const setTemplateForm = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log(e.target.value);
     const jsonTemplate = JSON.parse(e.target.value);
     const jsonTemplateKeys: string[] = Object.keys(jsonTemplate);
     const jsonTemplateValues: string[] = Object.values(jsonTemplate);
@@ -85,7 +86,7 @@ function OpenedWebsocket(props: Props) {
       templateKeys.push(Object.keys(templateLineData)[0]);
       templateValues.push(Object.values(templateLineData)[0]);
     });
-    setDockerfileInputData(jsonTemplate);
+    setDockerFormData(jsonTemplate);
     setInputComponents(jsonTemplateKeysToInt);
     setLineId(jsonTemplateKeysToInt.length);
     setLineOption(templateKeys);
@@ -112,7 +113,7 @@ function OpenedWebsocket(props: Props) {
     const fileSize = selectedFile?.size;
     const BUFFER_SIZE = 1024;
     let pos = 0;
-    if (selectedFile && dockerfileInputData) {
+    if (selectedFile && dockerFormData) {
       setFileSendCheck(true);
       reader.readAsArrayBuffer(selectedFile);
       console.log("selectedFile.name", selectedFile.name);
@@ -151,11 +152,11 @@ function OpenedWebsocket(props: Props) {
   };
 
   const makeDockerfile = () => {
-    console.log(dockerfileInputData);
-    // dockerfileInputData.map((lineData: any) => {
+    console.log(dockerFormData);
+    // dockerFormData.map((lineData: any) => {
     //   console.log(lineData);
     // });
-    let lineValues = Object.values(dockerfileInputData);
+    let lineValues = Object.values(dockerFormData);
     let txt = "";
     lineValues.map((lineValue: any, index) => {
       let lineSelected = Object.keys(lineValue);
@@ -177,7 +178,7 @@ function OpenedWebsocket(props: Props) {
     } else {
       setInputComponents([lineId === 0 ? lineId + 1 : lineId]);
     }
-    setDockerfileInputData({ ...dockerfileInputData, [lineId === 0 ? lineId + 1 : lineId]: "" });
+    setDockerFormData({ ...dockerFormData, [lineId === 0 ? lineId + 1 : lineId]: "" });
     setLineId(lineId === 0 ? lineId + 2 : lineId + 1);
   };
 
@@ -209,8 +210,8 @@ function OpenedWebsocket(props: Props) {
                     inputComponents={inputComponents}
                     option={lineOption ? lineOption[lineId] : ""}
                     value={lineValue ? lineValue[lineId] : ""}
-                    dockerfileInputData={dockerfileInputData}
-                    setDockerfileInputData={setDockerfileInputData}
+                    dockerFormData={dockerFormData}
+                    setDockerFormData={setDockerFormData}
                   />
                 ))
               : ""}
@@ -230,7 +231,7 @@ function OpenedWebsocket(props: Props) {
             </button>
             <button onClick={clearValue}>초기화</button>
           </div>
-          <div>{JSON.stringify(dockerfileInputData)}</div>
+          <div>{JSON.stringify(dockerFormData)}</div>
         </div>
       </header>
     </div>
