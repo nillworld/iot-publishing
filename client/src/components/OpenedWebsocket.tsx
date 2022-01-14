@@ -23,6 +23,7 @@ function OpenedWebsocket(props: Props) {
   const [lineId, setLineId] = useState<number>(0);
   const [lineOption, setLineOption] = useState<string[]>();
   const [lineValue, setLineValue] = useState<string[]>();
+  const [optionSelect, setOptionSelect] = useState<string>();
   const [inputComponents, setInputComponents] = useState<number[]>();
   const [dockerFormData, setDockerFormData] = useState<any>();
 
@@ -73,6 +74,7 @@ function OpenedWebsocket(props: Props) {
   }, [dockerFormData]);
 
   const setTemplateForm = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setOptionSelect(e.target.value);
     console.log(e.target.value);
     const jsonTemplate = JSON.parse(e.target.value);
     const jsonTemplateKeys: string[] = Object.keys(jsonTemplate);
@@ -186,7 +188,9 @@ function OpenedWebsocket(props: Props) {
   };
 
   const clearValue = () => {
+    setOptionSelect("");
     setInputComponents([]);
+    setDockerFormData({});
   };
 
   return fileSendCheck ? (
@@ -195,7 +199,7 @@ function OpenedWebsocket(props: Props) {
     <div className="App">
       <header className="App-header">
         <div className="form-div">
-          <select onChange={setTemplateForm}>
+          <select onChange={setTemplateForm} value={optionSelect}>
             {templateForms.map((templateForm, index) => (
               <option value={JSON.stringify(templateForm)} key={index}>
                 {templateForm[0]?.template}

@@ -6,7 +6,7 @@ import TransferMessage from "./components/TransferMessage";
 type Message = {
   state: string | undefined;
   generatorIP?: {} | undefined;
-  dockerFormData?: {} | undefined;
+  dockerForm?: {} | undefined;
 };
 
 function App() {
@@ -33,7 +33,6 @@ function App() {
 
         backWebSocket.onmessage = (message) => {
           if (message.data === "GENERATOR_CONNECTED") {
-            console.log("Generator와 연결 됨");
             setWsOpenCheck(true);
           } else if (message.data === "GENERATOR_CONNECT_ERROR") {
           }
