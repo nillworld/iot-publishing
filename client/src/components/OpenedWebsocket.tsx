@@ -107,9 +107,10 @@ function OpenedWebsocket(props: Props) {
   const dockerBuild = () => {
     ///////////////////////
     props.setMessageForBack({ state: "SET_DOCKER_FORM", dockerFormData: dockerFormData });
+
     ///////////////////////////
 
-    /* // const test = makeDockerfile();
+    /* 웹소켓에서 버퍼로 잘라 파일 보내기
     const reader = new FileReader();
     const fileName = selectedFile?.name;
     const fileSize = selectedFile?.size;
@@ -153,7 +154,7 @@ function OpenedWebsocket(props: Props) {
     } */
   };
 
-  const makeDockerfile = () => {
+  const makeDockerfileText = () => {
     console.log(dockerFormData);
     // dockerFormData.map((lineData: any) => {
     //   console.log(lineData);

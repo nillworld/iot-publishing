@@ -7,6 +7,9 @@ const clientConnect = () => {
   const backWSS = new WebsocketServer({ port: 4000 });
 
   let generatorWS;
+  let messageToServer = {
+    state: "",
+  };
 
   console.log("ws 4000 열림");
 
@@ -40,9 +43,10 @@ const clientConnect = () => {
           }
         };
         generatorWS.onopen = () => {
+          messageToServer.state = "GENERATOR_START";
           console.log("GeneratorWS opened");
           clientWS.send("GENERATOR_CONNECTED");
-          generatorWS.send("GENERATOR_START");
+          generatorWS.send(JSON.stringify(messageToServer));
 
           generatorWSOpenCheck = true;
         };
@@ -52,10 +56,38 @@ const clientConnect = () => {
         // };
       }
       if (jsonMessage.state === "SET_DOCKER_FORM") {
-        console.log(jsonMessage.dockerFormData);
+        messageToServer.state = "MAKE_DOCKER_FILE";
+        const dockerFileText = makeDockerfileText(jsonMessage.dockerFormData);
+        messageToServer.dockerForm = dockerFileText;
+        generatorWS.send(JSON.stringify(messageToServer));
       }
     });
   });
+};
+
+const makeDockerfileText = (dockerFormData) => {
+  console.log(dockerFormData);
+  // dockerFormData.map((lineData: any) => {
+  //   console.log(lineData);
+  // });
+  let lineValues = Object.values(dockerFormData);
+  let txt = "";
+  lineValues.map((lineValue, index) => {
+    let lineSelected = Object.keys(lineValue);
+    let lineInput = Object.values(lineValue);
+    if (index === 0) {
+      return;
+    }
+    if (lineSelected[0] === "" || lineInput[0] === "") {
+      return;
+    }
+    if (txt) {
+      txt = `${txt}\n ${lineSelected[0]} ${lineInput[0]}`;
+    } else {
+      txt = `${lineSelected[0]} ${lineInput[0]}`;
+    }
+  });
+  return txt;
 };
 
 const test = (clientWS) => {
