@@ -1,15 +1,19 @@
-const WebSocket = require("ws");
-const WebsocketServer = require("ws").Server;
-const tar = require("tar");
-const fs = require("fs");
+import * as WebSocket from "ws";
+import * as tar from "tar";
+import * as fs from "fs";
+
+const WebsocketServer = WebSocket.Server;
+
+type MessageToServerType = {
+  state: string;
+  dockerForm?: string;
+};
 
 const clientConnect = () => {
   const backWSS = new WebsocketServer({ port: 4000 });
 
   let generatorWS;
-  let messageToServer = {
-    state: "",
-  };
+  let messageToServer: MessageToServerType = { state: "" };
 
   console.log("ws 4000 열림");
 
@@ -73,18 +77,21 @@ const makeDockerfileText = (dockerFormData) => {
   lineValues.map((lineValue, index) => {
     let lineSelected = Object.keys(lineValue);
     let lineInput = Object.values(lineValue);
+
     if (index === 0) {
       return;
     }
-    if (lineSelected[0] === "" || lineInput[0] === "") {
+    if (lineValue === "" || lineSelected[0] === "" || lineInput[0] === "") {
       return;
     }
     if (txt) {
       txt = `${txt}\n ${lineSelected[0]} ${lineInput[0]}`;
     } else {
       txt = `${lineSelected[0]} ${lineInput[0]}`;
+      console.log("????", txt);
     }
   });
+
   return txt;
 };
 
