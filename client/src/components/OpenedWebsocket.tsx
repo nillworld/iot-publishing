@@ -13,12 +13,10 @@ type Props = {
 type Message = {
   state: string | undefined;
   generatorIP?: {} | undefined;
-  dockerForm?: {} | undefined;
+  dockerFormData?: {} | undefined;
 };
 
 function OpenedWebsocket(props: Props) {
-  const backWebSocket = props.backWebSocket;
-
   const [selectedFile, setSelectedFile] = useState<File>();
   const [fileSendCheck, setFileSendCheck] = useState<boolean>();
   const [downloadedPercent, setDownloadedPercent] = useState<string>("0%");
@@ -70,6 +68,10 @@ function OpenedWebsocket(props: Props) {
     },
   ];
 
+  useEffect(() => {
+    props.setMessageForBack({ state: "SETTING_DOCKER_FORM", dockerFormData: dockerFormData });
+  }, [dockerFormData]);
+
   const setTemplateForm = (e: React.ChangeEvent<HTMLSelectElement>) => {
     console.log(e.target.value);
     const jsonTemplate = JSON.parse(e.target.value);
@@ -102,12 +104,12 @@ function OpenedWebsocket(props: Props) {
     }
   };
 
-  const sendMessage = () => {
+  const dockerBuild = () => {
     ///////////////////////
-    props.setMessageForBack({ state: "SET_DOCKER_FORM" });
+    props.setMessageForBack({ state: "SET_DOCKER_FORM", dockerFormData: dockerFormData });
     ///////////////////////////
 
-    // const test = makeDockerfile();
+    /* // const test = makeDockerfile();
     const reader = new FileReader();
     const fileName = selectedFile?.name;
     const fileSize = selectedFile?.size;
@@ -148,7 +150,7 @@ function OpenedWebsocket(props: Props) {
           }
         };
       }
-    }
+    } */
   };
 
   const makeDockerfile = () => {
@@ -226,8 +228,8 @@ function OpenedWebsocket(props: Props) {
           </div>
 
           <div>
-            <button className="dockerform-btn" onClick={sendMessage} disabled={fileSendCheck}>
-              메세지 보내기
+            <button className="dockerform-btn" onClick={dockerBuild} disabled={fileSendCheck}>
+              도커로 빌드하기
             </button>
             <button onClick={clearValue}>초기화</button>
           </div>

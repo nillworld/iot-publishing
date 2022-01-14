@@ -42,16 +42,24 @@ function DockerFormInput(props: Props) {
         : []
     );
   };
+
+  const optionOnChange = (e: React.ChangeEvent<HTMLOptionElement>) => {
+    let dockerFormDataValues: string[] = [];
+    if (props.dockerFormData) {
+      dockerFormDataValues = Object.values(props.dockerFormData[props.lineId]);
+    }
+    props.setDockerFormData({ ...props.dockerFormData, [props.lineId]: { [e.target.value]: dockerFormDataValues[0] } });
+  };
   const inputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(props.dockerFormData);
-    let lineSelected: string[] = [];
+    let dockerFormDataKeys: string[] = [];
     setInputValue(e.target.value);
     if (props.dockerFormData) {
-      lineSelected = Object.keys(props.dockerFormData[props.lineId]);
+      dockerFormDataKeys = Object.keys(props.dockerFormData[props.lineId]);
     }
     props.setDockerFormData({
       ...props.dockerFormData,
-      [props.lineId]: { [lineSelected[0]]: e.target.value },
+      [props.lineId]: { [dockerFormDataKeys[0]]: e.target.value },
     });
   };
 
@@ -71,7 +79,7 @@ function DockerFormInput(props: Props) {
               =============
             </option>
             {options.map((option) => (
-              <option value={option} key={option}>
+              <option value={option} key={option} onChange={optionOnChange}>
                 {option}
               </option>
             ))}

@@ -20,7 +20,7 @@ const clientConnect = () => {
       if (message.toString() === "tar") {
         test(clientWS);
       }
-      if (jsonMessage.state === "CONNECT_GENERATOR") {
+      if (jsonMessage.state === "GENERATOR_CONNECT") {
         const ip = jsonMessage.generatorIP.ip;
         const port = jsonMessage.generatorIP.port;
 
@@ -52,6 +52,7 @@ const clientConnect = () => {
         // };
       }
       if (jsonMessage.state === "SET_DOCKER_FORM") {
+        console.log(jsonMessage.dockerFormData);
       }
     });
   });

@@ -75,7 +75,7 @@ function WebsocketConnecter(props: Props) {
     // }
     if (props.backWebSocket) {
       props.setMessageForBack({
-        state: "CONNECT_GENERATOR",
+        state: "GENERATOR_CONNECT",
         generatorIP: { ip: ip, port: port },
       });
       props.setConnectCheck(false);
@@ -87,7 +87,7 @@ function WebsocketConnecter(props: Props) {
     console.log("connectGenerator");
     if (props.backWebSocket) {
       props.setMessageForBack({
-        state: "CONNECT_GENERATOR",
+        state: "GENERATOR_CONNECT",
         generatorIP: { ip: "localhost", port: 1234 },
       });
     }
