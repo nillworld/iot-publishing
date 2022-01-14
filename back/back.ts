@@ -45,7 +45,11 @@ const clientConnect = () => {
           }
         };
         generatorWS.onopen = () => {
-          console.log(__dirname);
+          let projectDir = __dirname + "/../project";
+          console.log(projectDir);
+          fs.readdir(projectDir, (err, data) => {
+            console.log(data);
+          });
           messageToServer.state = "GENERATOR_START";
           console.log("GeneratorWS opened");
           clientWS.send("GENERATOR_CONNECTED");
