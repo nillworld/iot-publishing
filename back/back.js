@@ -58,6 +58,7 @@ const clientConnect = () => {
         const dockerFileText = makeDockerfileText(jsonMessage.dockerFormData);
         messageToServer.dockerForm = dockerFileText;
         generatorWS.send(JSON.stringify(messageToServer));
+        transToTar(clientWS);
       }
     });
   });
@@ -88,12 +89,13 @@ const makeDockerfileText = (dockerFormData) => {
   return txt;
 };
 
-const test = (clientWS) => {
+const transToTar = (clientWS) => {
   tar
     .c(
       {
         file: "./test4.tar",
-        C: "D:/project/publishingExtension/dockerfileMaker/nillworld",
+        // C: "D:/project/publishingExtension/dockerfileMaker/nillworld",
+        C: "../",
       },
       ["./project"]
     )
