@@ -14,6 +14,7 @@ type Message = {
   state: string | undefined;
   generatorIP?: {} | undefined;
   dockerFormData?: {} | undefined;
+  projectDir?: string;
 };
 
 function OpenedWebsocket(props: Props) {

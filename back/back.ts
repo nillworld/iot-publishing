@@ -73,10 +73,6 @@ const clientConnect = () => {
 };
 
 const makeDockerfileText = (dockerFormData) => {
-  console.log(dockerFormData);
-  // dockerFormData.map((lineData: any) => {
-  //   console.log(lineData);
-  // });
   let lineValues = Object.values(dockerFormData);
   let txt = "";
   lineValues.map((lineValue, index) => {
@@ -90,10 +86,9 @@ const makeDockerfileText = (dockerFormData) => {
       return;
     }
     if (txt) {
-      txt = `${txt}\n ${lineSelected[0]} ${lineInput[0]}`;
+      txt = `${txt}\n${lineSelected[0]} ${lineInput[0]}`;
     } else {
       txt = `${lineSelected[0]} ${lineInput[0]}`;
-      console.log("????", txt);
     }
   });
 
