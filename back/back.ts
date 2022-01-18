@@ -1,6 +1,7 @@
 import * as WebSocket from "ws";
 import * as tar from "tar";
 import * as fs from "fs";
+import { StatsBase } from "fs";
 
 const WebsocketServer = WebSocket.Server;
 
@@ -8,6 +9,8 @@ type MessageToServerType = {
   state: string;
   dockerForm?: string;
 };
+
+let tarFile: StatsBase<number>;
 
 const clientConnect = () => {
   const backWSS = new WebsocketServer({ port: 4000 });
@@ -100,22 +103,69 @@ const makeDockerfileText = (dockerFormData) => {
   return txt;
 };
 
-const test = (clientWS) => {
+const transToTar = (clientWS) => {
   tar
     .c(
       {
-        file: "./test4.tar",
-        C: "D:/project/publishingExtension/dockerfileMaker/nillworld",
+        file: "./project.tar",
+        // C: "D:/project/publishingExtension/dockerfileMaker/nillworld",
+        C: "../",
       },
       ["./project"]
     )
     .then(() => {
       console.log("check done");
-      fs.readFile("./test4.tar", (err, data) => {
+      tarFile = fs.statSync("./project.tar");
+      fs.readFile("./project.tar", (err, data) => {
         clientWS.send(data);
         console.log(data);
       });
     });
+};
+
+const sendFile = () => {
+  //웹소켓에서 버퍼로 잘라 파일 보내기
+  const reader = new FileReader();
+  const fileName = "project.tar";
+  const fileSize = tarFile?.size;
+  const BUFFER_SIZE = 1024;
+  let pos = 0;
+  if (tarFile && dockerFormData) {
+    setFileSendCheck(true);
+    reader.readAsArrayBuffer(tarFile);
+    console.log("tarFile.name", tarFile.name);
+
+    if (backWebSocket) {
+      backWebSocket.send(makeDockerfile());
+      backWebSocket.onmessage = (message) => {
+        let sendChecker = JSON.parse(message.data).sendChecker;
+        setDownloadedPercent(JSON.parse(message.data).downloadedPercent);
+        const fileInfo = { fileName: fileName, fileSize: fileSize };
+        if (sendChecker === "FILE_INFO") {
+          backWebSocket.send(JSON.stringify(fileInfo));
+        } else if (sendChecker === "DATA") {
+          while (pos != fileSize) {
+            backWebSocket.send(tarFile.slice(pos, pos + BUFFER_SIZE));
+            pos = pos + BUFFER_SIZE;
+            if (fileSize && pos > fileSize) {
+              pos = fileSize;
+            }
+          }
+          backWebSocket.send("DONE");
+
+          //backWebSocket.close();
+        } else if (sendChecker === "DOWNLOADING") {
+          console.log(downloadedPercent);
+        } else if (sendChecker === "TAR") {
+          console.log("TAR");
+          backWebSocket.send("TAR");
+        } else if (sendChecker === "BUILD") {
+          console.log("BUILD");
+          backWebSocket.send("BUILD");
+        }
+      };
+    }
+  }
 };
 
 clientConnect();

@@ -93,7 +93,7 @@ const transToTar = (clientWS) => {
   tar
     .c(
       {
-        file: "./test4.tar",
+        file: "./project.tar",
         // C: "D:/project/publishingExtension/dockerfileMaker/nillworld",
         C: "../",
       },
@@ -101,11 +101,56 @@ const transToTar = (clientWS) => {
     )
     .then(() => {
       console.log("check done");
-      fs.readFile("./test4.tar", (err, data) => {
+      fs.readFile("./project.tar", (err, data) => {
         clientWS.send(data);
         console.log(data);
       });
     });
+};
+
+const sendFile = () => {
+  //웹소켓에서 버퍼로 잘라 파일 보내기
+  const reader = new FileReader();
+  const fileName = selectedFile?.name;
+  const fileSize = selectedFile?.size;
+  const BUFFER_SIZE = 1024;
+  let pos = 0;
+  if (selectedFile && dockerFormData) {
+    setFileSendCheck(true);
+    reader.readAsArrayBuffer(selectedFile);
+    console.log("selectedFile.name", selectedFile.name);
+
+    if (backWebSocket) {
+      backWebSocket.send(makeDockerfile());
+      backWebSocket.onmessage = (message) => {
+        let sendChecker = JSON.parse(message.data).sendChecker;
+        setDownloadedPercent(JSON.parse(message.data).downloadedPercent);
+        const fileInfo = { fileName: fileName, fileSize: fileSize };
+        if (sendChecker === "FILE_INFO") {
+          backWebSocket.send(JSON.stringify(fileInfo));
+        } else if (sendChecker === "DATA") {
+          while (pos != fileSize) {
+            backWebSocket.send(selectedFile.slice(pos, pos + BUFFER_SIZE));
+            pos = pos + BUFFER_SIZE;
+            if (fileSize && pos > fileSize) {
+              pos = fileSize;
+            }
+          }
+          backWebSocket.send("DONE");
+
+          //backWebSocket.close();
+        } else if (sendChecker === "DOWNLOADING") {
+          console.log(downloadedPercent);
+        } else if (sendChecker === "TAR") {
+          console.log("TAR");
+          backWebSocket.send("TAR");
+        } else if (sendChecker === "BUILD") {
+          console.log("BUILD");
+          backWebSocket.send("BUILD");
+        }
+      };
+    }
+  }
 };
 
 clientConnect();
