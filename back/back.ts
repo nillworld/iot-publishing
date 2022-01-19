@@ -10,6 +10,7 @@ type MessageToServerType = {
   dockerForm?: string;
   fileName?: string;
   fileSize?: number;
+  value?: any;
 };
 type MessageToClientType = {
   state: string;
@@ -99,15 +100,21 @@ const clientConnect = () => {
         } else if (messageFromGenerator.state === "SET_FILE_INFO") {
           const BUFFER_SIZE = 1024;
           let pos = 0;
+          messageToServer.state = "UPLOADING_FROM_BACK";
           fs.readFile(messageToServer.fileName, (err, data) => {
             while (pos != messageToServer.fileSize) {
-              generatorWS.send(data.slice(pos, pos + BUFFER_SIZE));
+              console.log("DFSFSF", data);
+              messageToServer.value = data.slice(pos, pos + BUFFER_SIZE);
+              console.log("DFSFSF222222", messageToServer);
+              generatorWS.send(JSON.stringify(messageToServer));
+              console.log("DFSFSF33333333", data);
+              // generatorWS.send(data.slice(pos, pos + BUFFER_SIZE));
               pos = pos + BUFFER_SIZE;
               if (messageToServer.fileSize && pos > messageToServer.fileSize) {
                 pos = messageToServer.fileSize;
               }
             }
-            generatorWS.send("DONE");
+            // generatorWS.send("DONE");
             messageToClient.state = "GENERATOR_DOWNLOAD_DONE";
             clientWS.send(JSON.stringify(messageToClient));
           });
