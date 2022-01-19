@@ -32,6 +32,7 @@ function App() {
         // backWebSocket.send("tar");
 
         backWebSocket.onmessage = (message) => {
+          console.log("Message from back", message);
           if (message.data === "GENERATOR_CONNECTED") {
             setWsOpenCheck(true);
           } else if (message.data === "GENERATOR_CONNECT_ERROR") {
@@ -47,7 +48,7 @@ function App() {
   //back으로 'messageForBack'내용 바뀔때 마다 보냄
   useEffect(() => {
     backWebSocket?.send(JSON.stringify(messageForBack));
-    console.log("backWebSocket", messageForBack);
+    console.log("MessageForBack", messageForBack);
   }, [messageForBack]);
 
   return (

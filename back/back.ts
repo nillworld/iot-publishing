@@ -8,6 +8,8 @@ const WebsocketServer = WebSocket.Server;
 type MessageToServerType = {
   state: string;
   dockerForm?: string;
+  fileName?: string;
+  fileSize?: number;
 };
 
 let tarFile: StatsBase<number>;
@@ -25,9 +27,6 @@ const clientConnect = () => {
     clientWS.on("message", (message) => {
       const jsonMessage = JSON.parse(message.toString());
       console.log(jsonMessage);
-      if (message.toString() === "tar") {
-        test(clientWS);
-      }
       if (jsonMessage.state === "GENERATOR_CONNECT") {
         const ip = jsonMessage.generatorIP.ip;
         const port = jsonMessage.generatorIP.port;
@@ -71,96 +70,112 @@ const clientConnect = () => {
         messageToServer.dockerForm = dockerFileText;
         generatorWS.send(JSON.stringify(messageToServer));
       }
-    });
-  });
-};
 
-const makeDockerfileText = (dockerFormData) => {
-  let lineValues = Object.values(dockerFormData);
-  let txt = "";
-  lineValues.map((lineValue, index) => {
-    let lineSelected = Object.keys(lineValue);
-    let lineInput = Object.values(lineValue);
+      generatorWS.onmessage = (message) => {
+        const messageFromGenerator = JSON.parse(message.data);
+        console.log("#### Message from generator: ", messageFromGenerator.state);
 
-    if (index === 0) {
-      return;
-    }
-    if (lineValue === "" || lineSelected[0] === "" || lineInput[0] === "") {
-      return;
-    }
-    if (txt) {
-      txt = `${txt}\n${lineSelected[0]} ${lineInput[0]}`;
-    } else {
-      txt = `${lineSelected[0]} ${lineInput[0]}`;
-    }
-  });
-
-  return txt;
-};
-
-const transToTar = (clientWS) => {
-  tar
-    .c(
-      {
-        file: "./project.tar",
-        // C: "D:/project/publishingExtension/dockerfileMaker/nillworld",
-        C: "../",
-      },
-      ["./project"]
-    )
-    .then(() => {
-      console.log("check done");
-      tarFile = fs.statSync("./project.tar");
-      fs.readFile("./project.tar", (err, data) => {
-        clientWS.send(data);
-        console.log(data);
-      });
-    });
-};
-
-const sendFile = () => {
-  //웹소켓에서 버퍼로 잘라 파일 보내기
-  const reader = new FileReader();
-  const fileName = "project.tar";
-  const fileSize = tarFile?.size;
-  const BUFFER_SIZE = 1024;
-  let pos = 0;
-  if (tarFile && dockerFormData) {
-    setFileSendCheck(true);
-    reader.readAsArrayBuffer(tarFile);
-    console.log("tarFile.name", tarFile.name);
-
-    if (backWebSocket) {
-      backWebSocket.send(makeDockerfile());
-      backWebSocket.onmessage = (message) => {
-        let sendChecker = JSON.parse(message.data).sendChecker;
-        setDownloadedPercent(JSON.parse(message.data).downloadedPercent);
-        const fileInfo = { fileName: fileName, fileSize: fileSize };
-        if (sendChecker === "FILE_INFO") {
-          backWebSocket.send(JSON.stringify(fileInfo));
-        } else if (sendChecker === "DATA") {
-          while (pos != fileSize) {
-            backWebSocket.send(tarFile.slice(pos, pos + BUFFER_SIZE));
-            pos = pos + BUFFER_SIZE;
-            if (fileSize && pos > fileSize) {
-              pos = fileSize;
+        if (messageFromGenerator.state === "MADE_DOCKER_FILE") {
+          tar
+            .c(
+              {
+                file: "./project.tar",
+                // C: "D:/project/publishingExtension/dockerfileMaker/nillworld",
+                C: "../",
+              },
+              ["./project"]
+            )
+            .then(() => {
+              console.log("check done");
+              tarFile = fs.statSync("./project.tar");
+              sendFileInfo();
+            });
+        } else if (messageFromGenerator.state === "SET_FILE_INFO") {
+          const BUFFER_SIZE = 1024;
+          let pos = 0;
+          fs.readFile(messageToServer.fileName, (err, data) => {
+            while (pos != messageToServer.fileSize) {
+              generatorWS.send(data.slice(pos, pos + BUFFER_SIZE));
+              pos = pos + BUFFER_SIZE;
+              if (messageToServer.fileSize && pos > messageToServer.fileSize) {
+                pos = messageToServer.fileSize;
+              }
             }
-          }
-          backWebSocket.send("DONE");
-
-          //backWebSocket.close();
-        } else if (sendChecker === "DOWNLOADING") {
-          console.log(downloadedPercent);
-        } else if (sendChecker === "TAR") {
-          console.log("TAR");
-          backWebSocket.send("TAR");
-        } else if (sendChecker === "BUILD") {
-          console.log("BUILD");
-          backWebSocket.send("BUILD");
+            generatorWS.send("DONE");
+          });
         }
+
+        const sendFileInfo = () => {
+          console.log("?????");
+          messageToServer.state = "SET_FILE_INFO";
+          messageToServer.fileName = "project.tar";
+          messageToServer.fileSize = tarFile?.size;
+          console.log(messageToServer);
+          generatorWS.send(JSON.stringify(messageToServer));
+        };
       };
-    }
-  }
+    });
+  });
+
+  const makeDockerfileText = (dockerFormData) => {
+    let lineValues = Object.values(dockerFormData);
+    let txt = "";
+    lineValues.map((lineValue, index) => {
+      let lineSelected = Object.keys(lineValue);
+      let lineInput = Object.values(lineValue);
+
+      if (index === 0) {
+        return;
+      }
+      if (lineValue === "" || lineSelected[0] === "" || lineInput[0] === "") {
+        return;
+      }
+      if (txt) {
+        txt = `${txt}\n${lineSelected[0]} ${lineInput[0]}`;
+      } else {
+        txt = `${lineSelected[0]} ${lineInput[0]}`;
+      }
+    });
+
+    return txt;
+  };
+
+  // if (tarFile && dockerFormData) {
+  //   setFileSendCheck(true);
+  //   reader.readAsArrayBuffer(tarFile);
+  //   console.log("tarFile.name", tarFile.name);
+
+  //   if (backWebSocket) {
+  //     backWebSocket.send(makeDockerfile());
+  //     backWebSocket.onmessage = (message) => {
+  //       let sendChecker = JSON.parse(message.data).sendChecker;
+  //       setDownloadedPercent(JSON.parse(message.data).downloadedPercent);
+  //       const fileInfo = { fileName: fileName, fileSize: fileSize };
+  //       if (sendChecker === "FILE_INFO") {
+  //         backWebSocket.send(JSON.stringify(fileInfo));
+  //       } else if (sendChecker === "DATA") {
+  //         while (pos != fileSize) {
+  //           backWebSocket.send(tarFile.slice(pos, pos + BUFFER_SIZE));
+  //           pos = pos + BUFFER_SIZE;
+  //           if (fileSize && pos > fileSize) {
+  //             pos = fileSize;
+  //           }
+  //         }
+  //         backWebSocket.send("DONE");
+
+  //         //backWebSocket.close();
+  //       } else if (sendChecker === "DOWNLOADING") {
+  //         console.log(downloadedPercent);
+  //       } else if (sendChecker === "TAR") {
+  //         console.log("TAR");
+  //         backWebSocket.send("TAR");
+  //       } else if (sendChecker === "BUILD") {
+  //         console.log("BUILD");
+  //         backWebSocket.send("BUILD");
+  //       }
+  //     };
+  //   }
+  // }
 };
 
 clientConnect();

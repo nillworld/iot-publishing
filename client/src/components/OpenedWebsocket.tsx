@@ -26,7 +26,7 @@ function OpenedWebsocket(props: Props) {
   const [lineValue, setLineValue] = useState<string[]>();
   const [optionSelect, setOptionSelect] = useState<string>();
   const [inputComponents, setInputComponents] = useState<number[]>();
-  const [dockerFormData, setDockerFormData] = useState<any>();
+  const [dockerFormData, setDockerFormData] = useState<any>({});
 
   const templateForms = [
     {
@@ -110,6 +110,7 @@ function OpenedWebsocket(props: Props) {
   const dockerBuild = () => {
     ///////////////////////
     props.setMessageForBack({ state: "SET_DOCKER_FORM", dockerFormData: dockerFormData });
+    setFileSendCheck(true);
 
     ///////////////////////////
 
