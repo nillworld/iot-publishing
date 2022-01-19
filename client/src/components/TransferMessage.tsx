@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import "./TransferMessage.css";
 
 type Props = {
-  downloadedPercent: string;
+  downloadedPercent: string | undefined;
 };
 function TransferMessage(props: Props) {
   return (

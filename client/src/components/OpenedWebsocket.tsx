@@ -8,6 +8,7 @@ import TransferMessage from "./TransferMessage";
 type Props = {
   backWebSocket: WebSocket | undefined;
   setMessageForBack: Dispatch<SetStateAction<Message | undefined>>;
+  downloadedPercent: string | undefined;
 };
 
 type Message = {
@@ -20,7 +21,6 @@ type Message = {
 function OpenedWebsocket(props: Props) {
   const [selectedFile, setSelectedFile] = useState<File>();
   const [fileSendCheck, setFileSendCheck] = useState<boolean>();
-  const [downloadedPercent, setDownloadedPercent] = useState<string>("0%");
   const [lineId, setLineId] = useState<number>(0);
   const [lineOption, setLineOption] = useState<string[]>();
   const [lineValue, setLineValue] = useState<string[]>();
@@ -196,7 +196,7 @@ function OpenedWebsocket(props: Props) {
   };
 
   return fileSendCheck ? (
-    <TransferMessage downloadedPercent={downloadedPercent} />
+    <TransferMessage downloadedPercent={props.downloadedPercent} />
   ) : (
     <div className="App">
       <header className="App-header">

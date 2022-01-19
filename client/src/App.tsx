@@ -7,12 +7,14 @@ type Message = {
   state: string | undefined;
   generatorIP?: {} | undefined;
   dockerForm?: {} | undefined;
+  downloadedPercent?: string | undefined;
 };
 
 function App() {
   const [wsOpenCheck, setWsOpenCheck] = useState<boolean>(false);
   const [backWebSocket, setBackWebsocket] = useState<WebSocket>();
   const [messageForBack, setMessageForBack] = useState<Message>();
+  const [downloadedPercent, setDownloadedPercent] = useState<string | undefined>();
   const [connectCheck, setConnectCheck] = useState(true);
 
   // express로 back이랑 연결 방식
@@ -32,10 +34,14 @@ function App() {
         // backWebSocket.send("tar");
 
         backWebSocket.onmessage = (message) => {
-          console.log("Message from back", message);
-          if (message.data === "GENERATOR_CONNECTED") {
+          const jsonMessage = JSON.parse(message.data);
+          console.log("Message from back", jsonMessage);
+          if (jsonMessage.state === "GENERATOR_CONNECTED") {
             setWsOpenCheck(true);
-          } else if (message.data === "GENERATOR_CONNECT_ERROR") {
+          } else if (jsonMessage.state === "GENERATOR_CONNECT_ERROR") {
+          } else if (jsonMessage.state === "DOWNLOADING_FROM_BACK") {
+            setDownloadedPercent(jsonMessage.value);
+          } else if (jsonMessage.state === "GENERATOR_DOWNLOAD_DONE") {
           }
         };
       };
@@ -55,7 +61,11 @@ function App() {
     <div>
       {backWebSocket ? "" : <button onClick={connectBack}>이 버튼이 vscode api 연결 임시 방편</button>}
       {wsOpenCheck ? (
-        <OpenedWebsocket backWebSocket={backWebSocket} setMessageForBack={setMessageForBack} />
+        <OpenedWebsocket
+          backWebSocket={backWebSocket}
+          setMessageForBack={setMessageForBack}
+          downloadedPercent={downloadedPercent}
+        />
       ) : (
         <WebsocketConnecter
           wsOpenCheck={wsOpenCheck}

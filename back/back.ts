@@ -11,6 +11,10 @@ type MessageToServerType = {
   fileName?: string;
   fileSize?: number;
 };
+type MessageToClientType = {
+  state: string;
+  value?: any;
+};
 
 let tarFile: StatsBase<number>;
 
@@ -19,6 +23,7 @@ const clientConnect = () => {
 
   let generatorWS;
   let messageToServer: MessageToServerType = { state: "" };
+  let messageToClient: MessageToClientType = { state: "" };
 
   console.log("ws 4000 열림");
 
@@ -53,8 +58,9 @@ const clientConnect = () => {
             console.log(data);
           });
           messageToServer.state = "GENERATOR_START";
+          messageToClient.state = "GENERATOR_CONNECTED";
           console.log("GeneratorWS opened");
-          clientWS.send("GENERATOR_CONNECTED");
+          clientWS.send(JSON.stringify(messageToClient));
           generatorWS.send(JSON.stringify(messageToServer));
 
           generatorWSOpenCheck = true;
@@ -73,7 +79,7 @@ const clientConnect = () => {
 
       generatorWS.onmessage = (message) => {
         const messageFromGenerator = JSON.parse(message.data);
-        console.log("#### Message from generator: ", messageFromGenerator.state);
+        console.log("#### Message from generator: ", messageFromGenerator);
 
         if (messageFromGenerator.state === "MADE_DOCKER_FILE") {
           tar
@@ -102,7 +108,13 @@ const clientConnect = () => {
               }
             }
             generatorWS.send("DONE");
+            messageToClient.state = "GENERATOR_DOWNLOAD_DONE";
+            clientWS.send(JSON.stringify(messageToClient));
           });
+        } else if (messageFromGenerator.state === "DOWNLOADING_FROM_BACK") {
+          messageToClient.state = "DOWNLOADING_FROM_BACK";
+          messageToClient.value = messageFromGenerator.downloadedPercent;
+          clientWS.send(JSON.stringify(messageToClient));
         }
 
         const sendFileInfo = () => {
