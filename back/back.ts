@@ -104,7 +104,7 @@ const clientConnect = () => {
           fs.readFile(messageToServer.fileName, (err, data) => {
             while (pos != messageToServer.fileSize) {
               console.log("DFSFSF", data);
-              messageToServer.value = data.slice(pos, pos + BUFFER_SIZE);
+              messageToServer.value = data.slice(pos, pos + BUFFER_SIZE).toString();
               console.log("DFSFSF222222", messageToServer);
               generatorWS.send(JSON.stringify(messageToServer));
               console.log("DFSFSF33333333", data);
