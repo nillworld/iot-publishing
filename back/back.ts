@@ -99,6 +99,10 @@ const clientConnect = () => {
           messageToServer.state = "UPLOADING_FROM_BACK";
           fs.readFile(messageToServer.fileName, (err, data) => {
             while (pos != messageToServer.fileSize) {
+              ///// 디코딩이 문제있는건지 파일이 제대로 전달 안됨
+              // encording to base64> let tarFileBase64 = data.toString('base64');
+              // data size => tarFileBase64.length
+
               messageToServer.value = data.slice(pos, pos + BUFFER_SIZE).toString();
               generatorWS.send(JSON.stringify(messageToServer));
               // generatorWS.send(data.slice(pos, pos + BUFFER_SIZE));
