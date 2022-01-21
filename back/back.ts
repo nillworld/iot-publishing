@@ -66,10 +66,6 @@ const clientConnect = () => {
 
           generatorWSOpenCheck = true;
         };
-
-        // generatorWS.onmessage = (message) => {
-        //   console.log("#### Message from generator: ", message.data);
-        // };
       }
       if (jsonMessage.state === "SET_DOCKER_FORM") {
         messageToServer.state = "MAKE_DOCKER_FILE";
@@ -80,7 +76,7 @@ const clientConnect = () => {
 
       generatorWS.onmessage = (message) => {
         const messageFromGenerator = JSON.parse(message.data);
-        console.log("#### Message from generator: ", messageFromGenerator);
+        // console.log("#### Message from generator: ", messageFromGenerator);
 
         if (messageFromGenerator.state === "MADE_DOCKER_FILE") {
           tar
@@ -103,11 +99,8 @@ const clientConnect = () => {
           messageToServer.state = "UPLOADING_FROM_BACK";
           fs.readFile(messageToServer.fileName, (err, data) => {
             while (pos != messageToServer.fileSize) {
-              console.log("DFSFSF", data);
               messageToServer.value = data.slice(pos, pos + BUFFER_SIZE).toString();
-              console.log("DFSFSF222222", messageToServer);
               generatorWS.send(JSON.stringify(messageToServer));
-              console.log("DFSFSF33333333", data);
               // generatorWS.send(data.slice(pos, pos + BUFFER_SIZE));
               pos = pos + BUFFER_SIZE;
               if (messageToServer.fileSize && pos > messageToServer.fileSize) {
