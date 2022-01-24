@@ -91,24 +91,35 @@ const clientConnect = () => {
             .then(() => {
               console.log("check done");
               tarFile = fs.statSync("./project.tar");
-              sendFileInfo();
+              messageToServer.state = "SET_FILE_NAME";
+              messageToServer.fileName = "project.tar";
+              generatorWS.send(JSON.stringify(messageToServer));
             });
-        } else if (messageFromGenerator.state === "SET_FILE_INFO") {
+        } else if (messageFromGenerator.state === "SET_FILE_NAME") {
           const BUFFER_SIZE = 1024;
           let pos = 0;
           messageToServer.state = "UPLOADING_FROM_BACK";
           fs.readFile(messageToServer.fileName, (err, data) => {
-            while (pos != messageToServer.fileSize) {
+            console.log("check===1111", data);
+            console.log("check===2222", data.toString());
+            console.log("check===3333", data.toString("base64"));
+            console.log("check===4444", Buffer.from(data.toString("base64"), "base64").toString("utf8"));
+
+            let tarFileBase64 = data.toString("base64");
+            messageToServer.fileSize = tarFileBase64.length;
+
+            while (pos != tarFileBase64.length) {
               ///// 디코딩이 문제있는건지 파일이 제대로 전달 안됨
-              // encording to base64> let tarFileBase64 = data.toString('base64');
+              /// encording to base64
+              // let tarFileBase64 = data.toString('base64');
               // data size => tarFileBase64.length
 
-              messageToServer.value = data.slice(pos, pos + BUFFER_SIZE).toString();
+              messageToServer.value = tarFileBase64.slice(pos, pos + BUFFER_SIZE);
               generatorWS.send(JSON.stringify(messageToServer));
               // generatorWS.send(data.slice(pos, pos + BUFFER_SIZE));
               pos = pos + BUFFER_SIZE;
-              if (messageToServer.fileSize && pos > messageToServer.fileSize) {
-                pos = messageToServer.fileSize;
+              if (tarFileBase64.length && pos > tarFileBase64.length) {
+                pos = tarFileBase64.length;
               }
             }
             // generatorWS.send("DONE");
@@ -120,15 +131,6 @@ const clientConnect = () => {
           messageToClient.value = messageFromGenerator.downloadedPercent;
           clientWS.send(JSON.stringify(messageToClient));
         }
-
-        const sendFileInfo = () => {
-          console.log("?????");
-          messageToServer.state = "SET_FILE_INFO";
-          messageToServer.fileName = "project.tar";
-          messageToServer.fileSize = tarFile?.size;
-          console.log(messageToServer);
-          generatorWS.send(JSON.stringify(messageToServer));
-        };
       };
     });
   });
