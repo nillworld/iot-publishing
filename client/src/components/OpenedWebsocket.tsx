@@ -76,7 +76,6 @@ function OpenedWebsocket(props: Props) {
 
   const setTemplateForm = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setOptionSelect(e.target.value);
-    console.log(e.target.value);
     const jsonTemplate = JSON.parse(e.target.value);
     const jsonTemplateKeys: string[] = Object.keys(jsonTemplate);
     const jsonTemplateValues: string[] = Object.values(jsonTemplate);
@@ -102,81 +101,13 @@ function OpenedWebsocket(props: Props) {
 
   const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      console.log(e.target.files[0]);
       setSelectedFile(e.target.files[0]);
     }
   };
 
   const dockerBuild = () => {
-    ///////////////////////
     props.setMessageForBack({ state: "SET_DOCKER_FORM", dockerFormData: dockerFormData });
     setFileSendCheck(true);
-
-    ///////////////////////////
-
-    /* 웹소켓에서 버퍼로 잘라 파일 보내기
-    const reader = new FileReader();
-    const fileName = selectedFile?.name;
-    const fileSize = selectedFile?.size;
-    const BUFFER_SIZE = 1024;
-    let pos = 0;
-    if (selectedFile && dockerFormData) {
-      setFileSendCheck(true);
-      reader.readAsArrayBuffer(selectedFile);
-      console.log("selectedFile.name", selectedFile.name);
-
-      if (backWebSocket) {
-        backWebSocket.send(makeDockerfile());
-        backWebSocket.onmessage = (message) => {
-          let sendChecker = JSON.parse(message.data).sendChecker;
-          setDownloadedPercent(JSON.parse(message.data).downloadedPercent);
-          const fileInfo = { fileName: fileName, fileSize: fileSize };
-          if (sendChecker === "FILE_INFO") {
-            backWebSocket.send(JSON.stringify(fileInfo));
-          } else if (sendChecker === "DATA") {
-            while (pos != fileSize) {
-              backWebSocket.send(selectedFile.slice(pos, pos + BUFFER_SIZE));
-              pos = pos + BUFFER_SIZE;
-              if (fileSize && pos > fileSize) {
-                pos = fileSize;
-              }
-            }
-            backWebSocket.send("DONE");
-
-            //backWebSocket.close();
-          } else if (sendChecker === "DOWNLOADING") {
-            console.log(downloadedPercent);
-          } else if (sendChecker === "TAR") {
-            console.log("TAR");
-            backWebSocket.send("TAR");
-          } else if (sendChecker === "BUILD") {
-            console.log("BUILD");
-            backWebSocket.send("BUILD");
-          }
-        };
-      }
-    } */
-  };
-
-  const makeDockerfileText = () => {
-    console.log(dockerFormData);
-    // dockerFormData.map((lineData: any) => {
-    //   console.log(lineData);
-    // });
-    let lineValues = Object.values(dockerFormData);
-    let txt = "";
-    lineValues.map((lineValue: any, index) => {
-      let lineSelected = Object.keys(lineValue);
-      let lineInput = Object.values(lineValue);
-      if (index === 0) {
-        return;
-      }
-      if (lineSelected[0] === "" || lineInput[0] === "") {
-        return;
-      }
-      txt = `${txt}\n ${lineSelected[0]} ${lineInput[0]}`;
-    });
-    return txt;
   };
 
   const appendInput = () => {

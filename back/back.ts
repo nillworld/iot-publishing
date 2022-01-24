@@ -76,8 +76,6 @@ const clientConnect = () => {
 
       generatorWS.onmessage = (message) => {
         const messageFromGenerator = JSON.parse(message.data);
-        // console.log("#### Message from generator: ", messageFromGenerator);
-
         if (messageFromGenerator.state === "MADE_DOCKER_FILE") {
           tar
             .c(
@@ -99,13 +97,8 @@ const clientConnect = () => {
           messageToServer.state = "UPLOADING_FROM_BACK";
           fs.readFile(messageToServer.fileName, (err, data) => {
             while (pos != messageToServer.fileSize) {
-              ///// 디코딩이 문제있는건지 파일이 제대로 전달 안됨
-              // encording to base64> let tarFileBase64 = data.toString('base64');
-              // data size => tarFileBase64.length
-
               messageToServer.value = data.slice(pos, pos + BUFFER_SIZE).toString();
               generatorWS.send(JSON.stringify(messageToServer));
-              // generatorWS.send(data.slice(pos, pos + BUFFER_SIZE));
               pos = pos + BUFFER_SIZE;
               if (messageToServer.fileSize && pos > messageToServer.fileSize) {
                 pos = messageToServer.fileSize;
@@ -122,11 +115,9 @@ const clientConnect = () => {
         }
 
         const sendFileInfo = () => {
-          console.log("?????");
           messageToServer.state = "SET_FILE_INFO";
           messageToServer.fileName = "project.tar";
           messageToServer.fileSize = tarFile?.size;
-          console.log(messageToServer);
           generatorWS.send(JSON.stringify(messageToServer));
         };
       };
@@ -155,43 +146,6 @@ const clientConnect = () => {
 
     return txt;
   };
-
-  // if (tarFile && dockerFormData) {
-  //   setFileSendCheck(true);
-  //   reader.readAsArrayBuffer(tarFile);
-  //   console.log("tarFile.name", tarFile.name);
-
-  //   if (backWebSocket) {
-  //     backWebSocket.send(makeDockerfile());
-  //     backWebSocket.onmessage = (message) => {
-  //       let sendChecker = JSON.parse(message.data).sendChecker;
-  //       setDownloadedPercent(JSON.parse(message.data).downloadedPercent);
-  //       const fileInfo = { fileName: fileName, fileSize: fileSize };
-  //       if (sendChecker === "FILE_INFO") {
-  //         backWebSocket.send(JSON.stringify(fileInfo));
-  //       } else if (sendChecker === "DATA") {
-  //         while (pos != fileSize) {
-  //           backWebSocket.send(tarFile.slice(pos, pos + BUFFER_SIZE));
-  //           pos = pos + BUFFER_SIZE;
-  //           if (fileSize && pos > fileSize) {
-  //             pos = fileSize;
-  //           }
-  //         }
-  //         backWebSocket.send("DONE");
-
-  //         //backWebSocket.close();
-  //       } else if (sendChecker === "DOWNLOADING") {
-  //         console.log(downloadedPercent);
-  //       } else if (sendChecker === "TAR") {
-  //         console.log("TAR");
-  //         backWebSocket.send("TAR");
-  //       } else if (sendChecker === "BUILD") {
-  //         console.log("BUILD");
-  //         backWebSocket.send("BUILD");
-  //       }
-  //     };
-  //   }
-  // }
 };
 
 clientConnect();

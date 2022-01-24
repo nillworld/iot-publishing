@@ -17,13 +17,6 @@ function App() {
   const [downloadedPercent, setDownloadedPercent] = useState<string | undefined>();
   const [connectCheck, setConnectCheck] = useState(true);
 
-  // express로 back이랑 연결 방식
-  // const onServerTest = () => {
-  //   fetch("http://localhost:3001/")
-  //     .then((res) => res.json())
-  //     .then((data) => console.log(data));
-  // };
-
   const connectBack = () => {
     setBackWebsocket(new WebSocket(`ws://localhost:4000/ws`));
   };
@@ -31,7 +24,6 @@ function App() {
     if (backWebSocket) {
       backWebSocket.onopen = () => {
         console.log("Websocket port 4000으로 back과 통신 중");
-        // backWebSocket.send("tar");
 
         backWebSocket.onmessage = (message) => {
           const jsonMessage = JSON.parse(message.data);
