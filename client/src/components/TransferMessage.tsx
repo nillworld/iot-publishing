@@ -3,6 +3,7 @@ import "./TransferMessage.css";
 
 type Props = {
   downloadedPercent: string | undefined;
+  generatorState: string;
 };
 function TransferMessage(props: Props) {
   return (
@@ -12,6 +13,7 @@ function TransferMessage(props: Props) {
         <div className="progressBar-ing" style={{ width: props.downloadedPercent }}></div>
       </div>
       {props.downloadedPercent}
+      <div>{props.generatorState}</div>
     </div>
   );
 }

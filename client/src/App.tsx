@@ -16,6 +16,7 @@ function App() {
   const [messageForBack, setMessageForBack] = useState<Message>();
   const [downloadedPercent, setDownloadedPercent] = useState<string | undefined>();
   const [connectCheck, setConnectCheck] = useState(true);
+  const [generatorState, setGeneratorState] = useState<string>("");
 
   const connectBack = () => {
     setBackWebsocket(new WebSocket(`ws://localhost:4000/ws`));
@@ -32,8 +33,12 @@ function App() {
             setWsOpenCheck(true);
           } else if (jsonMessage.state === "GENERATOR_CONNECT_ERROR") {
           } else if (jsonMessage.state === "DOWNLOADING_FROM_BACK") {
+            setGeneratorState("프로젝트 파일을 업로드 중입니다.");
             setDownloadedPercent(jsonMessage.value);
           } else if (jsonMessage.state === "GENERATOR_DOWNLOAD_DONE") {
+            setGeneratorState("업로드가 완료. 서버에서 tar 압축 해제 중.");
+          } else if (jsonMessage.state === "GENERATOR_TAR_DECOMPRESS_DONE") {
+            setGeneratorState("서버에서 tar 압축 해제 완료.");
           }
         };
       };
@@ -57,6 +62,7 @@ function App() {
           backWebSocket={backWebSocket}
           setMessageForBack={setMessageForBack}
           downloadedPercent={downloadedPercent}
+          generatorState={generatorState}
         />
       ) : (
         <WebsocketConnecter

@@ -9,6 +9,7 @@ type Props = {
   backWebSocket: WebSocket | undefined;
   setMessageForBack: Dispatch<SetStateAction<Message | undefined>>;
   downloadedPercent: string | undefined;
+  generatorState: string;
 };
 
 type Message = {
@@ -38,7 +39,7 @@ function OpenedWebsocket(props: Props) {
       2: { WORKDIR: "/app" },
       3: { COPY: "package*.json /app" },
       4: { RUN: "npm install" },
-      5: { COPY: ". /app" },
+      5: { COPY: "./project /app" },
       6: { ENTRYPOINT: "" },
       7: { CMD: '[ "node", "server.js" ]' },
       8: { ENV: "" },
@@ -127,7 +128,7 @@ function OpenedWebsocket(props: Props) {
   };
 
   return fileSendCheck ? (
-    <TransferMessage downloadedPercent={props.downloadedPercent} />
+    <TransferMessage downloadedPercent={props.downloadedPercent} generatorState={props.generatorState} />
   ) : (
     <div className="App">
       <header className="App-header">

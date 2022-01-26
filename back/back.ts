@@ -104,16 +104,23 @@ const clientConnect = () => {
                 pos = messageToServer.fileSize;
               }
             }
-            // generatorWS.send("DONE");
-            messageToClient.state = "GENERATOR_DOWNLOAD_DONE";
-            clientWS.send(JSON.stringify(messageToClient));
           });
         } else if (messageFromGenerator.state === "DOWNLOADING_FROM_BACK") {
           messageToClient.state = "DOWNLOADING_FROM_BACK";
           messageToClient.value = messageFromGenerator.downloadedPercent;
           clientWS.send(JSON.stringify(messageToClient));
+        } else if (messageFromGenerator.state === "GENERATOR_DOWNLOAD_DONE") {
+          messageToClient.state = "GENERATOR_DOWNLOAD_DONE";
+          clientWS.send(JSON.stringify(messageToClient));
+          messageToServer.state = "GENERATOR_TAR_DECOMPRESS";
+          messageToServer.value = "";
+          generatorWS.send(JSON.stringify(messageToServer));
+        } else if (messageFromGenerator.state === "GENERATOR_TAR_DECOMPRESS_DONE") {
+          messageToClient.state = "GENERATOR_TAR_DECOMPRESS_DONE";
+          clientWS.send(JSON.stringify(messageToClient));
+          messageToServer.state = "GENERATOR_DOCKER_BUILD";
+          generatorWS.send(JSON.stringify(messageToServer));
         }
-
         const sendFileInfo = () => {
           messageToServer.state = "SET_FILE_INFO";
           messageToServer.fileName = "project.tar";
