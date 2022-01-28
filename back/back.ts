@@ -74,6 +74,18 @@ const clientConnect = () => {
         generatorWS.send(JSON.stringify(messageToServer));
       }
 
+      const senderToClient = (state: string, value?: any) => {
+        messageToClient.state = state;
+        messageToClient.value = value;
+        clientWS.send(JSON.stringify(messageToClient));
+      };
+
+      const senderToServer = (state: string, value?: any) => {
+        messageToServer.state = state;
+        messageToServer.value = value;
+        generatorWS.send(JSON.stringify(messageToServer));
+      };
+
       generatorWS.onmessage = (message) => {
         const messageFromGenerator = JSON.parse(message.data);
         if (messageFromGenerator.state === "MADE_DOCKER_FILE") {
@@ -89,7 +101,10 @@ const clientConnect = () => {
             .then(() => {
               console.log("check done");
               tarFile = fs.statSync("./project.tar");
-              sendFileInfo();
+              messageToServer.state = "SET_FILE_INFO";
+              messageToServer.fileName = "project.tar";
+              messageToServer.fileSize = tarFile?.size;
+              generatorWS.send(JSON.stringify(messageToServer));
             });
         } else if (messageFromGenerator.state === "SET_FILE_INFO") {
           const BUFFER_SIZE = 1024;
@@ -106,27 +121,20 @@ const clientConnect = () => {
             }
           });
         } else if (messageFromGenerator.state === "DOWNLOADING_FROM_BACK") {
-          messageToClient.state = "DOWNLOADING_FROM_BACK";
-          messageToClient.value = messageFromGenerator.downloadedPercent;
-          clientWS.send(JSON.stringify(messageToClient));
+          senderToClient("DOWNLOADING_FROM_BACK", messageFromGenerator.value);
         } else if (messageFromGenerator.state === "GENERATOR_DOWNLOAD_DONE") {
-          messageToClient.state = "GENERATOR_DOWNLOAD_DONE";
-          clientWS.send(JSON.stringify(messageToClient));
-          messageToServer.state = "GENERATOR_TAR_DECOMPRESS";
-          messageToServer.value = "";
-          generatorWS.send(JSON.stringify(messageToServer));
+          senderToClient("GENERATOR_DOWNLOAD_DONE");
+          senderToServer("GENERATOR_TAR_DECOMPRESS", "");
         } else if (messageFromGenerator.state === "GENERATOR_TAR_DECOMPRESS_DONE") {
-          messageToClient.state = "GENERATOR_TAR_DECOMPRESS_DONE";
-          clientWS.send(JSON.stringify(messageToClient));
-          messageToServer.state = "GENERATOR_DOCKER_BUILD";
-          generatorWS.send(JSON.stringify(messageToServer));
+          senderToClient("GENERATOR_TAR_DECOMPRESS_DONE");
+          senderToServer("GENERATOR_DOCKER_BUILD");
+        } else if (messageFromGenerator.state === "GENERATOR_DOCKER_BUILD_DONE") {
+          senderToClient("GENERATOR_DOCKER_BUILD_DONE");
+          senderToServer("GENERATOR_DOCKER_SAVE");
+        } else if (messageFromGenerator.state === "GENERATOR_DOCKER_SAVE_DONE") {
+          senderToClient("GENERATOR_DOCKER_SAVE_DONE");
+          senderToServer("SEND_TAR_FROM_GENERATOR");
         }
-        const sendFileInfo = () => {
-          messageToServer.state = "SET_FILE_INFO";
-          messageToServer.fileName = "project.tar";
-          messageToServer.fileSize = tarFile?.size;
-          generatorWS.send(JSON.stringify(messageToServer));
-        };
       };
     });
   });

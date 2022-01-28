@@ -39,6 +39,10 @@ function App() {
             setGeneratorState("업로드가 완료. 서버에서 tar 압축 해제 중.");
           } else if (jsonMessage.state === "GENERATOR_TAR_DECOMPRESS_DONE") {
             setGeneratorState("서버에서 tar 압축 해제 완료.");
+          } else if (jsonMessage.state === "GENERATOR_DOCKER_BUILD_DONE") {
+            setGeneratorState("서버에서 도커 빌드 완료.");
+          } else if (jsonMessage.state === "GENERATOR_DOCKER_SAVE_DONE") {
+            setGeneratorState("서버에서 도커 이미지 tar로 압축 완료.");
           }
         };
       };
