@@ -43,6 +43,8 @@ function App() {
             setGeneratorState("서버에서 도커 빌드 완료.");
           } else if (jsonMessage.state === "GENERATOR_DOCKER_SAVE_DONE") {
             setGeneratorState("서버에서 도커 이미지 tar로 압축 완료.");
+          } else if (jsonMessage.state === "SENDING_TAR_FROM_GENERATOR") {
+            setGeneratorState("서버에서 tar 파일 보내는 중...");
           }
         };
       };

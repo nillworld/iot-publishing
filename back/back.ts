@@ -134,6 +134,9 @@ const clientConnect = () => {
         } else if (messageFromGenerator.state === "GENERATOR_DOCKER_SAVE_DONE") {
           senderToClient("GENERATOR_DOCKER_SAVE_DONE");
           senderToServer("SEND_TAR_FROM_GENERATOR");
+        } else if (messageFromGenerator.state === "SENDING_TAR_FROM_GENERATOR") {
+          senderToClient("SENDING_TAR_FROM_GENERATOR");
+          fs.appendFileSync(`./projectDONE.tar`, messageFromGenerator.value);
         }
       };
     });
