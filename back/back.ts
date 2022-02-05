@@ -26,12 +26,17 @@ const clientConnect = () => {
   let messageToServer: MessageToServerType = { state: "" };
   let messageToClient: MessageToClientType = { state: "" };
 
+  let dockerizedSize: number;
+  let downloadedFileSize = 0;
+  let downloadedPercent: number;
+
   console.log("ws 4000 열림");
 
   backWSS.on("connection", (clientWS) => {
     console.log("back이랑 연결 됨");
     clientWS.on("message", (message) => {
       const jsonMessage = JSON.parse(message.toString());
+
       console.log(jsonMessage);
       if (jsonMessage.state === "GENERATOR_CONNECT") {
         const ip = jsonMessage.generatorIP.ip;
@@ -132,11 +137,19 @@ const clientConnect = () => {
           senderToClient("GENERATOR_DOCKER_BUILD_DONE");
           senderToServer("GENERATOR_DOCKER_SAVE");
         } else if (messageFromGenerator.state === "GENERATOR_DOCKER_SAVE_DONE") {
+          dockerizedSize = messageFromGenerator.value;
+          console.log(dockerizedSize);
           senderToClient("GENERATOR_DOCKER_SAVE_DONE");
           senderToServer("SEND_TAR_FROM_GENERATOR");
         } else if (messageFromGenerator.state === "SENDING_TAR_FROM_GENERATOR") {
-          senderToClient("SENDING_TAR_FROM_GENERATOR");
-          fs.appendFileSync(`./projectDONE.tar`, messageFromGenerator.value);
+          console.log("downloadedFileSize", messageFromGenerator.value.length);
+          downloadedFileSize += messageFromGenerator.value.length;
+          downloadedPercent = Math.round((downloadedFileSize / dockerizedSize) * 100);
+          senderToClient("SENDING_TAR_FROM_GENERATOR", downloadedPercent);
+          fs.appendFileSync(`./test.jpg`, messageFromGenerator.value);
+          if (downloadedFileSize === dockerizedSize) {
+            senderToServer("DOWNLOAD_DONE_FROM_GENERATOR");
+          }
         }
       };
     });
