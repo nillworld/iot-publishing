@@ -28,7 +28,7 @@ function App() {
 
         backWebSocket.onmessage = (message) => {
           const jsonMessage = JSON.parse(message.data);
-          console.log("Message from back", jsonMessage);
+          // console.log("Message from back", jsonMessage);
           if (jsonMessage.state === "GENERATOR_CONNECTED") {
             setWsOpenCheck(true);
           } else if (jsonMessage.state === "GENERATOR_CONNECT_ERROR") {
