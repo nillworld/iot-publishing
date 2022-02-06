@@ -46,6 +46,8 @@ function App() {
           } else if (jsonMessage.state === "SENDING_TAR_FROM_GENERATOR") {
             setDownloadedPercent(jsonMessage.value);
             setGeneratorState("서버에서 tar 파일 보내는 중...");
+          } else if (jsonMessage.state === "DOWNLOAD_DONE_FROM_GENERATOR") {
+            setGeneratorState("Docker 이미지 파일(tar) 다운로드 완료.");
           }
         };
       };

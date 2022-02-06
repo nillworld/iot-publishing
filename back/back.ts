@@ -156,6 +156,7 @@ const clientConnect = () => {
             senderToClient("SENDING_TAR_FROM_GENERATOR", downloadedPercent);
             if (downloadedFileSize === dockerizedSize) {
               senderToServer("DOWNLOAD_DONE_FROM_GENERATOR");
+              senderToClient("DOWNLOAD_DONE_FROM_GENERATOR");
             }
           }
         }
