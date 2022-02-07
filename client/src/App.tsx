@@ -36,7 +36,8 @@ function App() {
             setGeneratorState("프로젝트 파일을 업로드 중입니다.");
             setDownloadedPercent(jsonMessage.value);
           } else if (jsonMessage.state === "GENERATOR_DOWNLOAD_DONE") {
-            setGeneratorState("업로드가 완료. 서버에서 tar 압축 해제 중.");
+            setDownloadedPercent("none");
+            setGeneratorState("업로드 완료. 서버에서 tar 압축 해제 중.");
           } else if (jsonMessage.state === "GENERATOR_TAR_DECOMPRESS_DONE") {
             setGeneratorState("서버에서 tar 압축 해제 완료.");
           } else if (jsonMessage.state === "GENERATOR_DOCKER_BUILD_DONE") {

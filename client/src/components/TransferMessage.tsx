@@ -9,10 +9,15 @@ function TransferMessage(props: Props) {
   return (
     <div className="progress-div">
       <div className="mainText">파일 전송</div>
-      <div className="progressBar">
-        <div className="progressBar-ing" style={{ width: props.downloadedPercent }}></div>
-      </div>
-      {props.downloadedPercent}
+      {props.downloadedPercent === "none" ? (
+        ""
+      ) : (
+        <div className="progressBar">
+          <div className="progressBar-ing" style={{ width: props.downloadedPercent }}></div>
+        </div>
+      )}
+      {props.downloadedPercent === "none" ? "" : props.downloadedPercent}
+
       <div>{props.generatorState}</div>
     </div>
   );

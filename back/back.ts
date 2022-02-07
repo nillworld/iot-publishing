@@ -27,13 +27,14 @@ const clientConnect = () => {
   let messageToClient: MessageToClientType = { state: "" };
 
   let dockerizedSize: number;
-  let downloadedFileSize = 0;
   let downloadedPercent: string;
 
   console.log("ws 4000 열림");
 
   backWSS.on("connection", (clientWS) => {
     console.log("back이랑 연결 됨");
+    let downloadedFileSize = 0;
+
     clientWS.on("message", (message) => {
       const jsonMessage = JSON.parse(message.toString());
 

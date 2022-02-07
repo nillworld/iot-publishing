@@ -44,7 +44,7 @@ function OpenedWebsocket(props: Props) {
     },
     {
       0: { template: "Node 14" },
-      1: { FROM: "node:14" },
+      1: { FROM: "node:14-alpine" },
       2: { WORKDIR: "/app" },
       3: { COPY: "package*.json /app" },
       4: { RUN: "npm install" },
@@ -53,16 +53,18 @@ function OpenedWebsocket(props: Props) {
     },
     {
       0: { template: "Python 3.9" },
-      1: { FROM: "python:3.9" },
+      1: { FROM: "python:3.9-alpine" },
       2: { WORKDIR: "/app" },
       3: { COPY: ". /app" },
     },
     // https://docs.docker.com/language/java/build-images/
     {
       0: { template: "Java 16" },
-      1: { FROM: "openjdk:16-alpine3.13" },
+      1: { FROM: "openjdk:16-alpine" },
       2: { WORKDIR: "/app" },
       3: { COPY: ". /app" },
+      4: { RUN: "javac Test.java" },
+      5: { CMD: '["java", "Test"]' },
     },
   ];
 
@@ -167,7 +169,7 @@ function OpenedWebsocket(props: Props) {
             </button>
             <button onClick={clearValue}>초기화</button>
           </div>
-          <div>{JSON.stringify(dockerFormData)}</div>
+          {/* <div>{JSON.stringify(dockerFormData)}</div> */}
         </div>
       </header>
     </div>
