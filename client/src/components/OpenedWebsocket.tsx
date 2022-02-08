@@ -93,8 +93,6 @@ function OpenedWebsocket(props: Props) {
     setLineId(jsonTemplateKeysToInt.length);
     setLineOption(templateKeys);
     setLineValue(templateValues);
-    if (templateValues) {
-    }
   };
 
   const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
