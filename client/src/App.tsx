@@ -7,6 +7,7 @@ type Message = {
   state: string | undefined;
   generatorIP?: {} | undefined;
   dockerForm?: {} | undefined;
+  architecture?: string | undefined;
   downloadedPercent?: string | undefined;
 };
 

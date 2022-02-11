@@ -16,6 +16,7 @@ type Message = {
   state: string | undefined;
   generatorIP?: {} | undefined;
   dockerFormData?: {} | undefined;
+  architecture?: string | undefined;
   projectDir?: string;
 };
 
@@ -28,6 +29,7 @@ function OpenedWebsocket(props: Props) {
   const [optionSelect, setOptionSelect] = useState<string>();
   const [inputComponents, setInputComponents] = useState<number[]>();
   const [dockerFormData, setDockerFormData] = useState<any>({});
+  const [selectedArchitecture, setSelectedArchitecture] = useState<string>("linux/arm64");
 
   const templateForms = [
     {
@@ -68,9 +70,24 @@ function OpenedWebsocket(props: Props) {
     },
   ];
 
+  const architectureOptions = [
+    "linux/arm64",
+    "linux/amd64",
+    "linux/riscv64",
+    "linux/ppc64le",
+    "linux/s390x",
+    "linux/386",
+    "linux/arm/v7",
+    "linux/arm/v6",
+  ];
+
   useEffect(() => {
     props.setMessageForBack({ state: "SETTING_DOCKER_FORM", dockerFormData: dockerFormData });
   }, [dockerFormData]);
+
+  useEffect(() => {
+    props.setMessageForBack({ state: "SETTING_DOCKER_ARCHITECTURE", architecture: selectedArchitecture });
+  }, [selectedArchitecture]);
 
   const setTemplateForm = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setOptionSelect(e.target.value);
@@ -101,8 +118,16 @@ function OpenedWebsocket(props: Props) {
     }
   };
 
+  const onChangeArchitecture = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedArchitecture(e.target.value);
+  };
+
   const dockerBuild = () => {
-    props.setMessageForBack({ state: "SET_DOCKER_FORM", dockerFormData: dockerFormData });
+    props.setMessageForBack({
+      state: "SET_DOCKER_FORM",
+      dockerFormData: dockerFormData,
+      architecture: selectedArchitecture,
+    });
     setFileSendCheck(true);
   };
 
@@ -160,8 +185,18 @@ function OpenedWebsocket(props: Props) {
             </label>
             <div className="fileName-div">{selectedFile ? selectedFile.name : ".tar파일 선택"}</div>
           </div>
+          <div className="selectArchitecture-div">
+            <div className="selectArchitecture-txt">아키텍쳐 선택:</div>
+            <select name="" id="" onChange={onChangeArchitecture} value={selectedArchitecture}>
+              {architectureOptions.map((architectureOption, index) => (
+                <option value={architectureOption} key={index}>
+                  {architectureOption}
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <div>
+          <div className="buildBtn-div">
             <button className="dockerform-btn" onClick={dockerBuild} disabled={fileSendCheck}>
               도커로 빌드하기
             </button>

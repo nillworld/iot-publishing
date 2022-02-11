@@ -19,6 +19,19 @@
 .filebtn input[type="file"] {
   display: none;
 }
+.selectArchitecture-div {
+  display: flex;
+  align-items: center;
+  margin-top: 30px;
+}
+.selectArchitecture-txt {
+  margin-right: 10px;
+  font-size: 14px;
+  width: 160px;
+}
+.buildBtn-div {
+  margin-top: 30px;
+}
 .dockerform-btn {
   margin: 10px;
 }

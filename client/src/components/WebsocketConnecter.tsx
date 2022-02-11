@@ -25,7 +25,8 @@ function WebsocketConnecter(props: Props) {
   const [portCheck, setPortCheck] = useState(true);
 
   const getIP = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const re = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
+    const re =
+      /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
     if (re.test(e.target.value) !== false || "localhost" === e.target.value) {
       setIpRegExpCheck("");
       setIP(e.target.value);
@@ -101,7 +102,7 @@ function WebsocketConnecter(props: Props) {
         <button onClick={connectGenerator} disabled={ipCheck || portCheck || !props.connectCheck}>
           back 통해서 generator 연결
         </button>
-        {/* <button onClick={connectGeneratorTest}>back 통해서 generator 연결 테스트</button> */}
+        <button onClick={connectGeneratorTest}>back 통해서 generator 연결 테스트</button>
         <div className="check-comment">{ipRegExpCheck}</div>
         <div className="check-comment">{portRegExpCheck}</div>
         <div className="check-comment">{webSocketState}</div>

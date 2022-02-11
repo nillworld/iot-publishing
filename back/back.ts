@@ -140,7 +140,7 @@ const clientConnect = () => {
           senderToServer("GENERATOR_TAR_DECOMPRESS", "");
         } else if (messageFromGenerator.state === "GENERATOR_TAR_DECOMPRESS_DONE") {
           senderToClient("GENERATOR_TAR_DECOMPRESS_DONE");
-          senderToServer("GENERATOR_DOCKER_BUILD");
+          senderToServer("GENERATOR_DOCKER_BUILD", jsonMessage.architecture);
         } else if (messageFromGenerator.state === "GENERATOR_DOCKER_BUILD_DONE") {
           senderToClient("GENERATOR_DOCKER_BUILD_DONE");
           senderToServer("GENERATOR_DOCKER_SAVE");
@@ -151,6 +151,7 @@ const clientConnect = () => {
           dockerizedSize = messageFromGenerator.value;
         } else if (messageFromGenerator.state === "SENDING_TAR_FROM_GENERATOR") {
           downloadedFileSize += messageFromGenerator.value.length;
+          console.log(messageFromGenerator.value.length);
           fs.appendFileSync(`./dockerized.tar`, Buffer.from(messageFromGenerator.value, "base64"));
           if (dockerizedSize) {
             downloadedPercent = `${Math.round((downloadedFileSize / dockerizedSize) * 100)}%`;
