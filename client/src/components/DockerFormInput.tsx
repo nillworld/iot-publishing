@@ -11,7 +11,20 @@ type Props = {
   dockerFormData: any[] | undefined;
   setDockerFormData: Dispatch<SetStateAction<any | undefined>>;
 };
-const options = ["FROM", "WORKDIR", "RUN", "ENTRYPOINT", "CMD", "ADD", "ENV", "ARG", "LABEL", "EXPOSE", "MAINTAINER"];
+const options = [
+  "FROM",
+  "WORKDIR",
+  "RUN",
+  "COPY",
+  "ENTRYPOINT",
+  "CMD",
+  "ADD",
+  "ENV",
+  "ARG",
+  "LABEL",
+  "EXPOSE",
+  "MAINTAINER",
+];
 function DockerFormInput(props: Props) {
   const [inputValue, setInputValue] = useState<string>();
 

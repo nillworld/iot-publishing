@@ -37,12 +37,11 @@ function OpenedWebsocket(props: Props) {
     },
     {
       0: { template: "Node 16" },
-      1: { FROM: "node:16-alpine3.11" },
-      2: { WORKDIR: "/app" },
-      3: { COPY: "package*.json /app" },
-      4: { RUN: "npm install" },
+      1: { FROM: "node:16" },
+      2: { RUN: "apt-get update && apt-get install -y vim nano net-tools openssh-server" },
+      3: { WORKDIR: "/app" },
+      4: { COPY: "package*.json /app" },
       5: { COPY: "./project /app" },
-      6: { CMD: '[ "node", "server.js" ]' },
     },
     {
       0: { template: "Node 14" },
