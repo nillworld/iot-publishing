@@ -29,7 +29,6 @@ const clientConnect = () => {
   let dockerizedSize: number;
   let downloadedPercent: string;
   let fileTransHandler = false;
-  let testCount = 0;
 
   console.log("ws 4000 열림");
 
@@ -95,7 +94,8 @@ const clientConnect = () => {
       };
 
       generatorWS.onmessage = (generatorMessage) => {
-        if (!fileTransHandler) {
+        let messageType = typeof generatorMessage.data;
+        if (messageType === "string") {
           const messageFromGenerator = JSON.parse(generatorMessage.data);
           if (messageFromGenerator.state === "MADE_DOCKER_FILE") {
             tar
@@ -110,37 +110,26 @@ const clientConnect = () => {
               .then(() => {
                 console.log("check done");
                 tarFile = fs.statSync("./project.tar");
-                messageToServer.state = "SET_FILE_NAME";
+                messageToServer.state = "SET_FILE_INFO";
                 messageToServer.fileName = "project.tar";
+                messageToServer.fileSize = tarFile.size;
                 generatorWS.send(JSON.stringify(messageToServer));
               });
-          } else if (messageFromGenerator.state === "SET_FILE_NAME") {
-            const BUFFER_SIZE_MEGA = 1048576;
-            let pos = 0;
-            messageToServer.state = "UPLOADING_FROM_BACK";
-            fs.readFile(messageToServer.fileName, (err, data) => {
-              const dataBase64 = data.toString("base64");
-              messageToServer.fileSize = dataBase64.length;
-              while (pos != messageToServer.fileSize) {
-                messageToServer.value = dataBase64.slice(pos, pos + BUFFER_SIZE_MEGA);
-                generatorWS.send(JSON.stringify(messageToServer));
-                console.log(messageToServer.value.length);
-                pos = pos + BUFFER_SIZE_MEGA;
-                if (messageToServer.fileSize && pos > messageToServer.fileSize) {
-                  pos = messageToServer.fileSize;
-                }
-              }
-              try {
-                fs.unlinkSync("./project.tar");
-              } catch (error) {
-                console.log("Error:", error);
-              }
+          } else if (messageFromGenerator.state === "SET_FILE_INFO") {
+            const streamProjectFile = fs.createReadStream("./project.tar", {
+              highWaterMark: 1048576 * 16,
+            });
+            streamProjectFile.on("data", (fileData) => {
+              generatorWS.send(fileData);
+            });
+            streamProjectFile.on("end", () => {
+              senderToClient("GENERATOR_DOWNLOAD_DONE");
+              senderToServer("GENERATOR_TAR_DECOMPRESS", "");
+              fs.unlinkSync("./project.tar");
             });
           } else if (messageFromGenerator.state === "DOWNLOADING_FROM_BACK") {
             senderToClient("DOWNLOADING_FROM_BACK", messageFromGenerator.value);
           } else if (messageFromGenerator.state === "GENERATOR_DOWNLOAD_DONE") {
-            senderToClient("GENERATOR_DOWNLOAD_DONE");
-            senderToServer("GENERATOR_TAR_DECOMPRESS", "");
           } else if (messageFromGenerator.state === "GENERATOR_TAR_DECOMPRESS_DONE") {
             senderToClient("GENERATOR_TAR_DECOMPRESS_DONE");
             senderToServer("GENERATOR_DOCKER_BUILD", jsonMessage.architecture);
@@ -154,25 +143,17 @@ const clientConnect = () => {
             dockerizedSize = messageFromGenerator.value;
             fileTransHandler = true;
             senderToServer("SEND_TAR_FROM_GENERATOR");
-          } else if (messageFromGenerator.state === "SENDING_TAR_FROM_GENERATOR") {
-            // downloadedFileSize += messageFromGenerator.value.length;
-            // console.log(messageFromGenerator.value.length);
-            // fs.appendFileSync(`./dockerized.tar`, generatorMessage.data);
-            // if (dockerizedSize) {
-            //   downloadedPercent = `${Math.round((downloadedFileSize / dockerizedSize) * 100)}%`;
-            //   senderToClient("SENDING_TAR_FROM_GENERATOR", downloadedPercent);
-            //   if (downloadedFileSize === dockerizedSize) {
-            //     senderToServer("DOWNLOAD_DONE_FROM_GENERATOR");
-            //     senderToClient("DOWNLOAD_DONE_FROM_GENERATOR");
-            //   }
-            // }
           } else if (messageFromGenerator.state === "DONE_SENDING_TAR_FROM_GENERATOR") {
             senderToClient("DOWNLOAD_DONE_FROM_GENERATOR");
           }
         } else {
+          //File download - stream(object)
           fs.appendFileSync(`./dockerized.tar`, generatorMessage.data);
-          testCount += 1;
-          console.log(testCount);
+          downloadedFileSize += generatorMessage.data.length;
+          if (dockerizedSize) {
+            downloadedPercent = `${Math.round((downloadedFileSize / dockerizedSize) * 100)}%`;
+            senderToClient("SENDING_TAR_FROM_GENERATOR", downloadedPercent);
+          }
         }
       };
     });
