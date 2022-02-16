@@ -39,7 +39,6 @@ const clientConnect = () => {
     clientWS.on("message", (message) => {
       const jsonMessage = JSON.parse(message.toString());
 
-      console.log(jsonMessage);
       if (jsonMessage.state === "GENERATOR_CONNECT") {
         const ip = jsonMessage.generatorIP.ip;
         const port = jsonMessage.generatorIP.port;
@@ -108,7 +107,6 @@ const clientConnect = () => {
                 ["./project"]
               )
               .then(() => {
-                console.log("check done");
                 tarFile = fs.statSync("./project.tar");
                 messageToServer.state = "SET_FILE_INFO";
                 messageToServer.fileName = "project.tar";
@@ -116,7 +114,6 @@ const clientConnect = () => {
                 generatorWS.send(JSON.stringify(messageToServer));
               });
           } else if (messageFromGenerator.state === "SET_FILE_INFO") {
-            console.log("docker name", jsonMessage);
             senderToServer("SET_DOCKER_NAME", jsonMessage.dockerName);
           } else if (messageFromGenerator.state === "SET_DOCKER_NAME") {
             senderToServer("SET_DOCKER_TAG", jsonMessage.dockerTag);
