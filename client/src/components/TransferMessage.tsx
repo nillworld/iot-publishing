@@ -3,7 +3,6 @@ import "./TransferMessage.css";
 
 type Props = {
   downloadedPercent: string | undefined;
-  generatorState: string;
 };
 function TransferMessage(props: Props) {
   return (
@@ -11,14 +10,16 @@ function TransferMessage(props: Props) {
       <div className="mainText">파일 전송</div>
       {props.downloadedPercent === "none" ? (
         ""
+      ) : props.downloadedPercent === "100%" ? (
+        <div className="progressBar">
+          <div className="progressBar-ing" style={{ width: "0%" }}></div>
+        </div>
       ) : (
         <div className="progressBar">
           <div className="progressBar-ing" style={{ width: props.downloadedPercent }}></div>
         </div>
       )}
       {props.downloadedPercent === "none" ? "" : props.downloadedPercent}
-
-      <div>{props.generatorState}</div>
     </div>
   );
 }

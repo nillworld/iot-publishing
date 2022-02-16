@@ -19,6 +19,7 @@ function App() {
   const [messageForBack, setMessageForBack] = useState<Message>();
   const [downloadedPercent, setDownloadedPercent] = useState<string | undefined>();
   const [connectCheck, setConnectCheck] = useState(true);
+  const [preGeneratorState, setPreGeneratorState] = useState<string>("");
   const [generatorState, setGeneratorState] = useState<string>("");
 
   const connectBack = () => {
@@ -40,18 +41,24 @@ function App() {
             setDownloadedPercent(jsonMessage.value);
           } else if (jsonMessage.state === "GENERATOR_DOWNLOAD_DONE") {
             setDownloadedPercent("none");
-            setGeneratorState("업로드 완료. 서버에서 tar 압축 해제 중.");
+            setPreGeneratorState("프로젝트 파일 업로드 완료.");
+            setGeneratorState("서버에서 tar 압축 해제 중...");
           } else if (jsonMessage.state === "GENERATOR_TAR_DECOMPRESS_DONE") {
-            setGeneratorState("서버에서 tar 압축 해제 완료.");
+            setPreGeneratorState("서버에서 tar 압축 해제 완료.");
+            setGeneratorState("서버에서 도커 빌드 중...");
           } else if (jsonMessage.state === "GENERATOR_DOCKER_BUILD_DONE") {
-            setGeneratorState("서버에서 도커 빌드 완료.");
+            setPreGeneratorState("서버에서 도커 빌드 완료.");
+            setGeneratorState("서버에서 도커 이미지 tar로 압축 중...");
           } else if (jsonMessage.state === "GENERATOR_DOCKER_SAVE_DONE") {
-            setGeneratorState("서버에서 도커 이미지 tar로 압축 완료.");
+            setPreGeneratorState("서버에서 도커 이미지 tar로 압축 완료.");
+            setGeneratorState("서버에서 tar 파일 보내는 중...");
           } else if (jsonMessage.state === "SENDING_TAR_FROM_GENERATOR") {
             console.log(jsonMessage.value);
             setDownloadedPercent(jsonMessage.value);
-            setGeneratorState("서버에서 tar 파일 보내는 중...");
+            setPreGeneratorState("서버에서 도커 이미지 tar로 압축 완료.");
+            setGeneratorState("서버에서 tar 파일(도커 이미지) 보내는 중...");
           } else if (jsonMessage.state === "DOWNLOAD_DONE_FROM_GENERATOR") {
+            setPreGeneratorState("");
             setGeneratorState("Docker 이미지 파일(tar) 다운로드 완료.");
           }
         };
@@ -76,6 +83,7 @@ function App() {
           backWebSocket={backWebSocket}
           setMessageForBack={setMessageForBack}
           downloadedPercent={downloadedPercent}
+          preGeneratorState={preGeneratorState}
           generatorState={generatorState}
         />
       ) : (

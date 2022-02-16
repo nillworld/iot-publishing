@@ -10,6 +10,7 @@ type Props = {
   setMessageForBack: Dispatch<SetStateAction<Message | undefined>>;
   downloadedPercent: string | undefined;
   generatorState: string;
+  preGeneratorState: string;
 };
 
 type Message = {
@@ -32,8 +33,8 @@ function OpenedWebsocket(props: Props) {
   const [inputComponents, setInputComponents] = useState<number[]>();
   const [dockerFormData, setDockerFormData] = useState<any>({});
   const [selectedArchitecture, setSelectedArchitecture] = useState<string>("linux/arm64");
-  const [dockerImgName, setDockerImgName] = useState<string>();
-  const [dockerImgTag, setDockerImgTag] = useState<string>();
+  const [dockerImgName, setDockerImgName] = useState<string>("tobesoft");
+  const [dockerImgTag, setDockerImgTag] = useState<string>("0.1");
 
   const templateForms = [
     {
@@ -169,7 +170,13 @@ function OpenedWebsocket(props: Props) {
   };
 
   return fileSendCheck ? (
-    <TransferMessage downloadedPercent={props.downloadedPercent} generatorState={props.generatorState} />
+    <div>
+      <div className="generator-state-div">
+        <div>{props.preGeneratorState}</div>
+        <div>{props.generatorState}</div>
+      </div>
+      {props.downloadedPercent === "100%" ? "" : <TransferMessage downloadedPercent={props.downloadedPercent} />}
+    </div>
   ) : (
     <div className="App">
       <header className="App-header">
