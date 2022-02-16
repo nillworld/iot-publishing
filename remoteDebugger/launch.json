@@ -1,0 +1,12 @@
+{
+  "name": "Attach Node PI(recommended)",
+  "type": "node",
+  "request": "attach",
+  "address": "localhost",
+  "port": 9229,
+  "remoteRoot": "../app",
+  "skipFiles": ["<node_internals>/**"],
+  "windows": { "localRoot": "${workspaceRoot}\\fs24D8G2HH1JH628J3" },
+  "osx": { "localRoot": "${workspaceRoot}/fs24D8G2HH1JH628J3" },
+  "linux": { "localRoot": "${workspaceRoot}/fs24D8G2HH1JH628J3" }
+}

@@ -1,0 +1,8 @@
+{
+  "host": "192.168.0.102",
+  "username": "root",
+  "port": "2022",
+  "password": "tobe",
+  "remotePath": "../app",
+  "privateKey": ""
+}
