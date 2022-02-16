@@ -8,6 +8,8 @@ type Message = {
   generatorIP?: {} | undefined;
   dockerForm?: {} | undefined;
   architecture?: string | undefined;
+  dockerName?: string | undefined;
+  dockerTag?: string | undefined;
   downloadedPercent?: string | undefined;
 };
 

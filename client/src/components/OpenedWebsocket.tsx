@@ -17,6 +17,8 @@ type Message = {
   generatorIP?: {} | undefined;
   dockerFormData?: {} | undefined;
   architecture?: string | undefined;
+  dockerName?: string | undefined;
+  dockerTag?: string | undefined;
   projectDir?: string;
 };
 
@@ -30,6 +32,8 @@ function OpenedWebsocket(props: Props) {
   const [inputComponents, setInputComponents] = useState<number[]>();
   const [dockerFormData, setDockerFormData] = useState<any>({});
   const [selectedArchitecture, setSelectedArchitecture] = useState<string>("linux/arm64");
+  const [dockerImgName, setDockerImgName] = useState<string>();
+  const [dockerImgTag, setDockerImgTag] = useState<string>();
 
   const templateForms = [
     {
@@ -88,6 +92,14 @@ function OpenedWebsocket(props: Props) {
     props.setMessageForBack({ state: "SETTING_DOCKER_ARCHITECTURE", architecture: selectedArchitecture });
   }, [selectedArchitecture]);
 
+  useEffect(() => {
+    props.setMessageForBack({ state: "SETTING_DOCKER_IMAGE_NAME", dockerName: dockerImgName });
+  }, [dockerImgName]);
+
+  useEffect(() => {
+    props.setMessageForBack({ state: "SETTING_DOCKER_IMAGE_TAG", dockerTag: dockerImgTag });
+  }, [dockerImgTag]);
+
   const setTemplateForm = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setOptionSelect(e.target.value);
     const jsonTemplate = JSON.parse(e.target.value);
@@ -121,11 +133,21 @@ function OpenedWebsocket(props: Props) {
     setSelectedArchitecture(e.target.value);
   };
 
+  const onChangeDockerImgName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDockerImgName(e.target.value);
+  };
+
+  const onChangeDockerImgTag = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDockerImgTag(e.target.value);
+  };
+
   const dockerBuild = () => {
     props.setMessageForBack({
       state: "SET_DOCKER_FORM",
       dockerFormData: dockerFormData,
       architecture: selectedArchitecture,
+      dockerName: dockerImgName,
+      dockerTag: dockerImgTag,
     });
     setFileSendCheck(true);
   };
@@ -184,15 +206,28 @@ function OpenedWebsocket(props: Props) {
             </label>
             <div className="fileName-div">{selectedFile ? selectedFile.name : ".tar파일 선택"}</div>
           </div>
-          <div className="selectArchitecture-div">
-            <div className="selectArchitecture-txt">아키텍쳐 선택:</div>
-            <select name="" id="" onChange={onChangeArchitecture} value={selectedArchitecture}>
-              {architectureOptions.map((architectureOption, index) => (
-                <option value={architectureOption} key={index}>
-                  {architectureOption}
-                </option>
-              ))}
-            </select>
+          <div className="setting-context-div">
+            <div className="setting-line-div">
+              <div className="setting-txt">아키텍쳐 선택:</div>
+              <select name="" id="" onChange={onChangeArchitecture} value={selectedArchitecture}>
+                {architectureOptions.map((architectureOption, index) => (
+                  <option value={architectureOption} key={index}>
+                    {architectureOption}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="setting-context-div">
+            <div className="setting-line-div">
+              <div className="setting-txt">도커 이미지 이름: </div>
+              <input type="text" onChange={onChangeDockerImgName} value={dockerImgName} />
+            </div>
+            <div className="setting-line-div">
+              <div className="setting-txt">도커 이미지 태그: </div>
+              <input type="text" onChange={onChangeDockerImgTag} value={dockerImgTag} />
+            </div>
           </div>
 
           <div className="buildBtn-div">

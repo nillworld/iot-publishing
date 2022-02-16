@@ -19,15 +19,17 @@
 .filebtn input[type="file"] {
   display: none;
 }
-.selectArchitecture-div {
+.setting-context-div {
+  margin: 20px 0px;
+}
+.setting-line-div {
   display: flex;
   align-items: center;
-  margin-top: 30px;
 }
-.selectArchitecture-txt {
+.setting-txt {
   margin-right: 10px;
   font-size: 14px;
-  width: 160px;
+  width: 250px;
 }
 .buildBtn-div {
   margin-top: 30px;
