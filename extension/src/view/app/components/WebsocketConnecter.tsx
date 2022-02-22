@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import "./WebsocketConnecter.css";
 
 type Props = {

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Dispatch, MouseEventHandler, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import "./DockerFormInput.css";
 
 type Props = {
