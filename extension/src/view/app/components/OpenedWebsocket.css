@@ -1,0 +1,39 @@
+.filebtn-div {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+.fileName-div {
+  margin-left: 10px;
+  font-size: 13px;
+}
+.filebtn {
+  cursor: pointer;
+  border: 1px gray solid;
+  border-radius: 5px;
+  font-size: 13px;
+  padding: 7px;
+  top: 10px;
+  margin: 7px;
+}
+.filebtn input[type="file"] {
+  display: none;
+}
+.setting-context-div {
+  margin: 20px 0px;
+}
+.setting-line-div {
+  display: flex;
+  align-items: center;
+}
+.setting-txt {
+  margin-right: 10px;
+  font-size: 14px;
+  width: 250px;
+}
+.buildBtn-div {
+  margin-top: 30px;
+}
+.dockerform-btn {
+  margin: 10px;
+}

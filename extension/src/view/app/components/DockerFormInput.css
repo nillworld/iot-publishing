@@ -1,0 +1,10 @@
+.input-component-div {
+  display: flex;
+}
+.input-component-select {
+  margin: 5px 6px 0 0;
+  font-size: 12px;
+}
+.input-component-div button {
+  margin-top: 5px;
+}

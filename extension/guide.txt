@@ -2,11 +2,11 @@ D:\project\publishingExtension\dockerfileMaker\nillworld\extension - testConfig.
 
 
 src
-ㄴextension.ts (back)
-   ㄴview
+ ㄴextension.ts (back)
+    ㄴview
       ㄴviewLoader.ts(webview panel)
-         ㄴapp(front)
-	ㄴindex.tsx
+        ㄴapp(front)
+          ㄴindex.tsx
 
 
 https://medium.com/younited-tech-blog/reactception-extending-vs-code-extension-with-webviews-and-react-12be2a5898fd

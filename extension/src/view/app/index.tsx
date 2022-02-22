@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom";
 
 import "./index.css";
 import { IConfig } from "./model";
-import Config from "./config";
+import App from "./App";
 
 declare global {
   interface Window {
@@ -15,6 +15,9 @@ declare global {
 const vscode = window.acquireVsCodeApi();
 
 ReactDOM.render(
-  <Config vscode={vscode} initialData={window.initialData} />,
+  <React.StrictMode>
+    <App vscode={vscode} />
+    {/* <Config vscode={vscode} initialData={window.initialData} />, */}
+  </React.StrictMode>,
   document.getElementById("root")
 );

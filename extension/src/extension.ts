@@ -3,6 +3,9 @@
 import * as vscode from "vscode";
 import ViewLoader from "./view/ViewLoader";
 
+import * as WebSocket from "ws";
+const WebsocketServer = WebSocket.Server;
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -10,33 +13,36 @@ export function activate(context: vscode.ExtensionContext) {
   // This line of code will only be executed once when your extension is activated
   console.log('Congratulations, your extension "vscode-react" is now active!');
 
+  const backWSS = new WebsocketServer({ port: 4000 });
+  backWSS.on("connection", (clientWS) => {
+    console.log("back이랑 연결 됨");
+    clientWS.on("message", (message) => {
+      console.log("!!!!!!!!!!!!!!!!", message);
+    });
+  });
+
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
-  let disposable = vscode.commands.registerCommand(
-    "extension.viewconfig",
-    () => {
-      let openDialogOptions: vscode.OpenDialogOptions = {
-        canSelectFiles: true,
-        canSelectFolders: false,
-        canSelectMany: false,
-        filters: {
-          Json: ["json"]
-        }
-      };
+  let disposable = vscode.commands.registerCommand("extension.viewconfig", () => {
+    let openDialogOptions: vscode.OpenDialogOptions = {
+      canSelectFiles: true,
+      canSelectFolders: false,
+      canSelectMany: false,
+      filters: {
+        Json: ["json"],
+      },
+    };
 
-      vscode.window
-        .showOpenDialog(openDialogOptions)
-        .then(async (uri: vscode.Uri[] | undefined) => {
-          if (uri && uri.length > 0) {
-            const view = new ViewLoader(uri[0], context.extensionPath);
-          } else {
-            vscode.window.showErrorMessage("No valid file selected!");
-            return;
-          }
-        });
-    }
-  );
+    vscode.window.showOpenDialog(openDialogOptions).then(async (uri: vscode.Uri[] | undefined) => {
+      if (uri && uri.length > 0) {
+        const view = new ViewLoader(uri[0], context.extensionPath);
+      } else {
+        vscode.window.showErrorMessage("No valid file selected!");
+        return;
+      }
+    });
+  });
 
   context.subscriptions.push(disposable);
 }

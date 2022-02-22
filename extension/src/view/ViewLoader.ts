@@ -14,40 +14,31 @@ export default class ViewLoader {
 
     let config = this.getFileContent(fileUri);
     if (config) {
-      this._panel = vscode.window.createWebviewPanel(
-        "configView",
-        "Config View",
-        vscode.ViewColumn.One,
-        {
-          enableScripts: true,
+      this._panel = vscode.window.createWebviewPanel("configView", "Config View", vscode.ViewColumn.One, {
+        enableScripts: true,
 
-          localResourceRoots: [
-            vscode.Uri.file(path.join(extensionPath, "configViewer"))
-          ]
-        }
-      );
+        localResourceRoots: [vscode.Uri.file(path.join(extensionPath, "configViewer"))],
+      });
 
       this._panel.webview.html = this.getWebviewContent(config);
 
-      this._panel.webview.onDidReceiveMessage(
-        (command: ICommand) => {
-          switch (command.action) {
-            case CommandAction.Save:
-              this.saveFileContent(fileUri, command.content);
-              return;
-          }
-        },
-        undefined,
-        this._disposables
-      );
+      // this._panel.webview.onDidReceiveMessage(
+      //   (command: ICommand) => {
+      //     switch (command.action) {
+      //       case CommandAction.Save:
+      //         this.saveFileContent(fileUri, command.content);
+      //         return;
+      //     }
+      //   },
+      //   undefined,
+      //   this._disposables
+      // );
     }
   }
 
   private getWebviewContent(config: IConfig): string {
     // Local path to main script run in the webview
-    const reactAppPathOnDisk = vscode.Uri.file(
-      path.join(this._extensionPath, "configViewer", "configViewer.js")
-    );
+    const reactAppPathOnDisk = vscode.Uri.file(path.join(this._extensionPath, "configViewer", "configViewer.js"));
     const reactAppUri = reactAppPathOnDisk.with({ scheme: "vscode-resource" });
 
     const configJson = JSON.stringify(config);
@@ -59,11 +50,7 @@ export default class ViewLoader {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Config View</title>
 
-        <meta http-equiv="Content-Security-Policy"
-                    content="default-src 'none';
-                             img-src https:;
-                             script-src 'unsafe-eval' 'unsafe-inline' vscode-resource:;
-                             style-src vscode-resource: 'unsafe-inline';">
+        <meta http-equiv="Content-Security-Policy" content="default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;">
 
         <script>
           window.acquireVsCodeApi = acquireVsCodeApi;
@@ -93,9 +80,7 @@ export default class ViewLoader {
       let content: string = JSON.stringify(config);
       fs.writeFileSync(fileUri.fsPath, content);
 
-      vscode.window.showInformationMessage(
-        `👍 Configuration saved to ${fileUri.fsPath}`
-      );
+      vscode.window.showInformationMessage(`👍 Configuration saved to ${fileUri.fsPath}`);
     }
   }
 }
