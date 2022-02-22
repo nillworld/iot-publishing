@@ -111,7 +111,7 @@ export function activate(context: vscode.ExtensionContext) {
                 {
                   file: "./project.tar",
                   // C: "D:/project/publishingExtension/dockerfileMaker/nillworld",
-                  C: "../",
+                  C: __dirname,
                 },
                 ["./project"]
               )
@@ -158,7 +158,7 @@ export function activate(context: vscode.ExtensionContext) {
           }
         } else {
           //File download - stream(object)
-          fs.appendFileSync(`./dockerized.tar`, generatorMessage.data);
+          fs.appendFileSync(`${__dirname}\\dockerized.tar`, generatorMessage.data);
           downloadedFileSize += generatorMessage.data.length;
           if (dockerizedSize) {
             downloadedPercent = `${Math.round((downloadedFileSize / dockerizedSize) * 100)}%`;
