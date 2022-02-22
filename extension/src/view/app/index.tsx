@@ -4,6 +4,7 @@ import * as ReactDOM from "react-dom";
 import "./index.css";
 import { IConfig } from "./model";
 import App from "./App";
+import { useState } from "react";
 
 declare global {
   interface Window {

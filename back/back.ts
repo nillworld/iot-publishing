@@ -28,7 +28,6 @@ const clientConnect = () => {
 
   let dockerizedSize: number;
   let downloadedPercent: string;
-  let fileTransHandler = false;
 
   console.log("ws 4000 열림");
 
@@ -143,7 +142,6 @@ const clientConnect = () => {
             senderToServer("SEND_FILE_SIZE_FROM_GENERATOR");
           } else if (messageFromGenerator.state === "GENERATOR_DOCKER_SIZE") {
             dockerizedSize = messageFromGenerator.value;
-            fileTransHandler = true;
             senderToServer("SEND_TAR_FROM_GENERATOR");
           } else if (messageFromGenerator.state === "DONE_SENDING_TAR_FROM_GENERATOR") {
             senderToClient("DOWNLOAD_DONE_FROM_GENERATOR");

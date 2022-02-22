@@ -23,7 +23,12 @@ function App(props: any) {
   const [generatorState, setGeneratorState] = useState<string>("");
   props.vscode.setState("hihi");
 
+  useEffect(() => {
+    setBackWebsocket(new WebSocket(`ws://localhost:4000/ws`));
+  }, []);
+
   const connectBack = () => {
+    console.log("backWebSocket", backWebSocket);
     console.log(props.vscode.setState("hihi"));
     setBackWebsocket(new WebSocket(`ws://localhost:4000/ws`));
   };
