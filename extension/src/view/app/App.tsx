@@ -27,11 +27,6 @@ function App(props: any) {
     setBackWebsocket(new WebSocket(`ws://localhost:4000/ws`));
   }, []);
 
-  const connectBack = () => {
-    console.log("backWebSocket", backWebSocket);
-    console.log(props.vscode.setState("hihi"));
-    setBackWebsocket(new WebSocket(`ws://localhost:4000/ws`));
-  };
   const testBtn = () => {
     console.log(props.vscode.getState());
   };
@@ -87,7 +82,6 @@ function App(props: any) {
 
   return (
     <div>
-      {backWebSocket ? "" : <button onClick={connectBack}>이 버튼이 vscode api 연결 임시 방편</button>}
       <button onClick={testBtn}>test</button>
       {wsOpenCheck ? (
         <OpenedWebsocket

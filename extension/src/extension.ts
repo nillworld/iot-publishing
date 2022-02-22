@@ -49,7 +49,6 @@ export function activate(context: vscode.ExtensionContext) {
       const jsonMessage = JSON.parse(message.toString());
 
       if (jsonMessage.state === "GENERATOR_CONNECT") {
-        console.log("CHCHCHCHCHHC");
         const ip = jsonMessage.generatorIP.ip;
         const port = jsonMessage.generatorIP.port;
 
