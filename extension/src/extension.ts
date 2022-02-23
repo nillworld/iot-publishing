@@ -204,15 +204,16 @@ export function activate(context: vscode.ExtensionContext) {
         Json: ["json"],
       },
     };
+    const view = new ViewLoader(context.extensionPath);
 
-    vscode.window.showOpenDialog(openDialogOptions).then(async (uri: vscode.Uri[] | undefined) => {
-      if (uri && uri.length > 0) {
-        const view = new ViewLoader(uri[0], context.extensionPath);
-      } else {
-        vscode.window.showErrorMessage("No valid file selected!");
-        return;
-      }
-    });
+    // vscode.window.showOpenDialog(openDialogOptions).then(async (uri: vscode.Uri[] | undefined) => {
+    //   if (uri && uri.length > 0) {
+    //     const view = new ViewLoader(uri[0], context.extensionPath);
+    //   } else {
+    //     vscode.window.showErrorMessage("No valid file selected!");
+    //     return;
+    //   }
+    // });
   });
 
   context.subscriptions.push(disposable);

@@ -9,18 +9,18 @@ export default class ViewLoader {
   private readonly _extensionPath: string;
   private _disposables: vscode.Disposable[] = [];
 
-  constructor(fileUri: vscode.Uri, extensionPath: string) {
+  constructor(extensionPath: string) {
     this._extensionPath = extensionPath;
 
-    let config = this.getFileContent(fileUri);
-    if (config) {
+    // let config = this.getFileContent(fileUri);
+    if (true) {
       this._panel = vscode.window.createWebviewPanel("Dockerizing", "Dockerizing", vscode.ViewColumn.One, {
         enableScripts: true,
 
         localResourceRoots: [vscode.Uri.file(path.join(extensionPath, "dockerizingService"))],
       });
 
-      // this._panel.webview.html = this.getWebviewContent(config);
+      this._panel.webview.html = this.getWebviewContent();
 
       // this._panel.webview.onDidReceiveMessage(
       //   (command: ICommand) => {
@@ -36,14 +36,14 @@ export default class ViewLoader {
     }
   }
 
-  private getWebviewContent(config: IConfig): string {
+  private getWebviewContent(): string {
     // Local path to main script run in the webview
     const reactAppPathOnDisk = vscode.Uri.file(
       path.join(this._extensionPath, "dockerizingService", "dockerizingService.js")
     );
     const reactAppUri = reactAppPathOnDisk.with({ scheme: "vscode-resource" });
 
-    const configJson = JSON.stringify(config);
+    // const configJson = JSON.stringify(config);
 
     return `<!DOCTYPE html>
     <html lang="en">
@@ -56,7 +56,7 @@ export default class ViewLoader {
 
         <script>
           window.acquireVsCodeApi = acquireVsCodeApi;
-          window.initialData = ${configJson};
+          
         </script>
     </head>
     <body>
