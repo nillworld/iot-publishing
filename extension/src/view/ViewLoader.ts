@@ -14,13 +14,13 @@ export default class ViewLoader {
 
     let config = this.getFileContent(fileUri);
     if (config) {
-      this._panel = vscode.window.createWebviewPanel("configView", "Config View", vscode.ViewColumn.One, {
+      this._panel = vscode.window.createWebviewPanel("Dockerizing", "Dockerizing", vscode.ViewColumn.One, {
         enableScripts: true,
 
-        localResourceRoots: [vscode.Uri.file(path.join(extensionPath, "configViewer"))],
+        localResourceRoots: [vscode.Uri.file(path.join(extensionPath, "dockerizingService"))],
       });
 
-      this._panel.webview.html = this.getWebviewContent(config);
+      // this._panel.webview.html = this.getWebviewContent(config);
 
       // this._panel.webview.onDidReceiveMessage(
       //   (command: ICommand) => {
@@ -38,7 +38,9 @@ export default class ViewLoader {
 
   private getWebviewContent(config: IConfig): string {
     // Local path to main script run in the webview
-    const reactAppPathOnDisk = vscode.Uri.file(path.join(this._extensionPath, "configViewer", "configViewer.js"));
+    const reactAppPathOnDisk = vscode.Uri.file(
+      path.join(this._extensionPath, "dockerizingService", "dockerizingService.js")
+    );
     const reactAppUri = reactAppPathOnDisk.with({ scheme: "vscode-resource" });
 
     const configJson = JSON.stringify(config);
