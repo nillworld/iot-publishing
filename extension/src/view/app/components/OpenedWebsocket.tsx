@@ -8,7 +8,7 @@ import TransferMessage from "./TransferMessage";
 type Props = {
   backWebSocket: WebSocket | undefined;
   setMessageForBack: Dispatch<SetStateAction<Message | undefined>>;
-  projectDir: string[] | undefined;
+  projectDir: string | undefined;
   downloadedPercent: string | undefined;
   generatorState: string;
   preGeneratorState: string;
@@ -24,7 +24,7 @@ type Message = {
 };
 
 function OpenedWebsocket(props: Props) {
-  const [selectedFile, setSelectedFile] = useState<string[]>();
+  const [selectedFile, setSelectedFile] = useState<string>();
   const [fileSendCheck, setFileSendCheck] = useState<boolean>();
   const [lineId, setLineId] = useState<number>(0);
   const [lineOption, setLineOption] = useState<string[]>();

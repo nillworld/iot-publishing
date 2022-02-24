@@ -38,8 +38,8 @@ export function activate(context: vscode.ExtensionContext) {
 
   let dockerizedSize: number;
   let downloadedPercent: string;
-  let projectFiles: string[];
-  let projectNames: string[];
+  let projectFile: string;
+  let projectName: string;
   let dockerizedTarDir: string;
 
   console.log("ws 4000 열림");
@@ -84,19 +84,14 @@ export function activate(context: vscode.ExtensionContext) {
         let openDialogOptions: vscode.OpenDialogOptions = {
           openLabel: "프로젝트폴더 선택",
           canSelectFolders: true,
-
-          canSelectFiles: true,
-          canSelectMany: true,
         };
         vscode.window.showOpenDialog(openDialogOptions).then(async (uri: vscode.Uri[] | undefined) => {
           if (uri && uri.length > 0) {
-            projectFiles = uri.map((dir) => dir.path.slice(1));
-            console.log(projectFiles);
-            projectNames = projectFiles.map((projectFile) => {
-              let projectFileDir = projectFile.split("/");
-              return projectFileDir[projectFileDir.length - 1] + " ";
-            });
-            senderToClient("SET_PROJECT_FILES_DONE", projectNames);
+            projectFile = uri[0].path.slice(1);
+            console.log(projectFile);
+            let projectFileDir = projectFile.split("/");
+            projectName = projectFileDir[projectFileDir.length - 1];
+            senderToClient("SET_PROJECT_FILES_DONE", projectName);
           } else {
             vscode.window.showErrorMessage("No valid file selected!");
             return;
@@ -146,9 +141,9 @@ export function activate(context: vscode.ExtensionContext) {
                 {
                   file: "./project.tar",
                   // here, can not set multi dir
-                  C: projectFiles[0],
+                  C: projectFile,
                 },
-                ["./project"]
+                ["."]
               )
               .then(() => {
                 tarFile = fs.statSync("./project.tar");
@@ -171,7 +166,7 @@ export function activate(context: vscode.ExtensionContext) {
             streamProjectFile.on("end", () => {
               senderToClient("GENERATOR_DOWNLOAD_DONE");
               senderToServer("GENERATOR_TAR_DECOMPRESS", "");
-              // fs.unlinkSync("./project.tar");
+              fs.unlinkSync("./project.tar");
             });
           } else if (messageFromGenerator.state === "DOWNLOADING_FROM_BACK") {
             senderToClient("DOWNLOADING_FROM_BACK", messageFromGenerator.value);

@@ -17,7 +17,7 @@ function App(props: any) {
   const [wsOpenCheck, setWsOpenCheck] = useState<boolean>(false);
   const [backWebSocket, setBackWebsocket] = useState<WebSocket>();
   const [messageForBack, setMessageForBack] = useState<Message>();
-  const [projectDir, setProjectDir] = useState<string[] | undefined>();
+  const [projectDir, setProjectDir] = useState<string | undefined>();
   const [downloadedPercent, setDownloadedPercent] = useState<string | undefined>();
   const [connectCheck, setConnectCheck] = useState(true);
   const [preGeneratorState, setPreGeneratorState] = useState<string>("");
