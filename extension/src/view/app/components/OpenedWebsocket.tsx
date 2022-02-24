@@ -8,6 +8,7 @@ import TransferMessage from "./TransferMessage";
 type Props = {
   backWebSocket: WebSocket | undefined;
   setMessageForBack: Dispatch<SetStateAction<Message | undefined>>;
+  projectDir: string[] | undefined;
   downloadedPercent: string | undefined;
   generatorState: string;
   preGeneratorState: string;
@@ -20,11 +21,10 @@ type Message = {
   architecture?: string | undefined;
   dockerName?: string | undefined;
   dockerTag?: string | undefined;
-  projectDir?: string;
 };
 
 function OpenedWebsocket(props: Props) {
-  const [selectedFile, setSelectedFile] = useState<File>();
+  const [selectedFile, setSelectedFile] = useState<string[]>();
   const [fileSendCheck, setFileSendCheck] = useState<boolean>();
   const [lineId, setLineId] = useState<number>(0);
   const [lineOption, setLineOption] = useState<string[]>();
@@ -90,6 +90,10 @@ function OpenedWebsocket(props: Props) {
   }, [dockerFormData]);
 
   useEffect(() => {
+    setSelectedFile(props.projectDir);
+  }, [props.projectDir]);
+
+  useEffect(() => {
     props.setMessageForBack({ state: "SETTING_DOCKER_ARCHITECTURE", architecture: selectedArchitecture });
   }, [selectedArchitecture]);
 
@@ -124,10 +128,11 @@ function OpenedWebsocket(props: Props) {
     setLineValue(templateValues);
   };
 
-  const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setSelectedFile(e.target.files[0]);
-    }
+  const onClickFileSelect = () => {
+    // if (e.target.files) {
+    //   setSelectedFile(e.target.files[0]);
+    // }
+    props.setMessageForBack({ state: "SET_PROJECT_FILES" });
   };
 
   const onChangeArchitecture = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -140,6 +145,9 @@ function OpenedWebsocket(props: Props) {
 
   const onChangeDockerImgTag = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDockerImgTag(e.target.value);
+  };
+  const onClickDockerTarSaveDir = () => {
+    props.setMessageForBack({ state: "SET_DOCKER_TAR_SAVE_DIR" });
   };
 
   const dockerBuild = () => {
@@ -209,9 +217,9 @@ function OpenedWebsocket(props: Props) {
           <div className="filebtn-div">
             <label className="filebtn">
               프로젝트 선택
-              <input placeholder="arg 입력~" type="file" name={"file"} onChange={onChangeFile} />
+              <input type="button" name={"file"} onClick={onClickFileSelect} />
             </label>
-            <div className="fileName-div">{selectedFile ? selectedFile.name : ".tar파일 선택"}</div>
+            <div className="fileName-div">{selectedFile ? selectedFile : ".tar파일 선택"}</div>
           </div>
           <div className="setting-context-div">
             <div className="setting-line-div">
@@ -234,6 +242,10 @@ function OpenedWebsocket(props: Props) {
             <div className="setting-line-div">
               <div className="setting-txt">도커 이미지 태그: </div>
               <input type="text" onChange={onChangeDockerImgTag} value={dockerImgTag} />
+            </div>
+            <div className="setting-line-div">
+              <div className="setting-txt">도커 이미지 저장 경로: </div>
+              <input type="text" onClick={onClickDockerTarSaveDir} value={dockerImgTag} />
             </div>
           </div>
 

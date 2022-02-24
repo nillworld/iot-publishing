@@ -38,6 +38,9 @@ export function activate(context: vscode.ExtensionContext) {
 
   let dockerizedSize: number;
   let downloadedPercent: string;
+  let projectFiles: string[];
+  let projectNames: string[];
+  let dockerizedTarDir: string;
 
   console.log("ws 4000 열림");
 
@@ -68,11 +71,6 @@ export function activate(context: vscode.ExtensionContext) {
           }
         };
         generatorWS.onopen = () => {
-          let projectDir = __dirname + "/../project";
-          console.log(projectDir);
-          fs.readdir(projectDir, (err, data) => {
-            console.log(data);
-          });
           messageToServer.state = "GENERATOR_START";
           messageToClient.state = "GENERATOR_CONNECTED";
           console.log("GeneratorWS opened");
@@ -81,6 +79,43 @@ export function activate(context: vscode.ExtensionContext) {
 
           generatorWSOpenCheck = true;
         };
+      }
+      if (jsonMessage.state === "SET_PROJECT_FILES") {
+        let openDialogOptions: vscode.OpenDialogOptions = {
+          openLabel: "프로젝트폴더 선택",
+          canSelectFolders: true,
+
+          canSelectFiles: true,
+          canSelectMany: true,
+        };
+        vscode.window.showOpenDialog(openDialogOptions).then(async (uri: vscode.Uri[] | undefined) => {
+          if (uri && uri.length > 0) {
+            projectFiles = uri.map((dir) => dir.path.slice(1));
+            console.log(projectFiles);
+            projectNames = projectFiles.map((projectFile) => {
+              let projectFileDir = projectFile.split("/");
+              return projectFileDir[projectFileDir.length - 1] + " ";
+            });
+            senderToClient("SET_PROJECT_FILES_DONE", projectNames);
+          } else {
+            vscode.window.showErrorMessage("No valid file selected!");
+            return;
+          }
+        });
+      }
+      if (jsonMessage.state === "SET_DOCKER_TAR_SAVE_DIR") {
+        let openDialogOptions: vscode.OpenDialogOptions = {
+          openLabel: "저장 경로 선택",
+          canSelectFolders: true,
+        };
+        vscode.window.showOpenDialog(openDialogOptions).then(async (uri: vscode.Uri[] | undefined) => {
+          if (uri && uri.length > 0) {
+            dockerizedTarDir = uri[0].path.slice(1);
+          } else {
+            vscode.window.showErrorMessage("No valid file selected!");
+            return;
+          }
+        });
       }
       if (jsonMessage.state === "SET_DOCKER_FORM") {
         messageToServer.state = "MAKE_DOCKER_FILE";
@@ -110,8 +145,7 @@ export function activate(context: vscode.ExtensionContext) {
               .c(
                 {
                   file: "./project.tar",
-                  // C: "D:/project/publishingExtension/dockerfileMaker/nillworld",
-                  C: __dirname,
+                  C: projectFiles[0],
                 },
                 ["./project"]
               )
@@ -136,7 +170,7 @@ export function activate(context: vscode.ExtensionContext) {
             streamProjectFile.on("end", () => {
               senderToClient("GENERATOR_DOWNLOAD_DONE");
               senderToServer("GENERATOR_TAR_DECOMPRESS", "");
-              fs.unlinkSync("./project.tar");
+              // fs.unlinkSync("./project.tar");
             });
           } else if (messageFromGenerator.state === "DOWNLOADING_FROM_BACK") {
             senderToClient("DOWNLOADING_FROM_BACK", messageFromGenerator.value);
@@ -158,7 +192,7 @@ export function activate(context: vscode.ExtensionContext) {
           }
         } else {
           //File download - stream(object)
-          fs.appendFileSync(`${__dirname}\\dockerized.tar`, generatorMessage.data);
+          fs.appendFileSync(`${dockerizedTarDir}\\dockerized.tar`, generatorMessage.data);
           downloadedFileSize += generatorMessage.data.length;
           if (dockerizedSize) {
             downloadedPercent = `${Math.round((downloadedFileSize / dockerizedSize) * 100)}%`;
