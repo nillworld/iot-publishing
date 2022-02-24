@@ -145,6 +145,7 @@ export function activate(context: vscode.ExtensionContext) {
               .c(
                 {
                   file: "./project.tar",
+                  // here, can not set multi dir
                   C: projectFiles[0],
                 },
                 ["./project"]
