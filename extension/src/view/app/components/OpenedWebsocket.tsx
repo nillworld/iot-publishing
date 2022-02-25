@@ -44,15 +44,14 @@ function OpenedWebsocket(props: Props) {
       0: { template: "-Template-" },
     },
     {
-      0: { template: "Java and Node" },
-      1: { FROM: "openjdk:latest" },
+      0: { template: "Java 11 and Node 16" },
+      1: { FROM: "node:16" },
       2: {
-        RUN: "apt-get update && apt-get install -y curl && curl -sL https://deb.nodesource.com/setup_14.x | bash - && apt-get install -y nodejs && curl -L https://www.npmjs.com/install.sh | sh \
-				",
-        // invisibility: true,
+        RUN: "apt-get update && apt-get -y install default-jre vim nano net-tools openssh-server",
+        invisibility: true,
       },
       3: { WORKDIR: "/app" },
-      5: { COPY: "./project /app" },
+      4: { COPY: "./project /app" },
     },
     {
       0: { template: "Node 16" },
