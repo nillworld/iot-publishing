@@ -128,10 +128,6 @@ function OpenedWebsocket(props: Props) {
     const jsonTemplateKeys: string[] = Object.keys(jsonTemplate);
     const jsonTemplateValues: string[] = Object.values(jsonTemplate);
 
-    console.log("@#@#@#@#11", jsonTemplate);
-    console.log("@#@#@#@#", jsonTemplateValues);
-    console.log("@#@#@##@!#@!#@#1122", jsonTemplateKeys);
-
     let jsonTemplateKeysToInt: number[] = [];
     jsonTemplateKeys.map((key) => {
       jsonTemplateKeysToInt.push(parseInt(key));
@@ -144,7 +140,6 @@ function OpenedWebsocket(props: Props) {
       templateValues.push(Object.values(templateLineData)[0]);
       templateValuesVisible.push(Object.values(templateLineData)[1]);
     });
-    console.log("@#@#@##@!#@!#@#1133", templateValuesVisible);
 
     setDockerFormData(jsonTemplate);
     setInputComponents(jsonTemplateKeysToInt);

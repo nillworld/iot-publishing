@@ -66,7 +66,6 @@ function DockerFormInput(props: Props) {
     props.setDockerFormData({ ...props.dockerFormData, [props.lineId]: { [e.target.value]: dockerFormDataValues[0] } });
   };
   const inputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(props.dockerFormData);
     let dockerFormDataKeys: string[] = [];
     setInputValue(e.target.value);
     if (props.dockerFormData) {
