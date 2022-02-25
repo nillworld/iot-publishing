@@ -18,6 +18,7 @@ function App(props: any) {
   const [backWebSocket, setBackWebsocket] = useState<WebSocket>();
   const [messageForBack, setMessageForBack] = useState<Message>();
   const [projectDir, setProjectDir] = useState<string | undefined>();
+  const [saveDir, setSaveDir] = useState<string | undefined>();
   const [downloadedPercent, setDownloadedPercent] = useState<string | undefined>();
   const [connectCheck, setConnectCheck] = useState(true);
   const [preGeneratorState, setPreGeneratorState] = useState<string>("");
@@ -43,6 +44,8 @@ function App(props: any) {
             setWsOpenCheck(true);
           } else if (jsonMessage.state === "SET_PROJECT_FILES_DONE") {
             setProjectDir(jsonMessage.value);
+          } else if (jsonMessage.state === "SET_DOCKER_TAR_SAVE_DIR_DONE") {
+            setSaveDir(jsonMessage.value);
           } else if (jsonMessage.state === "GENERATOR_CONNECT_ERROR") {
           } else if (jsonMessage.state === "DOWNLOADING_FROM_BACK") {
             setGeneratorState("프로젝트 파일을 업로드 중입니다.");
@@ -85,12 +88,13 @@ function App(props: any) {
 
   return (
     <div>
-      <button onClick={testBtn}>test</button>
+      {/* <button onClick={testBtn}>test</button> */}
       {wsOpenCheck ? (
         <OpenedWebsocket
           backWebSocket={backWebSocket}
           setMessageForBack={setMessageForBack}
           projectDir={projectDir}
+          saveDir={saveDir}
           downloadedPercent={downloadedPercent}
           preGeneratorState={preGeneratorState}
           generatorState={generatorState}

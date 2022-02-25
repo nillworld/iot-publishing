@@ -9,6 +9,7 @@ type Props = {
   setInputComponents: Dispatch<SetStateAction<number[] | undefined>>;
   option?: string;
   value?: string;
+  invisibility?: boolean;
   dockerFormData: any[] | undefined;
   setDockerFormData: Dispatch<SetStateAction<any | undefined>>;
 };
@@ -80,6 +81,8 @@ function DockerFormInput(props: Props) {
   return (
     <div>
       {props.option === "template" ? (
+        ""
+      ) : props.invisibility ? (
         ""
       ) : (
         <div className="input-component-div">

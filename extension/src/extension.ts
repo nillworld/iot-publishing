@@ -39,8 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
   let dockerizedSize: number;
   let downloadedPercent: string;
   let projectFile: string;
-  let projectName: string;
-  let dockerizedTarDir: string;
+  let saveDir: string;
 
   console.log("ws 4000 열림");
 
@@ -88,9 +87,11 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.showOpenDialog(openDialogOptions).then(async (uri: vscode.Uri[] | undefined) => {
           if (uri && uri.length > 0) {
             projectFile = uri[0].path.slice(1);
-            console.log(projectFile);
-            let projectFileDir = projectFile.split("/");
-            projectName = projectFileDir[projectFileDir.length - 1];
+            const projectFileDir = projectFile.split("/");
+            let projectName = projectFileDir[projectFileDir.length - 1];
+            if (projectName === "") {
+              projectName = projectFile;
+            }
             senderToClient("SET_PROJECT_FILES_DONE", projectName);
           } else {
             vscode.window.showErrorMessage("No valid file selected!");
@@ -105,7 +106,13 @@ export function activate(context: vscode.ExtensionContext) {
         };
         vscode.window.showOpenDialog(openDialogOptions).then(async (uri: vscode.Uri[] | undefined) => {
           if (uri && uri.length > 0) {
-            dockerizedTarDir = uri[0].path.slice(1);
+            saveDir = uri[0].path.slice(1);
+            const saveDirSet = saveDir.split("/");
+            let saveDirName = saveDirSet[saveDirSet.length - 1];
+            if (saveDirName === "") {
+              saveDirName = saveDir;
+            }
+            senderToClient("SET_DOCKER_TAR_SAVE_DIR_DONE", saveDirName);
           } else {
             vscode.window.showErrorMessage("No valid file selected!");
             return;
@@ -188,7 +195,7 @@ export function activate(context: vscode.ExtensionContext) {
           }
         } else {
           //File download - stream(object)
-          fs.appendFileSync(`${dockerizedTarDir}\\dockerized.tar`, generatorMessage.data);
+          fs.appendFileSync(`${saveDir}\\dockerized.tar`, generatorMessage.data);
           downloadedFileSize += generatorMessage.data.length;
           if (dockerizedSize) {
             downloadedPercent = `${Math.round((downloadedFileSize / dockerizedSize) * 100)}%`;

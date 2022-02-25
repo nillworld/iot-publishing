@@ -12,7 +12,14 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
-
+/* .App-header.vscode-light {
+  color: black;
+  font-size: 150px;
+}
+.App-header.vscode-dark {
+  color: white;
+  font-size: 150px;
+} */
 .App-header {
   /* background-color: #282c34; */
   min-height: 100vh;
@@ -21,8 +28,6 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  /* color: white; */
-  color: #282c34;
 }
 .App-header .form-div {
   width: 30%;

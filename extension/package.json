@@ -31,8 +31,8 @@
     "commands": [
       {
         "command": "extension.viewconfig",
-        "title": "Display config JSON.",
-        "category": "Webview React"
+        "title": "Dockerizing project",
+        "category": "TobeSoft"
       }
     ]
   },
