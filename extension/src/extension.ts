@@ -231,28 +231,8 @@ export function activate(context: vscode.ExtensionContext) {
     return txt;
   };
 
-  // The command has been defined in the package.json file
-  // Now provide the implementation of the command with registerCommand
-  // The commandId parameter must match the command field in package.json
   let disposable = vscode.commands.registerCommand("extension.viewconfig", () => {
-    let openDialogOptions: vscode.OpenDialogOptions = {
-      canSelectFiles: true,
-      canSelectFolders: false,
-      canSelectMany: false,
-      filters: {
-        Json: ["json"],
-      },
-    };
-    const view = new ViewLoader(context.extensionPath);
-
-    // vscode.window.showOpenDialog(openDialogOptions).then(async (uri: vscode.Uri[] | undefined) => {
-    //   if (uri && uri.length > 0) {
-    //     const view = new ViewLoader(uri[0], context.extensionPath);
-    //   } else {
-    //     vscode.window.showErrorMessage("No valid file selected!");
-    //     return;
-    //   }
-    // });
+    new ViewLoader(context.extensionPath);
   });
 
   context.subscriptions.push(disposable);
