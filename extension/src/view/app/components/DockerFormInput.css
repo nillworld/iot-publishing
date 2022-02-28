@@ -1,10 +1,20 @@
-.input-component-div {
+.dockerfile-form-line {
   display: flex;
+  margin-top: 10px;
 }
-.input-component-select {
-  margin: 5px 6px 0 0;
+.dockerfile-form-line select {
+  /* margin: 5px 6px 0 0; */
   font-size: 12px;
+  margin-right: 5px;
+  cursor: pointer;
 }
-.input-component-div button {
-  margin-top: 5px;
+.dockerfile-form-line input {
+  border-radius: 5px 0 0 5px;
+}
+.dockerfile-form-line button {
+  /* margin-top: 5px; */
+  width: 40px;
+  font-size: 20px;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
 }

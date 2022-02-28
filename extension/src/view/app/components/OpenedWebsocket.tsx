@@ -229,85 +229,92 @@ function OpenedWebsocket(props: Props) {
       {props.downloadedPercent === "100%" ? "" : <TransferMessage downloadedPercent={props.downloadedPercent} />}
     </div>
   ) : (
-    <div className="App">
-      <header className="App-header">
-        <div className="form-div">
-          <select onChange={setTemplateForm} value={optionSelect}>
-            {templateForms.map((templateForm, index) => (
-              <option value={JSON.stringify(templateForm)} key={index}>
-                {templateForm[0]?.template}
+    <div className="form-div">
+      <select className="template-select" onChange={setTemplateForm} value={optionSelect}>
+        {templateForms.map((templateForm, index) => (
+          <option value={JSON.stringify(templateForm)} key={index}>
+            {templateForm[0]?.template}
+          </option>
+        ))}
+      </select>
+      <div>
+        {inputComponents
+          ? inputComponents.map((lineId: number) => (
+              <DockerFormInput
+                key={lineId}
+                lineId={lineId}
+                setLineId={setLineId}
+                setInputComponents={setInputComponents}
+                inputComponents={inputComponents}
+                option={lineOption ? lineOption[lineId] : ""}
+                value={lineValue ? lineValue[lineId] : ""}
+                invisibility={lineInvisibility ? lineInvisibility[lineId] : true}
+                dockerFormData={dockerFormData}
+                setDockerFormData={setDockerFormData}
+              />
+            ))
+          : ""}
+        <button className="add-btn" onClick={appendInput}>
+          ADD Instruction
+        </button>
+        <div className="clear-div">
+          <button onClick={clearValue}>초기화</button>
+        </div>
+      </div>
+      <div className="filebtn-div">
+        <label className="filebtn">
+          프로젝트 선택
+          <input type="button" name={"file"} onClick={onClickFileSelect} onChange={onChangeFileSelect} />
+        </label>
+        <div className="fileName-div">{selectedFile ? selectedFile : "프로젝트 폴더 선택"}</div>
+      </div>
+      <div className="setting-context-div">
+        <div className="setting-line-div">
+          <div className="setting-txt">아키텍쳐 선택:</div>
+          <select
+            className="setting-architecture-select"
+            name=""
+            id=""
+            onChange={onChangeArchitecture}
+            value={selectedArchitecture}
+          >
+            {architectureOptions.map((architectureOption, index) => (
+              <option value={architectureOption} key={index}>
+                {architectureOption}
               </option>
             ))}
           </select>
-          <div>
-            {inputComponents
-              ? inputComponents.map((lineId: number) => (
-                  <DockerFormInput
-                    key={lineId}
-                    lineId={lineId}
-                    setLineId={setLineId}
-                    setInputComponents={setInputComponents}
-                    inputComponents={inputComponents}
-                    option={lineOption ? lineOption[lineId] : ""}
-                    value={lineValue ? lineValue[lineId] : ""}
-                    invisibility={lineInvisibility ? lineInvisibility[lineId] : true}
-                    dockerFormData={dockerFormData}
-                    setDockerFormData={setDockerFormData}
-                  />
-                ))
-              : ""}
-            <button onClick={appendInput}>ADD Instruction</button>
-          </div>
-          <div className="filebtn-div">
-            <label className="filebtn">
-              프로젝트 선택
-              <input type="button" name={"file"} onClick={onClickFileSelect} onChange={onChangeFileSelect} />
-            </label>
-            <div className="fileName-div">{selectedFile ? selectedFile : "프로젝트 폴더 선택"}</div>
-          </div>
-          <div className="setting-context-div">
-            <div className="setting-line-div">
-              <div className="setting-txt">아키텍쳐 선택:</div>
-              <select name="" id="" onChange={onChangeArchitecture} value={selectedArchitecture}>
-                {architectureOptions.map((architectureOption, index) => (
-                  <option value={architectureOption} key={index}>
-                    {architectureOption}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="setting-context-div">
-            <div className="setting-line-div">
-              <div className="setting-txt">도커 이미지 이름: </div>
-              <input type="text" onChange={onChangeDockerImgName} value={dockerImgName} />
-            </div>
-            <div className="setting-line-div">
-              <div className="setting-txt">도커 이미지 태그: </div>
-              <input type="text" onChange={onChangeDockerImgTag} value={dockerImgTag} />
-            </div>
-            <div className="setting-line-div">
-              <div className="setting-txt">도커 저장 경로: </div>
-              <input
-                type="text"
-                onClick={onClickDockerTarSaveDir}
-                onChange={onChangeDockerTarSaveDir}
-                value={selectedSaveDir ? selectedSaveDir : ""}
-                placeholder={selectedSaveDir ? selectedSaveDir : "도커 이미지 저장 경로를 설정"}
-              />
-            </div>
-          </div>
-
-          <div className="buildBtn-div">
-            <button className="dockerform-btn" onClick={dockerBuild} disabled={fileSendCheck}>
-              도커로 빌드하기
-            </button>
-            <button onClick={clearValue}>초기화</button>
-          </div>
-          {/* <div>{JSON.stringify(dockerFormData)}</div> */}
         </div>
-      </header>
+      </div>
+
+      <div className="setting-context-div">
+        <div className="setting-line-div">
+          <div className="setting-txt">도커 이미지 이름: </div>
+          <input type="text" onChange={onChangeDockerImgName} value={dockerImgName} />
+        </div>
+        <div className="setting-line-div">
+          <div className="setting-txt">도커 이미지 태그: </div>
+          <input type="text" onChange={onChangeDockerImgTag} value={dockerImgTag} />
+        </div>
+        <div className="setting-line-div">
+          <div className="setting-txt">도커 저장 경로: </div>
+          <input
+            className="save-dir"
+            type="text"
+            onClick={onClickDockerTarSaveDir}
+            onChange={onChangeDockerTarSaveDir}
+            value={selectedSaveDir ? selectedSaveDir : ""}
+            placeholder={selectedSaveDir ? selectedSaveDir : "도커 이미지 저장 경로를 설정"}
+          />
+        </div>
+      </div>
+
+      <div className="buildBtn-div">
+        <button className="dockerform-btn" onClick={dockerBuild} disabled={fileSendCheck}>
+          도커로 빌드하기
+        </button>
+      </div>
+      {/* <div>{JSON.stringify(dockerFormData)}</div> */}
     </div>
   );
 }

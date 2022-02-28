@@ -89,28 +89,31 @@ function App(props: any) {
   }, [messageForBack]);
 
   return (
-    <div>
-      {/* <button onClick={testBtn}>test</button> */}
-      {wsOpenCheck ? (
-        <OpenedWebsocket
-          backWebSocket={backWebSocket}
-          setMessageForBack={setMessageForBack}
-          projectDir={projectDir}
-          saveDir={saveDir}
-          downloadedPercent={downloadedPercent}
-          preGeneratorState={preGeneratorState}
-          generatorState={generatorState}
-        />
-      ) : (
-        <WebsocketConnecter
-          wsOpenCheck={wsOpenCheck}
-          backWebSocket={backWebSocket}
-          setMessageForBack={setMessageForBack}
-          connectCheck={connectCheck}
-          setConnectCheck={setConnectCheck}
-        />
-      )}
-      <div></div>
+    <div className="App">
+      <div className="App-center-box">
+        <div>
+          {/* <button onClick={testBtn}>test</button> */}
+          {wsOpenCheck ? (
+            <OpenedWebsocket
+              backWebSocket={backWebSocket}
+              setMessageForBack={setMessageForBack}
+              projectDir={projectDir}
+              saveDir={saveDir}
+              downloadedPercent={downloadedPercent}
+              preGeneratorState={preGeneratorState}
+              generatorState={generatorState}
+            />
+          ) : (
+            <WebsocketConnecter
+              wsOpenCheck={wsOpenCheck}
+              backWebSocket={backWebSocket}
+              setMessageForBack={setMessageForBack}
+              connectCheck={connectCheck}
+              setConnectCheck={setConnectCheck}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 }

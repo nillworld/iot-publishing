@@ -1,20 +1,60 @@
+.form-div {
+  padding: 120px 45px;
+  border-radius: 20px;
+  background-color: rgb(240, 240, 240);
+}
+.vscode-dark .form-div {
+  background-color: rgb(40, 40, 40);
+}
+.form-div select {
+  height: 35px;
+  border-radius: 5px;
+  padding-left: 10px;
+}
+.form-div .template-select {
+  width: 100%;
+  cursor: pointer;
+}
+.form-div .template-select option {
+  font-size: 15px;
+}
+.form-div input {
+  width: 100%;
+  padding-left: 10px;
+}
+.form-div .add-btn {
+  width: 100%;
+  height: 27px;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+.form-div .clear-div {
+  display: flex;
+  flex-direction: row-reverse;
+}
+.form-div .clear-div button {
+  border-radius: 3px;
+  padding: 3px 10px;
+}
 .filebtn-div {
   margin-top: 20px;
   display: flex;
   align-items: center;
 }
 .fileName-div {
-  margin-left: 10px;
+  margin-left: 15px;
   font-size: 13px;
 }
 .filebtn {
+  height: 35px;
   cursor: pointer;
   border: 1px gray solid;
   border-radius: 5px;
   font-size: 13px;
   padding: 7px;
   top: 10px;
-  margin: 7px;
+  display: flex;
+  align-items: center;
 }
 .filebtn input[type="button"] {
   display: none;
@@ -25,15 +65,32 @@
 .setting-line-div {
   display: flex;
   align-items: center;
+  margin-top: 7px;
 }
 .setting-txt {
+  display: flex;
   margin-right: 10px;
   font-size: 14px;
-  width: 250px;
+  width: 180px;
+}
+.setting-architecture-select {
+  width: 100%;
+}
+.setting-architecture-select option {
+  font-size: 15px;
+}
+.setting-line-div input {
+  height: 35px;
+  border-radius: 5px;
+}
+.save-dir {
+  cursor: pointer;
 }
 .buildBtn-div {
   margin-top: 30px;
 }
 .dockerform-btn {
-  margin: 10px;
+  width: 100%;
+  height: 40px;
+  border-radius: 8px;
 }

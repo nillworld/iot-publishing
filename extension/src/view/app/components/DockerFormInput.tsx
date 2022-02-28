@@ -84,8 +84,8 @@ function DockerFormInput(props: Props) {
       ) : props.invisibility ? (
         ""
       ) : (
-        <div className="input-component-div">
-          <select name="" id="" className="input-component-select" onChange={selectOnChange}>
+        <div className="dockerfile-form-line">
+          <select name="" id="" onChange={selectOnChange}>
             {props.option ? (
               <option value={props.option}>{props.option}</option>
             ) : (
