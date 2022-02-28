@@ -29,9 +29,9 @@ function App(props: any) {
     setBackWebsocket(new WebSocket(`ws://localhost:4000/ws`));
   }, []);
 
-  const testBtn = () => {
-    console.log(props.vscode.getState());
-  };
+  // const testBtn = () => {
+  //   console.log(props.vscode.getState());
+  // };
   useEffect(() => {
     if (backWebSocket) {
       backWebSocket.onopen = () => {
@@ -56,6 +56,9 @@ function App(props: any) {
           } else if (jsonMessage.state === "GENERATOR_TAR_DECOMPRESS_DONE") {
             setPreGeneratorState("서버에서 tar 압축 해제 완료.");
             setGeneratorState("서버에서 도커 빌드 중...");
+          } else if (jsonMessage.state === "GENERATOR_DOCKER_BUILD_ERROR") {
+            setPreGeneratorState("");
+            setGeneratorState("Docker Error. Generator에 Docker 데몬이 실행 되고 있는지 확인 해 주세요.");
           } else if (jsonMessage.state === "GENERATOR_DOCKER_BUILD_DONE") {
             setPreGeneratorState("서버에서 도커 빌드 완료.");
             setGeneratorState("서버에서 도커 이미지 tar로 압축 중...");

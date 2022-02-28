@@ -16,12 +16,20 @@
   margin: 30px;
   border: 1px solid black;
 }
+.vscode-dark .progressBar {
+  border: 1px solid white;
+}
+
 .progressBar-ing {
   background-color: black;
   height: 100%;
   width: 0%;
   transition-duration: 0.3s;
 }
+.vscode-dark .progressBar-ing {
+  background-color: white;
+}
+
 .generator-state-div {
   margin-top: 70px;
   display: flex;

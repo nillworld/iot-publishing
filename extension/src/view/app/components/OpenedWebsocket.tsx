@@ -27,6 +27,7 @@ type Message = {
 function OpenedWebsocket(props: Props) {
   const [selectedFile, setSelectedFile] = useState<string>();
   const [fileSendCheck, setFileSendCheck] = useState<boolean>();
+  const [fileReSendCheck, setFileReSendCheck] = useState<boolean>();
   const [lineId, setLineId] = useState<number>(0);
   const [lineOption, setLineOption] = useState<string[]>();
   const [lineValue, setLineValue] = useState<string[]>();
@@ -111,6 +112,12 @@ function OpenedWebsocket(props: Props) {
   }, [props.saveDir]);
 
   useEffect(() => {
+    if (props.generatorState.indexOf("Docker Error") >= 0) {
+      setFileReSendCheck(false);
+    }
+  }, [props.generatorState]);
+
+  useEffect(() => {
     props.setMessageForBack({ state: "SETTING_DOCKER_ARCHITECTURE", architecture: selectedArchitecture });
   }, [selectedArchitecture]);
 
@@ -185,6 +192,10 @@ function OpenedWebsocket(props: Props) {
     });
     setFileSendCheck(true);
   };
+  const dockerRebuild = () => {
+    setFileReSendCheck(true);
+    dockerBuild();
+  };
 
   const appendInput = () => {
     if (inputComponents) {
@@ -207,6 +218,13 @@ function OpenedWebsocket(props: Props) {
       <div className="generator-state-div">
         <div>{props.preGeneratorState}</div>
         <div>{props.generatorState}</div>
+        {props.generatorState.indexOf("Docker Error") >= 0 ? (
+          <button className="dockerform-btn" onClick={dockerRebuild} disabled={fileReSendCheck}>
+            빌드 재시도
+          </button>
+        ) : (
+          ""
+        )}
       </div>
       {props.downloadedPercent === "100%" ? "" : <TransferMessage downloadedPercent={props.downloadedPercent} />}
     </div>
@@ -245,7 +263,7 @@ function OpenedWebsocket(props: Props) {
               프로젝트 선택
               <input type="button" name={"file"} onClick={onClickFileSelect} onChange={onChangeFileSelect} />
             </label>
-            <div className="fileName-div">{selectedFile ? selectedFile : ".tar파일 선택"}</div>
+            <div className="fileName-div">{selectedFile ? selectedFile : "프로젝트 폴더 선택"}</div>
           </div>
           <div className="setting-context-div">
             <div className="setting-line-div">

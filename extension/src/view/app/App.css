@@ -12,14 +12,6 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
-/* .App-header.vscode-light {
-  color: black;
-  font-size: 150px;
-}
-.App-header.vscode-dark {
-  color: white;
-  font-size: 150px;
-} */
 .App-header {
   /* background-color: #282c34; */
   min-height: 100vh;
