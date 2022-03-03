@@ -29,9 +29,9 @@ function App(props: any) {
     setBackWebsocket(new WebSocket(`ws://localhost:4000/ws`));
   }, []);
 
-  // const testBtn = () => {
-  //   console.log(props.vscode.getState());
-  // };
+  const testBtn = () => {
+    console.log(props.vscode.getState());
+  };
   useEffect(() => {
     if (backWebSocket) {
       backWebSocket.onopen = () => {
@@ -92,7 +92,7 @@ function App(props: any) {
     <div className="App">
       <div className="App-center-box">
         <div>
-          {/* <button onClick={testBtn}>test</button> */}
+          <button onClick={testBtn}>test</button>
           {wsOpenCheck ? (
             <OpenedWebsocket
               backWebSocket={backWebSocket}

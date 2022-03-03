@@ -11,12 +11,9 @@ export default class ViewLoader {
 
   constructor(extensionPath: string) {
     this._extensionPath = extensionPath;
-
-    // let config = this.getFileContent(fileUri);
     if (true) {
       this._panel = vscode.window.createWebviewPanel("Dockerizing", "Dockerizing", vscode.ViewColumn.One, {
         enableScripts: true,
-
         localResourceRoots: [vscode.Uri.file(path.join(extensionPath, "dockerizingService"))],
       });
 
