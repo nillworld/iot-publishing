@@ -27,6 +27,7 @@ export function activate(context: vscode.ExtensionContext) {
   // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
   console.log('Congratulations, your extension "vscode-react" is now active!');
+
   const backWSS = new WebsocketServer({ port: 4000 });
 
   let generatorWS: any;
@@ -229,11 +230,11 @@ export function activate(context: vscode.ExtensionContext) {
     return txt;
   };
 
-  let disposable = vscode.commands.registerCommand("extension.viewconfig", () => {
+  let commandWebview = vscode.commands.registerCommand("extension.viewconfig", () => {
     new ViewLoader(context.extensionPath);
   });
 
-  context.subscriptions.push(disposable);
+  context.subscriptions.push(commandWebview);
 }
 
 // this method is called when your extension is deactivated

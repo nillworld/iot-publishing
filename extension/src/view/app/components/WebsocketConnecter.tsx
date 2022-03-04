@@ -103,7 +103,7 @@ function WebsocketConnecter(props: Props) {
         <button onClick={connectGenerator} disabled={ipCheck || portCheck || !props.connectCheck}>
           Generator 연결
         </button>
-        <button onClick={connectGeneratorTest}>back 통해서 generator 연결 테스트</button>
+        {/* <button onClick={connectGeneratorTest}>back 통해서 generator 연결 테스트</button> */}
         <div className="check-comment">{ipRegExpCheck}</div>
         <div className="check-comment">{portRegExpCheck}</div>
         <div className="check-comment">{webSocketState}</div>

@@ -92,7 +92,7 @@ function App(props: any) {
     <div className="App">
       <div className="App-center-box">
         <div>
-          <button onClick={testBtn}>test</button>
+          {/* <button onClick={testBtn}>test</button> */}
           {wsOpenCheck ? (
             <OpenedWebsocket
               backWebSocket={backWebSocket}
