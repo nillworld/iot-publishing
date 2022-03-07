@@ -12,6 +12,7 @@ type Props = {
   saveDir: string | undefined;
   downloadedPercent: string | undefined;
   generatorState: string;
+  setGeneratorState: Dispatch<SetStateAction<string | undefined>>;
   preGeneratorState: string;
 };
 
@@ -86,6 +87,17 @@ function OpenedWebsocket(props: Props) {
       4: { RUN: "javac Test.java" },
       5: { CMD: '["java", "Test"]' },
     },
+    {
+      0: { template: "Node 14" },
+      1: { FROM: "node:16-alpine" },
+      2: {
+        RUN: "apk add --no-cache --virtual .gyp python make g++ \
+			&& apt-get update && apt-get install -y vim nano net-tools openssh-server \
+			&& apk del .gyp",
+      },
+      3: { WORKDIR: "/app" },
+      4: { COPY: "./project /app" },
+    },
   ];
 
   const architectureOptions = [
@@ -112,7 +124,7 @@ function OpenedWebsocket(props: Props) {
   }, [props.saveDir]);
 
   useEffect(() => {
-    if (props.generatorState.indexOf("Docker Error") >= 0) {
+    if (props.generatorState.indexOf("Docker demon Error") >= 0) {
       setFileReSendCheck(false);
     }
   }, [props.generatorState]);
@@ -197,6 +209,11 @@ function OpenedWebsocket(props: Props) {
     dockerBuild();
   };
 
+  const dockerFormResetting = () => {
+    setFileSendCheck(false);
+    props.setGeneratorState("");
+  };
+
   const appendInput = () => {
     if (inputComponents) {
       setInputComponents([...inputComponents, lineId === 0 ? lineId + 1 : lineId]);
@@ -218,9 +235,13 @@ function OpenedWebsocket(props: Props) {
       <div className="generator-state-div">
         <div>{props.preGeneratorState}</div>
         <div>{props.generatorState}</div>
-        {props.generatorState.indexOf("Docker Error") >= 0 ? (
+        {props.generatorState.indexOf("Docker demon Error") >= 0 ? (
           <button className="dockerform-btn" onClick={dockerRebuild} disabled={fileReSendCheck}>
             빌드 재시도
+          </button>
+        ) : props.generatorState.indexOf("Docker build Error") >= 0 ? (
+          <button className="dockerform-btn" onClick={dockerFormResetting} disabled={!fileSendCheck}>
+            도커 빌드 옵션 재설정
           </button>
         ) : (
           ""

@@ -180,6 +180,8 @@ export function activate(context: vscode.ExtensionContext) {
           } else if (messageFromGenerator.state === "GENERATOR_TAR_DECOMPRESS_DONE") {
             senderToClient("GENERATOR_TAR_DECOMPRESS_DONE");
             senderToServer("GENERATOR_DOCKER_BUILD", jsonMessage.architecture);
+          } else if (messageFromGenerator.state === "GENERATOR_DOCKER_DEMON_ERROR") {
+            senderToClient("GENERATOR_DOCKER_DEMON_ERROR");
           } else if (messageFromGenerator.state === "GENERATOR_DOCKER_BUILD_ERROR") {
             senderToClient("GENERATOR_DOCKER_BUILD_ERROR");
           } else if (messageFromGenerator.state === "GENERATOR_DOCKER_BUILD_DONE") {
