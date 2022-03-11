@@ -87,17 +87,6 @@ function OpenedWebsocket(props: Props) {
       4: { RUN: "javac Test.java" },
       5: { CMD: '["java", "Test"]' },
     },
-    {
-      0: { template: "Node 14" },
-      1: { FROM: "node:16-alpine" },
-      2: {
-        RUN: "apk add --no-cache --virtual .gyp python make g++ \
-			&& apt-get update && apt-get install -y vim nano net-tools openssh-server \
-			&& apk del .gyp",
-      },
-      3: { WORKDIR: "/app" },
-      4: { COPY: "./project /app" },
-    },
   ];
 
   const architectureOptions = [
