@@ -12,7 +12,7 @@ type Props = {
   saveDir: string | undefined;
   downloadedPercent: string | undefined;
   generatorState: string;
-  setGeneratorState: Dispatch<SetStateAction<string | undefined>>;
+  setGeneratorState: Dispatch<SetStateAction<string>>;
   preGeneratorState: string;
 };
 
@@ -113,7 +113,10 @@ function OpenedWebsocket(props: Props) {
   }, [props.saveDir]);
 
   useEffect(() => {
-    if (props.generatorState.indexOf("Docker demon Error") >= 0) {
+    if (
+      props.generatorState.indexOf("Docker demon Error") >= 0 ||
+      props.preGeneratorState.indexOf("Docker demon Error")
+    ) {
       setFileReSendCheck(false);
     }
   }, [props.generatorState]);
@@ -224,7 +227,8 @@ function OpenedWebsocket(props: Props) {
       <div className="generator-state-div">
         <div>{props.preGeneratorState}</div>
         <div>{props.generatorState}</div>
-        {props.generatorState.indexOf("Docker demon Error") >= 0 ? (
+        {props.generatorState.indexOf("Docker demon Error") >= 0 ||
+        props.preGeneratorState.indexOf("Docker demon Error") >= 0 ? (
           <button className="dockerform-btn" onClick={dockerRebuild} disabled={fileReSendCheck}>
             빌드 재시도
           </button>

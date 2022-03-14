@@ -78,7 +78,7 @@ function WebsocketConnecter(props: Props) {
   };
 
   // 테스트용 Generator Connector
-  const connectGeneratorTest = () => {
+  /* const connectGeneratorTest = () => {
     console.log("connectGenerator");
     if (props.backWebSocket) {
       props.setMessageForBack({
@@ -86,7 +86,7 @@ function WebsocketConnecter(props: Props) {
         generatorIP: { ip: "localhost", port: 1234 },
       });
     }
-  };
+  }; */
 
   return (
     <div className="form">
